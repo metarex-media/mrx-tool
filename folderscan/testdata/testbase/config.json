@@ -1,0 +1,29 @@
+{
+    "Configuration": {
+        "MrxVersion": "pre alpha",
+        "DefaultStreamProperties": {
+            "FrameRate": "24/1",
+            "Type": "some data to track"
+        },
+        "StreamProperties": {
+            "0": {
+                "FrameRate": "24/1",
+                "Type": "CameraComponent",
+                "NameSpace": "https://metarex.media/reg/MRX.123.456.789.000"
+            },
+            "1": {
+                "Type": "Camera Schema",
+                "NameSpace": "https://metarex.media/reg/MRX.123.456.789.001"
+            },
+            "2": {
+                "Type": "Static Tail Data",
+                "NameSpace": "https://metarex.media/reg/MRX.123.456.789.002"
+            },
+            "3": {
+                "FrameRate": "48/1",
+                "Type": "CameraComponent",
+                "NameSpace": "https://metarex.media/reg/MRX.123.456.789.003"
+            }
+        }
+    }
+}

@@ -1,0 +1,401 @@
+{
+    "UMID": "060a2b340101010501010c20132f3179f598a3ae27d64334bf09289ebf5eaadd",
+    "Mrx Manifest Version": "0.0.0.1",
+    "MRXTool": "Mr MXF's MRX golang writer version info etc",
+    "Data Streams": [
+        {
+            "Common Data Properties": {
+                "StreamID": 1,
+                "StreamType": "Text based frame data"
+            },
+            "Essence": [
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0000frameText",
+                    "EditDate": "2023-06-15 14:14:15.4862202 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0001frameText",
+                    "EditDate": "2023-06-15 14:14:15.486741 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0002frameText",
+                    "EditDate": "2023-06-15 14:14:15.4872616 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0003frameText",
+                    "EditDate": "2023-06-15 14:14:15.4875006 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0004frameText",
+                    "EditDate": "2023-06-15 14:14:15.4880782 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0005frameText",
+                    "EditDate": "2023-06-15 14:14:15.4885815 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0006frameText",
+                    "EditDate": "2023-06-15 14:14:15.4890973 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0007frameText",
+                    "EditDate": "2023-06-15 14:14:15.4896173 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0008frameText",
+                    "EditDate": "2023-06-15 14:14:15.4901473 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0009frameText",
+                    "EditDate": "2023-06-15 14:14:15.4906692 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0010frameText",
+                    "EditDate": "2023-06-15 14:14:15.4912459 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0011frameText",
+                    "EditDate": "2023-06-15 14:14:15.4917531 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0012frameText",
+                    "EditDate": "2023-06-15 14:14:15.4922693 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0013frameText",
+                    "EditDate": "2023-06-15 14:14:15.4934596 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0014frameText",
+                    "EditDate": "2023-06-15 14:14:15.4945428 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0015frameText",
+                    "EditDate": "2023-06-15 14:14:15.4952923 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0016frameText",
+                    "EditDate": "2023-06-15 14:14:15.4963219 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0017frameText",
+                    "EditDate": "2023-06-15 14:14:15.4979807 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0018frameText",
+                    "EditDate": "2023-06-15 14:14:15.4979807 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0019frameText",
+                    "EditDate": "2023-06-15 14:14:15.4990466 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0020frameText",
+                    "EditDate": "2023-06-15 14:14:15.4990466 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0021frameText",
+                    "EditDate": "2023-06-15 14:14:15.4995704 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0022frameText",
+                    "EditDate": "2023-06-15 14:14:15.5000871 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0023frameText",
+                    "EditDate": "2023-06-15 14:14:15.5006201 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0024frameText",
+                    "EditDate": "2023-06-15 14:14:15.5017256 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0025frameText",
+                    "EditDate": "2023-06-15 14:14:15.5022577 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0026frameText",
+                    "EditDate": "2023-06-15 14:14:15.5027837 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0027frameText",
+                    "EditDate": "2023-06-15 14:14:15.5033131 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0028frameText",
+                    "EditDate": "2023-06-15 14:14:15.5038316 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0029frameText",
+                    "EditDate": "2023-06-15 14:14:15.5043463 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0030frameText",
+                    "EditDate": "2023-06-15 14:14:15.5048649 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0031frameText",
+                    "EditDate": "2023-06-15 14:14:15.5053827 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0032frameText",
+                    "EditDate": "2023-06-15 14:14:15.5058977 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0033frameText",
+                    "EditDate": "2023-06-15 14:14:15.5064271 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0034frameText",
+                    "EditDate": "2023-06-15 14:14:15.5069702 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0035frameText",
+                    "EditDate": "2023-06-15 14:14:15.5080561 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0036frameText",
+                    "EditDate": "2023-06-15 14:14:15.5086631 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0037frameText",
+                    "EditDate": "2023-06-15 14:14:15.5091726 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0038frameText",
+                    "EditDate": "2023-06-15 14:14:15.509694 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0039frameText",
+                    "EditDate": "2023-06-15 14:14:15.5111582 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0040frameText",
+                    "EditDate": "2023-06-15 14:14:15.5121952 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0041frameText",
+                    "EditDate": "2023-06-15 14:14:15.512712 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0042frameText",
+                    "EditDate": "2023-06-15 14:14:15.512712 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0043frameText",
+                    "EditDate": "2023-06-15 14:14:15.5144944 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0044frameText",
+                    "EditDate": "2023-06-15 14:14:15.5144944 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0045frameText",
+                    "EditDate": "2023-06-15 14:14:15.5144944 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0046frameText",
+                    "EditDate": "2023-06-15 14:14:15.5164759 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0047frameText",
+                    "EditDate": "2023-06-15 14:14:15.5164759 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0048frameText",
+                    "EditDate": "2023-06-15 14:14:15.5164759 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0049frameText",
+                    "EditDate": "2023-06-15 14:14:15.5164759 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0050frameText",
+                    "EditDate": "2023-06-15 14:14:15.5164759 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0051frameText",
+                    "EditDate": "2023-06-15 14:14:15.5164759 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0052frameText",
+                    "EditDate": "2023-06-15 14:14:15.5195041 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0053frameText",
+                    "EditDate": "2023-06-15 14:14:15.5195041 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0054frameText",
+                    "EditDate": "2023-06-15 14:14:15.5195041 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0055frameText",
+                    "EditDate": "2023-06-15 14:14:15.5210098 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0056frameText",
+                    "EditDate": "2023-06-15 14:14:15.5220539 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0057frameText",
+                    "EditDate": "2023-06-15 14:14:15.5220539 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0058frameText",
+                    "EditDate": "2023-06-15 14:14:15.5220539 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0059frameText",
+                    "EditDate": "2023-06-15 14:14:15.5220539 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0060frameText",
+                    "EditDate": "2023-06-15 14:14:15.5220539 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0061frameText",
+                    "EditDate": "2023-06-15 14:14:15.5220539 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0062frameText",
+                    "EditDate": "2023-06-15 14:14:15.5220539 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0063frameText",
+                    "EditDate": "2023-06-15 14:14:15.5220539 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0064frameText",
+                    "EditDate": "2023-06-15 14:14:15.5220539 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0065frameText",
+                    "EditDate": "2023-06-15 14:14:15.5255254 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0066frameText",
+                    "EditDate": "2023-06-15 14:14:15.5255254 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0067frameText",
+                    "EditDate": "2023-06-15 14:14:15.5255254 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0068frameText",
+                    "EditDate": "2023-06-15 14:14:15.5289395 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0069frameText",
+                    "EditDate": "2023-06-15 14:14:15.5289395 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0070frameText",
+                    "EditDate": "2023-06-15 14:14:15.5309468 +0100 BST"
+                },
+                {
+                    "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0001mrxip\\0071frameText",
+                    "EditDate": "2023-06-15 14:14:15.5322045 +0100 BST"
+                }
+            ]
+        },
+        {
+            "Common Data Properties": {
+                "StreamID": 2,
+                "StreamType": "Text based clip data"
+            },
+            "Essence": [
+                {
+                    "Hash": "e3c3be0962148273994481229d0f007adb653aff151b853d1dfaee0c4d384854",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0002mrxip\\0000clipText",
+                    "EditDate": "2023-06-15 14:14:15.5332727 +0100 BST"
+                }
+            ]
+        },
+        {
+            "Common Data Properties": {
+                "StreamID": 3,
+                "StreamType": "Text based clip data"
+            },
+            "Essence": [
+                {
+                    "Hash": "6903fe1d0d6f4d06feb95e443ecf4ef0322245acd28d370fcf7f7c211ffd8a09",
+                    "DataOrigin": "C:\\Users\\mmTri\\Documents\\Gitlab\\mrx-parser\\encode\\testdata\\testbase\\0003mrxip\\0000clipText",
+                    "EditDate": "2023-06-15 14:14:15.5343432 +0100 BST"
+                }
+            ]
+        }
+    ]
+}

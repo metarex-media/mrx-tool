@@ -1,0 +1,622 @@
+Partitions:
+    - PartitionType: header
+      HeaderLength: 2243
+      EssenceByteCount: 0
+      ContentPackageCount: 0
+    - PartitionType: body
+      HeaderLength: 140
+      EssenceByteCount: 18720
+      ContentPackageCount: 72
+      ContentPackages:
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 2401
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 2661
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 2921
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 3181
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 3441
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 3701
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 3961
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 4221
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 4481
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 4741
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 5001
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 5261
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 5521
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 5781
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 6041
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 6301
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 6561
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 6821
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 7081
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 7341
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 7601
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 7861
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 8121
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 8381
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 8641
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 8901
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 9161
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 9421
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 9681
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 9941
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 10201
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 10461
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 10721
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 10981
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 11241
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 11501
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 11761
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 12021
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 12281
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 12541
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 12801
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 13061
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 13321
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 13581
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 13841
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 14101
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 14361
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 14621
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 14881
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 15141
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 15401
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 15661
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 15921
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 16181
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 16441
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 16701
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 16961
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 17221
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 17481
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 17741
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 18001
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 18261
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 18521
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 18781
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 19041
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 19301
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 19561
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 19821
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 20081
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 20341
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 20601
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 20861
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+      ContentPackageStatistics:
+        Mean: 260
+        Variance: 0
+        StandardDeviation: 0
+        Minimum: 260
+        Maximum: 260
+    - PartitionType: body
+      HeaderLength: 140
+      EssenceByteCount: 292
+      ContentPackageCount: 1
+      ContentPackages:
+        - ContentPackage:
+            - Key: 060e2b34.01020101.0f020101.01040000
+              Symbol: ClipWrappedTextData
+              Description: Identifies Clip Wrapped Text Data
+              FileOffset: 21262
+              Length: 273
+              TotalByteCount: 292
+          ContentPackageLength: 292
+    - PartitionType: body
+      HeaderLength: 140
+      EssenceByteCount: 5866
+      ContentPackageCount: 1
+      ContentPackages:
+        - ContentPackage:
+            - Key: 060e2b34.01020101.0f020101.01040000
+              Symbol: ClipWrappedTextData
+              Description: Identifies Clip Wrapped Text Data
+              FileOffset: 21694
+              Length: 5847
+              TotalByteCount: 5866
+          ContentPackageLength: 5866
+    - PartitionType: footer
+      HeaderLength: 2243
+      EssenceByteCount: 0
+      ContentPackageCount: 0

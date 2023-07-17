@@ -1,0 +1,11 @@
+*.exe
+#**/*.yaml
+
+user/*
+
+stream/testdata/testfile.txt
+
+!decode/testdata/*.yaml
+decode/testdata/0001body
+decode/testdata/0002body
+decode/testdata/0003body

@@ -1,0 +1,12 @@
+{
+		"cameras":
+		{
+			"CameraComponent":
+			{
+				"intrinsics": [ 5440.0002265929279, 0, 960, 0, 5440.0002265929279, 540, 0, 0, 1 ],
+				"rotation": [ 0, 0, 0, 1 ],
+				"translation": [ 0, 0, 0 ],
+				"sensor_size": [ 1920, 1080 ]
+			}
+		}
+	}

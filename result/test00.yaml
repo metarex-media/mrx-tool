@@ -1,0 +1,334 @@
+Partitions:
+    - PartitionType: header
+      HeaderLength: 17920
+      EssenceByteCount: 0
+      ContentPackageCount: 0
+    - PartitionType: body
+      HeaderLength: 512
+      EssenceByteCount: 12570624
+      ContentPackageCount: 24
+      ContentPackages:
+        - ContentPackage:
+            - Key: 00000000.00000000.00000000.00000000
+              Description: A collection of skipped content packages
+              FileOffset: 0
+              Length: 0
+              TotalByteCount: 4184280
+              TotalContainerCount: 8
+          ContentPackageLength: 4184280
+        - ContentPackage:
+            - Key: 060e2b34.02050101.0d010301.04010100
+              Symbol: SystemItemTBD0
+              Description: ""
+              FileOffset: 4208660
+              Length: 57
+              TotalByteCount: 77
+            - Key: 060e2b34.02430101.0d010301.04010200
+              Symbol: SystemItemTBD1
+              Description: ""
+              FileOffset: 4208737
+              Length: 0
+              TotalByteCount: 20
+            - Key: 060e2b34.01020101.0d010301.15011700
+              Symbol: FrameWrappedProResPictureElement
+              Description: Identifies a frame-wrapped ProRes Picture Element
+              FileOffset: 4209173
+              Length: 510896
+              TotalByteCount: 510917
+            - Key: 060e2b34.01020101.0d010301.16010100
+              Symbol: WaveFrameWrappedSoundElement
+              Description: Identifies a frame-wrapped Broadcast Wave sound element
+              FileOffset: 4720149
+              Length: 12000
+              TotalByteCount: 12021
+          ContentPackageLength: 523035
+        - ContentPackage:
+            - Key: 060e2b34.02050101.0d010301.04010100
+              Symbol: SystemItemTBD0
+              Description: ""
+              FileOffset: 4732436
+              Length: 57
+              TotalByteCount: 77
+            - Key: 060e2b34.02430101.0d010301.04010200
+              Symbol: SystemItemTBD1
+              Description: ""
+              FileOffset: 4732513
+              Length: 0
+              TotalByteCount: 20
+            - Key: 060e2b34.01020101.0d010301.15011700
+              Symbol: FrameWrappedProResPictureElement
+              Description: Identifies a frame-wrapped ProRes Picture Element
+              FileOffset: 4732949
+              Length: 510896
+              TotalByteCount: 510917
+            - Key: 060e2b34.01020101.0d010301.16010100
+              Symbol: WaveFrameWrappedSoundElement
+              Description: Identifies a frame-wrapped Broadcast Wave sound element
+              FileOffset: 5243925
+              Length: 12000
+              TotalByteCount: 12021
+          ContentPackageLength: 523035
+        - ContentPackage:
+            - Key: 060e2b34.02050101.0d010301.04010100
+              Symbol: SystemItemTBD0
+              Description: ""
+              FileOffset: 5256212
+              Length: 57
+              TotalByteCount: 77
+            - Key: 060e2b34.02430101.0d010301.04010200
+              Symbol: SystemItemTBD1
+              Description: ""
+              FileOffset: 5256289
+              Length: 0
+              TotalByteCount: 20
+            - Key: 060e2b34.01020101.0d010301.15011700
+              Symbol: FrameWrappedProResPictureElement
+              Description: Identifies a frame-wrapped ProRes Picture Element
+              FileOffset: 5256725
+              Length: 510896
+              TotalByteCount: 510917
+            - Key: 060e2b34.01020101.0d010301.16010100
+              Symbol: WaveFrameWrappedSoundElement
+              Description: Identifies a frame-wrapped Broadcast Wave sound element
+              FileOffset: 5767701
+              Length: 12000
+              TotalByteCount: 12021
+          ContentPackageLength: 523035
+        - ContentPackage:
+            - Key: 060e2b34.02050101.0d010301.04010100
+              Symbol: SystemItemTBD0
+              Description: ""
+              FileOffset: 5779988
+              Length: 57
+              TotalByteCount: 77
+            - Key: 060e2b34.02430101.0d010301.04010200
+              Symbol: SystemItemTBD1
+              Description: ""
+              FileOffset: 5780065
+              Length: 0
+              TotalByteCount: 20
+            - Key: 060e2b34.01020101.0d010301.15011700
+              Symbol: FrameWrappedProResPictureElement
+              Description: Identifies a frame-wrapped ProRes Picture Element
+              FileOffset: 5780501
+              Length: 510896
+              TotalByteCount: 510917
+            - Key: 060e2b34.01020101.0d010301.16010100
+              Symbol: WaveFrameWrappedSoundElement
+              Description: Identifies a frame-wrapped Broadcast Wave sound element
+              FileOffset: 6291477
+              Length: 12000
+              TotalByteCount: 12021
+          ContentPackageLength: 523035
+        - ContentPackage:
+            - Key: 060e2b34.02050101.0d010301.04010100
+              Symbol: SystemItemTBD0
+              Description: ""
+              FileOffset: 6303764
+              Length: 57
+              TotalByteCount: 77
+            - Key: 060e2b34.02430101.0d010301.04010200
+              Symbol: SystemItemTBD1
+              Description: ""
+              FileOffset: 6303841
+              Length: 0
+              TotalByteCount: 20
+            - Key: 060e2b34.01020101.0d010301.15011700
+              Symbol: FrameWrappedProResPictureElement
+              Description: Identifies a frame-wrapped ProRes Picture Element
+              FileOffset: 6304277
+              Length: 510896
+              TotalByteCount: 510917
+            - Key: 060e2b34.01020101.0d010301.16010100
+              Symbol: WaveFrameWrappedSoundElement
+              Description: Identifies a frame-wrapped Broadcast Wave sound element
+              FileOffset: 6815253
+              Length: 12000
+              TotalByteCount: 12021
+          ContentPackageLength: 523035
+        - ContentPackage:
+            - Key: 060e2b34.02050101.0d010301.04010100
+              Symbol: SystemItemTBD0
+              Description: ""
+              FileOffset: 6827540
+              Length: 57
+              TotalByteCount: 77
+            - Key: 060e2b34.02430101.0d010301.04010200
+              Symbol: SystemItemTBD1
+              Description: ""
+              FileOffset: 6827617
+              Length: 0
+              TotalByteCount: 20
+            - Key: 060e2b34.01020101.0d010301.15011700
+              Symbol: FrameWrappedProResPictureElement
+              Description: Identifies a frame-wrapped ProRes Picture Element
+              FileOffset: 6828053
+              Length: 510896
+              TotalByteCount: 510917
+            - Key: 060e2b34.01020101.0d010301.16010100
+              Symbol: WaveFrameWrappedSoundElement
+              Description: Identifies a frame-wrapped Broadcast Wave sound element
+              FileOffset: 7339029
+              Length: 12000
+              TotalByteCount: 12021
+          ContentPackageLength: 523035
+        - ContentPackage:
+            - Key: 060e2b34.02050101.0d010301.04010100
+              Symbol: SystemItemTBD0
+              Description: ""
+              FileOffset: 7351316
+              Length: 57
+              TotalByteCount: 77
+            - Key: 060e2b34.02430101.0d010301.04010200
+              Symbol: SystemItemTBD1
+              Description: ""
+              FileOffset: 7351393
+              Length: 0
+              TotalByteCount: 20
+            - Key: 060e2b34.01020101.0d010301.15011700
+              Symbol: FrameWrappedProResPictureElement
+              Description: Identifies a frame-wrapped ProRes Picture Element
+              FileOffset: 7351829
+              Length: 510896
+              TotalByteCount: 510917
+            - Key: 060e2b34.01020101.0d010301.16010100
+              Symbol: WaveFrameWrappedSoundElement
+              Description: Identifies a frame-wrapped Broadcast Wave sound element
+              FileOffset: 7862805
+              Length: 12000
+              TotalByteCount: 12021
+          ContentPackageLength: 523035
+        - ContentPackage:
+            - Key: 060e2b34.02050101.0d010301.04010100
+              Symbol: SystemItemTBD0
+              Description: ""
+              FileOffset: 7875092
+              Length: 57
+              TotalByteCount: 77
+            - Key: 060e2b34.02430101.0d010301.04010200
+              Symbol: SystemItemTBD1
+              Description: ""
+              FileOffset: 7875169
+              Length: 0
+              TotalByteCount: 20
+            - Key: 060e2b34.01020101.0d010301.15011700
+              Symbol: FrameWrappedProResPictureElement
+              Description: Identifies a frame-wrapped ProRes Picture Element
+              FileOffset: 7875605
+              Length: 510896
+              TotalByteCount: 510917
+            - Key: 060e2b34.01020101.0d010301.16010100
+              Symbol: WaveFrameWrappedSoundElement
+              Description: Identifies a frame-wrapped Broadcast Wave sound element
+              FileOffset: 8386581
+              Length: 12000
+              TotalByteCount: 12021
+          ContentPackageLength: 523035
+        - ContentPackage:
+            - Key: 060e2b34.02050101.0d010301.04010100
+              Symbol: SystemItemTBD0
+              Description: ""
+              FileOffset: 8398868
+              Length: 57
+              TotalByteCount: 77
+            - Key: 060e2b34.02430101.0d010301.04010200
+              Symbol: SystemItemTBD1
+              Description: ""
+              FileOffset: 8398945
+              Length: 0
+              TotalByteCount: 20
+            - Key: 060e2b34.01020101.0d010301.15011700
+              Symbol: FrameWrappedProResPictureElement
+              Description: Identifies a frame-wrapped ProRes Picture Element
+              FileOffset: 8399381
+              Length: 510896
+              TotalByteCount: 510917
+            - Key: 060e2b34.01020101.0d010301.16010100
+              Symbol: WaveFrameWrappedSoundElement
+              Description: Identifies a frame-wrapped Broadcast Wave sound element
+              FileOffset: 8910357
+              Length: 12000
+              TotalByteCount: 12021
+          ContentPackageLength: 523035
+        - ContentPackage:
+            - Key: 00000000.00000000.00000000.00000000
+              Description: A collection of skipped content packages
+              FileOffset: 0
+              Length: 0
+              TotalByteCount: 3661245
+              TotalContainerCount: 7
+          ContentPackageLength: 3661245
+      ContentPackageStatistics:
+        Mean: 523035
+        Variance: 0
+        StandardDeviation: 0
+        Minimum: 523035
+        Maximum: 523035
+    - PartitionType: body
+      HeaderLength: 1536
+      EssenceByteCount: 0
+      ContentPackageCount: 0
+      IndexTable:
+        DeltaEntryArray:
+            - - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+            - - 0
+              - 0
+              - 0
+              - 0
+              - 2
+              - 0
+            - - 0
+              - 1
+              - 0
+              - 0
+              - 0
+              - 0
+        EditUnitByteCount: 0
+        EssenceStreamID: 1
+        IndexDuration: 24
+        IndexEditRate:
+            numerator: 24
+            denominator: 1
+        IndexStartPosition: 0
+        IndexStreamID: 2
+        InstanceID: 7c36dbb3c7c411eca39900ff87d46f74
+        SliceCount: 1
+    - PartitionType: footer
+      HeaderLength: 1536
+      EssenceByteCount: 0
+      ContentPackageCount: 0
+      IndexTable:
+        DeltaEntryArray:
+            - - 0
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+            - - 0
+              - 0
+              - 0
+              - 0
+              - 2
+              - 0
+            - - 0
+              - 1
+              - 0
+              - 0
+              - 0
+              - 0
+        EditUnitByteCount: 0
+        EssenceStreamID: 1
+        IndexDuration: 24
+        IndexEditRate:
+            numerator: 24
+            denominator: 1
+        IndexStartPosition: 0
+        IndexStreamID: 2
+        InstanceID: 7c36dbb3c7c411eca39900ff87d46f74
+        SliceCount: 1

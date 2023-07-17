@@ -1,0 +1,107 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "MRX Manifest Schema",
+    "description": "The Schmea for the MRX Manifest schema, version 0.0.0.1",
+    "type": "object",
+    "properties": {
+        "UMID": {
+            "type": "string",
+            "description": "The UUID of the MRX file the manifest is attached to"
+        },
+        "Mrx Manifest Version": {
+            "type": "string"
+        },
+        "MRXTool": {
+            "type": "string"
+        },
+        "Data Streams": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/Partition"
+            },
+            "description": "The coordiantes of the location to be added, a->p is the x axis, 0->9 are the allowed y axis parameters. Alternativley an alias can be used if already declared"
+        },
+        "History": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/History"
+            },
+            "description": "The coordiantes of the location to be added, a->p is the x axis, 0->9 are the allowed y axis parameters. Alternativley an alias can be used if already declared"
+        }
+    },
+    "required": [
+        "UMID"
+    ],
+    "additionalProperties": false,
+    "$defs": {
+        "Partition": {
+            "properties": {
+                "Common Data Properties": {
+                    "type": "object",
+                    "properties": {
+                        "test": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "Essence": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/FileLayout"
+                    }
+                }
+            }
+        },
+        "FileLayout": {
+            "properties": {
+                "Hash": {
+                    "type": "string",
+                    "length": 64,
+                    "description": "The sha 256 of the data"
+                },
+                "DataOrigin": {
+                    "type": "string"
+                },
+                "EditDate": {
+                    "type": "string"
+                },
+                "Custom Meta Data": {
+                    "type": "object"
+                }
+            },
+            "required": [
+                "Hash"
+            ],
+            "additionalProperties": false
+        },
+        "History": {
+            "properties": {
+                "Mrx Manifest Version": {
+                    "type": "string"
+                },
+                "MRXTool": {
+                    "type": "string"
+                },
+                "UMID": {
+                    "type": "string",
+                    "description": "The UMID of the MRX file the manifest is attached to"
+                },
+                "Data Streams": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/Partition"
+                    },
+                    "description": "The coordiantes of the location to be added, a->p is the x axis, 0->9 are the allowed y axis parameters. Alternativley an alias can be used if already declared"
+                },
+                "SnapShot Date": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "UMID",
+                "SnapShot Date"
+            ],
+            "additionalProperties": false
+        }
+    }
+}

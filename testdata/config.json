@@ -1,0 +1,24 @@
+{
+
+    "Configuration" : {
+        "MrxVersion": "pre alpha",
+        "DefaultStreamProperties": {
+            "FrameRate" : "24/1",
+            "Type" : "some data to track"
+        },
+        "StreamProperties" : {
+            "1":{
+                "FrameRate" : "24/1",
+                "Type" : "CameraComponent"
+            },
+            "2": {
+                "FrameRate"  : "static",
+                "Type" : "Camera Schema"
+            },
+            "3": {
+                "FrameRate"  : "static",
+                "Type" : "Static Tail Data"
+            }
+        }
+    }
+}
