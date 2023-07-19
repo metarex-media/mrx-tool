@@ -712,7 +712,7 @@ func (mw *MxfWriter) encodeRoundTrip(setup *Roundtrip, manifesters []Overview, m
 	prevManifestTag := TaggedManifest{Manifest: prevManifest}
 
 	UUIDb, _ := mw.writeInformation.mrxUMID.MarshalText()
-	manifest := Manifest{UMID: string(UUIDb), MRXTool: mrxTool, Version: " 0. 0. 0.1"}
+	manifest := Manifest{UMID: string(UUIDb), MRXTool: mrxTool, Version: " 0.0.0.1"}
 
 	//if it a manifest has been found
 	if !reflect.DeepEqual(prevManifestTag.Manifest, Manifest{}) {
@@ -737,16 +737,6 @@ func (mw *MxfWriter) encodeRoundTrip(setup *Roundtrip, manifesters []Overview, m
 	// update the set up to contain the mainfest information
 	setup.Manifest = manifest
 
-	// STREAM ID reoredering
-	/*
-
-		push the streamset up through
-		if reorder = true
-
-
-
-
-	*/
 
 	if mrxChans.reorder {
 
