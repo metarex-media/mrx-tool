@@ -5,6 +5,7 @@ package encode
 import (
 	"bytes"
 	"context"
+	_ "embed"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -12,6 +13,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/peterbourgon/mergemap"
+	"github.com/xeipuuv/gojsonschema"
 	"gitlab.com/mm-eng/generatedmrx"
 	"golang.org/x/sync/errgroup"
 )
@@ -88,6 +91,7 @@ func (mw *MxfWriter) Write(w io.Writer, encodeOptions *MrxEncodeOptions) error {
 	}
 
 	//this is where the config update would come in
+	configUpdate(&round.Config, encodeOptions.ConfigOverWrite)
 
 	// merge the user options and the parsed information
 	cleanStream := streamClean(essenceStream, round.Config)
@@ -251,6 +255,65 @@ func streamClean(foundStream StreamInformation, userStream Configuration) mrxLay
 	fullStream.dataStreams = cleanEssence
 
 	return fullStream
+}
+
+//go:embed jsonschema/configuration_Schema.json
+var configSchema []byte
+
+func configUpdate(base *Configuration, overWrite []byte) error {
+
+	if len(overWrite) == 0 {
+		return nil
+	}
+
+	// run the schema on it here
+	// also make the schema https://github.com/gojsonschema/gojsonschema
+	schema := gojsonschema.NewBytesLoader(configSchema)
+	document := gojsonschema.NewBytesLoader(overWrite)
+
+	result, err := gojsonschema.Validate(schema, document)
+	if err != nil {
+		return err
+	}
+
+	if !result.Valid() {
+		errs := "The overwriting bytes are not valid. see errors :\n"
+		for _, desc := range result.Errors() {
+			errs += fmt.Sprintf("- %s\n", desc)
+		}
+
+		return fmt.Errorf("%v", errs)
+	}
+
+	update := make(map[string]any)
+
+	err = json.Unmarshal(overWrite, &update)
+
+	if err != nil {
+		return fmt.Errorf("error handling the configuration overwrite bytes: %v", err)
+	}
+
+	baseToMap, _ := json.Marshal(base)
+	baseMap := make(map[string]any)
+	err = json.Unmarshal(baseToMap, &baseMap)
+
+	if err != nil {
+		return fmt.Errorf("error setting up the base configuration to merge: %v", err)
+	}
+
+	merged := mergemap.Merge(baseMap, update)
+
+	combinedBytes, _ := json.Marshal(merged)
+
+	//json.Unmarshal(combinedBytes, base)
+
+	err = json.Unmarshal(combinedBytes, base)
+
+	if err != nil {
+		return fmt.Errorf("error updating the configuration with the merged changes: %v", err)
+	}
+
+	return nil
 }
 
 type partitionPosition struct {
@@ -736,7 +799,6 @@ func (mw *MxfWriter) encodeRoundTrip(setup *Roundtrip, manifesters []Overview, m
 
 	// update the set up to contain the mainfest information
 	setup.Manifest = manifest
-
 
 	if mrxChans.reorder {
 

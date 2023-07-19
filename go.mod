@@ -9,6 +9,7 @@ require gitlab.com/mm-eng/generatedmrx v0.0.0-20230707092127-2b056536b916
 require (
 	github.com/cbroglie/mustache v1.4.0
 	github.com/google/uuid v1.3.0
+	github.com/peterbourgon/mergemap v0.0.1
 	github.com/smartystreets/goconvey v1.8.0
 	github.com/spf13/cobra v1.7.0
 	github.com/xeipuuv/gojsonschema v1.2.0
