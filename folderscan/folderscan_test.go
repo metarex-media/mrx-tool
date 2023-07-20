@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"syscall"
 	"testing"
 
 	"github.com/cbroglie/mustache"
@@ -82,7 +83,7 @@ func TestEncodeErrors(t *testing.T) {
 
 	targets := []string{"./testdata/errors/not/a/real/location", "./testdata/errors/mixedEssence"}
 	expectedErr := []string{
-		"Error reading folder {{location}} : open {{location}}: The system cannot find the path specified.",
+		fmt.Sprintf("Error reading folder {{location}} : open {{location}}: %v", syscall.ENOENT), //syscall.ENOENT is used when a file is not found
 		"Mixed essence file types found in {{location}}, please ensure they are all the same type"}
 
 	for i, target := range targets {
@@ -114,7 +115,7 @@ func TestEncodeErrors(t *testing.T) {
 	f.Close()
 
 	errMessage, _ := mustache.Render(
-		"Error extracting data to encode from {{location}}:open {{location}}: The system cannot find the file specified.", map[string]string{"location": target})
+		fmt.Sprintf("Error extracting data to encode from {{location}}:open {{location}}: %v", syscall.ENOENT), map[string]string{"location": target})
 	// run the test as if it was being run  by encode, checking each step of the process.
 
 	Convey("Checking that the pipe errors are returned", t, func() {
