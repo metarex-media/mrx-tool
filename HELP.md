@@ -49,8 +49,8 @@ The recommended workflow for encoding mrx files using this tool, is to generate
 your metadata channels into an ordered file system with format described below.
 Then using the CLI, encode that file system as an mrx file, ensuring to declare
 the frame rates of in the configuration file. The default frame rate is 24 fps
-if no configuration is found. The first framewrapped metadata encountoured in
-the encoding process sets the frame rate for the rest of the framewrapped data.
+if no configuration is found. The first frame wrapped metadata encountered in
+the encoding process sets the frame rate for the rest of the frame wrapped data.
 
 When generating your data into the file system, for it to be encoded, the
 following file system layout is to be used. The folder naming layout has a
@@ -59,7 +59,7 @@ to hold only one type of data, please note a channel will be multiplexed with
 other channels if these contain frame wrapped data. The channels must start as
 0000Stream and increase incrementally, so they can be configuration. Then each
 child folder is numerically ordered from 0000 to 9999 with the naming format
-0000mrxrip, these are partitions to split up the data when the count excedes
+0000mrxrip, these are partitions to split up the data when the count exceeds
 9999 and may not represent the partitions in the generated mxf file. Where each
 folder is to contain only one type of data (e.g. Binary Unclocked Data), which
 is numerically listed. The data files within the folder must follow the naming
@@ -92,7 +92,7 @@ or
 The mrx file can be validated by running the CLI again to extract the contents,
 including the generated [manifest](#the-manifest), the extracted file system
 should match the layout of the input filesystem. However due to the internal mrx
-layout described [here](#design-documentation), the channels may be reodered
+layout described [here](#design-documentation), the channels may be reordered
 when being encoded and decoded again, this will occur if clip wrapped data is
 placed before frame wrapped data.
 
@@ -168,7 +168,7 @@ metadata about the individual pieces of metadata in the mrx file. The order of
 the metadata in the manifest matches the order it is found in the mrx file.
 
 The manifest layout contains several nested layers of metadata, for the overall
-file, the inividual metadata channels and the individual metadata files in the
+file, the individual metadata channels and the individual metadata files in the
 channel. The top segment of the manifest contains the metadata of the mrx file
 and the tool that made the manifest. Then the channel field, which is an array
 of the individual channels, these share a "Common Data Properties" key that
@@ -189,14 +189,14 @@ example is below.
 
 When encoding the file, there are optional parameters to tune the manifest.
 
-Manifest History - if the mrx file is generated from metadata with a prexisiting
+Manifest History - if the mrx file is generated from metadata with a pre existing
 manifest, then it will be added on to the history metadata field of the new
 manifest. The user can limit the number of manifests in the history field so
 that the manifest does not contain redundant information.
 
 ## Design Documentation
 
-The overall deisgn utilises a few current mxf methods and standards for wrapping
+The overall design utilises a few current mxf methods and standards for wrapping
 data, with some new additions being used when these do not cover our use cases.
 With the generated files following the op1a operational pattern.
 
@@ -208,14 +208,14 @@ aligned grouping, where the frame rate content is declared first. As in SMPTE
 The essence data keys cover:
 
 1. The type of metadata,  frame wrapped etc.
-2. The essence count in that content package, e.g. thrid frame wrapped data
+2. The essence count in that content package, e.g. third frame wrapped data
    type.
 3. The count of that essence type (up to 127) in a content package.
 
 The key frame rate essence is produced first, giving a single content package,
-with the rest of the contentpackages trailing. There may be several keys of
+with the rest of the content packages trailing. There may be several keys of
 essence in a single content package. A single frame (at the frame rate set by
-the the first essence) is encompassed in a single contentpackage, which may
+the the first essence) is encompassed in a single content package, which may
 contain several essence keys, until a new key frame essence is encountered. The
 essence keys for the frame wrapped data, follow the generic container pattern.
 Each essence key one has an essence count,  at the 14 byte, with a count from 1
@@ -223,7 +223,7 @@ to 127 the essence count is the number of essence items in the content package .
 The 16th byte is the element number, this is a unique value amongst essence keys
 of the same type. The element number is the incremental count of this element
 type, if three frame wrapped data elements are present then they will have
-element numbers of 00, 01 and 02 respectivley.
+element numbers of 00, 01 and 02 respectively.
 
 The IXSD essence key from does not follow this format. The 14th byte is the
 element number and the 16th byte is the element type. This is different from the
@@ -232,7 +232,7 @@ the essence count and the 16th byte is the element number.
 
 Clip wrapped data follows the methods layed out in RP2057 and rdd 47, where text
 based documents are stored in generic partitions. Each generic partition has an
-incremental stream id, they are placed immediatley before the manifest
+incremental stream id, they are placed immediately before the manifest
 partition. Then the footer partition follows the manifest partition.
 
 The essence keys for generic stream partitions follow RP2057 and ST 410, with
@@ -250,11 +250,12 @@ The timing rules are as follows:
 
 ## Metarex Glossary
 
-Channel - an instance of metadata with a single mrxId, channels of metadata may
-be multiplexed into a single mrx stream. ChannelID - UMID + SID  + UID , the
-UID in this case is the essence key within the stream. This is the ID of a
-Channel PositionID - channelID + (frame * editrate), the ID of a frame of
+- Channel - an instance of metadata with a single mrxId, channels of metadata may
+be multiplexed into a single mrx stream.
+- ChannelID - UMID + SID  + UID , the
+UID in this case is the essence key within the stream.
+- Channel PositionID - channelID + (frame * editrate), the ID of a frame of
 metadata within a Channel, this will relate to a content package InstanceID -
 PostionID + (if contentPackage > 1) sub frame edit rate, the ID of a specific
-file within a frame, If the content package is a single item then the poistionID
+file within a frame, If the content package is a single item then the positionID
 and ChannelID are the same.
