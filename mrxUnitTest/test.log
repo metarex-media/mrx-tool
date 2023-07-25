@@ -1,0 +1,51 @@
+Running Partiton 0 Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+	Checking the previous partition pointer is the correct byte position
+        Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Partiton 1 Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+	Checking the previous partition pointer is the correct byte position
+        Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Partiton 2 Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+	Checking the previous partition pointer is the correct byte position
+        Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Partiton 3 Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+	Checking the previous partition pointer is the correct byte position
+        Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Partiton 4 Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+	Checking the previous partition pointer is the correct byte position
+        Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Random Index Pack Tests tests:
+	Checking the partition positions in the file match those in the supplied random index pack
+        Fail!
+            The generated index pack did not match
+            Expected
+                <[]mrxUnitTest.RIP | len:5, cap:8>: [
+                    {sid: 0, byteOffset: 0},
+                    {sid: 1, byteOffset: 2243},
+                    {sid: 1, byteOffset: 21103},
+                    {sid: 2, byteOffset: 21535},
+                    {sid: 0, byteOffset: 27541},
+                ]
+            to equal
+                <[]mrxUnitTest.RIP | len:5, cap:8>: [
+                    {sid: 0, byteOffset: 0},
+                    {sid: 2, byteOffset: 2243},
+                    {sid: 2, byteOffset: 21103},
+                    {sid: 2, byteOffset: 21535},
+                    {sid: 0, byteOffset: 27541},
+                ]
+Ran 1 tests: Passed:0 , Failed: 1

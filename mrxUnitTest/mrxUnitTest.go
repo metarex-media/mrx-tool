@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"os"
 	"sync"
 
 	"github.com/metarex-media/mrx-tool/klv"
@@ -116,6 +117,9 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 
 	var wg sync.WaitGroup
 	var contents layout
+	f, _ := os.Create("test.log")
+	contents.testLog = f
+
 	wg.Add(1)
 
 	go func() {
@@ -141,9 +145,9 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 			if partitionName(klvItem.Key) == "060e2b34.020501  .0d010201.01    00" {
 
 				if klvItem.Key[13] == 17 {
-					fmt.Println("RIP", klvItem.TotalLength())
+					// fmt.Println("RIP", klvItem.TotalLength())
 					contents.TotalByteCount += klvItem.TotalLength()
-					ripHandle(klvItem)
+					contents.ripHandle(klvItem)
 					// handle the rip
 
 					// then hoover the rest of the essence saying 25 bytes were found after the end of  file
@@ -185,7 +189,7 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 
 	// collect any errors from the decode process
 	err := errs.Wait()
-	fmt.Println(err, "potential error here")
+	// fmt.Println(err, "potential error here")
 	if err != nil {
 		// log the fatal error
 		return nil, err
@@ -193,19 +197,24 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 
 	// post processing data if the klv hasn't returned an error
 	// count of partitions
-	fmt.Println(contents.TotalByteCount, 29865)
+
 	return &MrxContents{}, nil
 }
 
 type layout struct {
-	current *mxfPartition
+	current int
 	// log of partitions []array -> for comparing with the rip - also count footer
 	// and headers etc and generic stream partition
 	// current key layout map[essenceKeys]incase a streamID is replaced
 
 	// MRX Contents
-
 	TotalByteCount int
+
+	// completed tests body here There needs to be this
+	Rip []RIP
+
+	// error save destination
+	testLog io.Writer
 }
 
 type EssenceKeys struct {
@@ -229,12 +238,6 @@ type MrxContents struct {
 type StreamContents struct {
 	SID       int
 	FrameKeys [][]byte //so i can discern the order
-}
-
-func ripHandle(*klv.KLV) {
-
-	// check the positions it gives with the logged positions
-
 }
 
 func essHandle(*klv.KLV) {

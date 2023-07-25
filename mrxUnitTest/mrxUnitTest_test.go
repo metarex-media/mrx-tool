@@ -5,18 +5,20 @@ import (
 	"os"
 	"testing"
 
+	// . "github.com/onsi/ginkgo"
+	// . "github.com/onsi/gomega"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestFileRead(t *testing.T) {
 
 	// run two different test files with and without index tables
-	mrxFiles := []string{"../testdata/rexy_sunbathe_mrx.mxf", "../testdata/Disney_Test_Patterns_ISXD.mxf"}
+	mrxFiles := []string{"../testdata/myfirst.mrx", "../testdata/rexy_sunbathe_mrx.mxf"}
 	//hashes := []string{"4ebf90df1fd10d3cba689f2a313d6c1dc04b23353139ce9441c54d583679b5d6", "e9aa941ee55166c81171f9da12f4b0fcd03b20bbb4dc38fa3b1586ff8e3f4537"}
 
-	for i, mrx := range mrxFiles {
+	for _, mrx := range mrxFiles {
 		//	var resultsBuffer bytes.Buffer
-		fmt.Println(i)
+		// fmt.Println(i)
 		//	streamer, _ := os.Open(mrx)
 		f, _ := os.Open(mrx)
 		genErr := decode(f)
@@ -35,4 +37,5 @@ func TestFileRead(t *testing.T) {
 		})
 
 	}
+
 }

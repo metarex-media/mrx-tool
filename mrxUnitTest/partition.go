@@ -5,6 +5,8 @@ import (
 	"fmt"
 
 	"github.com/metarex-media/mrx-tool/klv"
+
+	. "github.com/onsi/gomega"
 )
 
 func fullName(namebytes []byte) string {
@@ -36,10 +38,26 @@ func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error
 	//	shift, lengthlength := klvItem
 
 	partitionLayout := partitionExtract(klvItem)
-	fmt.Println(partitionLayout.ThisPartition, l.TotalByteCount)
-	fmt.Println(klvItem.TotalLength())
+
+	seg := newSegmentTest(l.testLog, fmt.Sprintf("Partiton %0d Tests", len(l.Rip))) // the length of the RIP gives the relative partition count
+	tester := NewGomegaWithT(seg)
+
+	seg.Test("Checking the this partition pointer matches the actual byte offset of the file", func() bool {
+		return tester.Expect(uint64(l.TotalByteCount)).To(Equal(partitionLayout.ThisPartition),
+			fmt.Sprintf("The byte offset %v, did not match the this partition value %v", l.TotalByteCount, partitionLayout.ThisPartition))
+	})
+
+	seg.Test("Checking the previous partition pointer is the correct byte position", func() bool {
+		return tester.Expect(uint64(l.current)).To(Equal(partitionLayout.PreviousPartition),
+			fmt.Sprintf("The previous partition at %v, did not match the declared previous partition value %v", l.current, partitionLayout.PreviousPartition))
+	})
+
+	//  implement a test case here
+	//	fmt.Println(partitionLayout.ThisPartition, l.TotalByteCount)
+	l.Rip = append(l.Rip, RIP{byteOffset: uint64(l.TotalByteCount), sid: partitionLayout.BodySID})
+	//	fmt.Println(klvItem.TotalLength())
+	l.current = l.TotalByteCount
 	l.TotalByteCount += klvItem.TotalLength()
-	l.current = &partitionLayout
 
 	// flush out the header metadata
 	// as it is not used yet (apart from the primer)
@@ -63,7 +81,7 @@ func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error
 		l.TotalByteCount += index.TotalLength()
 	}
 	// position += md.currentContainer.HeaderLength
-
+	seg.result()
 	return nil
 }
 
@@ -157,3 +175,50 @@ func partitionExtract(partionKLV *klv.KLV) mxfPartition {
 	//	fmt.Println(partPack, totalLength, "My partition oack")
 	return partPack
 }
+
+type RIP struct {
+	sid        uint32
+	byteOffset uint64
+}
+
+func (l *layout) ripHandle(rip *klv.KLV) {
+
+	// check the positions it gives with the logged positions
+	length, _ := klv.BerDecode(rip.Length)
+
+	ripLength := length - 4
+
+	var gotRip []RIP
+
+	for i := 0; i < ripLength; i += 12 {
+		gotRip = append(gotRip, RIP{sid: order.Uint32(rip.Value[i : i+4]), byteOffset: order.Uint64(rip.Value[i+4 : i+12])})
+	}
+
+	//	testing.T
+	// GinkgoWriter
+	// var t *testing.T
+	//	defer GinkgoRecover()
+	//RegisterFailHandler(Fail)
+	seg := newSegmentTest(l.testLog, "Random Index Pack Tests")
+	res := NewGomegaWithT(seg)
+
+	// res.Expect()
+
+	seg.Test("Checking the partition positions in the file match those in the supplied random index pack", func() bool {
+		return res.Expect(l.Rip).To(Equal(gotRip), "The generated index pack did not match")
+	})
+
+	//fmt.Println(res.Expect(l.Rip).To(Equal(gotRip)), "some ingo", "more desc", "lots of stuff", 342)
+	//fmt.Println(res.Expect(4).To(Equal(6), "some ingo"))
+
+	//	fmt.Println("MIDDLE")
+
+	// fmt.Println(gotRip)
+	//Expect(l.Rip).To(Equal(gotRip))
+	seg.result()
+}
+
+/*
+
+use go convey assertions with wrapping in the testing.T method?
+*/
