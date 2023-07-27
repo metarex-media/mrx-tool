@@ -4,17 +4,13 @@ Running Partiton 0 Tests tests:
 	Checking the previous partition pointer is the correct byte position
         Pass
 Ran 2 tests: Passed:2 , Failed: 0
-Running Partiton 1 Essence Tests tests:
-	Checking the essence keys do not change order
-        Pass
-Ran 1 tests: Passed:1 , Failed: 0
 Running Partiton 1 Tests tests:
 	Checking the this partition pointer matches the actual byte offset of the file
         Pass
 	Checking the previous partition pointer is the correct byte position
         Pass
 Ran 2 tests: Passed:2 , Failed: 0
-Running Partiton 2 Essence Tests tests:
+Running Partiton 1 Essence Tests tests:
 	Checking the essence keys do not change order
         Pass
 Ran 1 tests: Passed:1 , Failed: 0
@@ -24,7 +20,7 @@ Running Partiton 2 Tests tests:
 	Checking the previous partition pointer is the correct byte position
         Pass
 Ran 2 tests: Passed:2 , Failed: 0
-Running Partiton 3 Essence Tests tests:
+Running Partiton 2 Essence Tests tests:
 	Checking the essence keys do not change order
         Pass
 Ran 1 tests: Passed:1 , Failed: 0
@@ -34,7 +30,7 @@ Running Partiton 3 Tests tests:
 	Checking the previous partition pointer is the correct byte position
         Pass
 Ran 2 tests: Passed:2 , Failed: 0
-Running Partiton 4 Essence Tests tests:
+Running Partiton 3 Essence Tests tests:
 	Checking the essence keys do not change order
         Pass
 Ran 1 tests: Passed:1 , Failed: 0
@@ -44,10 +40,6 @@ Running Partiton 4 Tests tests:
 	Checking the previous partition pointer is the correct byte position
         Pass
 Ran 2 tests: Passed:2 , Failed: 0
-Running Partiton 5 Essence Tests tests:
-	Checking the essence keys do not change order
-        Pass
-Ran 1 tests: Passed:1 , Failed: 0
 Running Random Index Pack Tests tests:
 	Checking the partition positions in the file match those in the supplied random index pack
         Fail!

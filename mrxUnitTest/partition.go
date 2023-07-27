@@ -34,9 +34,13 @@ func partitionName(namebytes []byte) string {
 }
 
 func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error {
+	// maybe hadle everything on a partition basis
+
 	// /	e.essenceCount = 0
 	//	shift, lengthlength := klvItem
 
+	// TODO break into three sections for handling the partitoins on a per partiton basis
+	// and defer the writing in the order they should happen
 	partitionLayout := partitionExtract(klvItem)
 
 	seg := newSegmentTest(l.testLog, fmt.Sprintf("Partiton %0d Tests", len(l.Rip))) // the length of the RIP gives the relative partition count
@@ -53,6 +57,7 @@ func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error
 			fmt.Sprintf("The previous partition at %v, did not match the declared previous partition value %v", l.currentPartPos, partitionLayout.PreviousPartition))
 	})
 
+	l.currentPartition = &partitionLayout
 	//  implement a test case here
 	//	fmt.Println(partitionLayout.ThisPartition, l.TotalByteCount)
 	l.Rip = append(l.Rip, RIP{byteOffset: uint64(l.TotalByteCount), sid: partitionLayout.BodySID})
@@ -73,8 +78,8 @@ func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error
 
 	}
 
-	// @TODO check the flushed header metadata matches the length it says
-
+	// @TODO check the flushed header metadata matches the length it says it
+	// and implement more style tests with it
 	l.TotalByteCount += flushedMeta
 	//hoover up the indextable and remove it to prevent it being mistaken as essence
 	if partitionLayout.IndexTable {
@@ -113,6 +118,11 @@ type mxfPartition struct {
 
 var (
 	order = binary.BigEndian
+
+	headerPartition        = "header"
+	bodyPartition          = "body"
+	genericStreamPartition = "generic stream partition"
+	footerPartition        = "footer"
 )
 
 func partitionExtract(partionKLV *klv.KLV) mxfPartition {
@@ -123,17 +133,17 @@ func partitionExtract(partionKLV *klv.KLV) mxfPartition {
 	switch partionKLV.Key[13] {
 	case 02:
 		//header
-		partPack.PartitionType = "header"
+		partPack.PartitionType = headerPartition
 	case 03:
 		//body
 		if partionKLV.Key[14] == 17 {
-			partPack.PartitionType = "generic stream partition"
+			partPack.PartitionType = genericStreamPartition
 		} else {
-			partPack.PartitionType = "body"
+			partPack.PartitionType = bodyPartition
 		}
 	case 04:
 		//footer
-		partPack.PartitionType = "footer"
+		partPack.PartitionType = footerPartition
 	default:
 		//is nothing
 		partPack.PartitionType = "invalid"

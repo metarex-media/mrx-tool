@@ -147,7 +147,7 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 				// test the previous partitions essence as the final step
 				// if len(contents.RipLayout) ==0 and the cache length !=0 emit an error that essence was found first
 
-				if len(contents.Rip) != 0 {
+				if len(contents.cache.keys) != 0 {
 					contents.essenceTests()
 				}
 
@@ -223,7 +223,7 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 
 type layout struct {
 	currentPartPos   int
-	currentPartition *Partition
+	currentPartition *mxfPartition
 	// log of partitions []array -> for comparing with the rip - also count footer
 	// and headers etc and generic stream partition
 	// current key layout map[essenceKeys]incase a streamID is replaced

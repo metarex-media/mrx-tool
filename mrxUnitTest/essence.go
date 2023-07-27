@@ -27,7 +27,7 @@ type pattern struct {
 }
 
 func (l *layout) essenceTests() {
-	test := newSegmentTest(l.testLog, fmt.Sprintf("Partiton %0d Essence Tests", len(l.Rip)))
+	test := newSegmentTest(l.testLog, fmt.Sprintf("Partiton %0d Essence Tests", len(l.Rip)-1)) //-1 for the partition has been extracted
 	defer test.result()
 	tester := NewGomegaWithT(test)
 
@@ -61,6 +61,18 @@ func (l *layout) essenceTests() {
 	//			fmt.Sprintf("The byte offset %v, did not match the this partition value %v", l.TotalByteCount, partitionLayout.ThisPartition))
 	//	})
 
+
+	// are there any exact tests in the 
+	switch l.currentPartition.PartitionType {
+	case bodyPartition:
+	case genericStreamPartition:
+		/*
+			check the length if more than one bit is found
+		*/
+	default:
+		// do nothing
+	}
+	// reset the cache at the end
 	l.cache.keys = make([][]byte, 0)
 }
 
