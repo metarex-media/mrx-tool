@@ -112,7 +112,6 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 	//initiate the klv stream
 	errs.Go(func() error {
 		return klv.BufferWrap(stream, buffer, size)
-
 	})
 
 	var wg sync.WaitGroup
@@ -122,12 +121,13 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 
 	wg.Add(1)
 
+	// @TODO set this up with errs so test breaking errors are returned
 	go func() {
 
 		defer func() {
+			// this only runs when an error occurs to stop blocking
 			_, klvOpen := <-buffer
 			for klvOpen {
-				fmt.Println("EARLY FINISH")
 				_, klvOpen = <-buffer
 			}
 
@@ -143,6 +143,13 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 			// check if it is a partition key
 			// if not its presumed to be essence
 			if partitionName(klvItem.Key) == "060e2b34.020501  .0d010201.01    00" {
+
+				// test the previous partitions essence as the final step
+				// if len(contents.RipLayout) ==0 and the cache length !=0 emit an error that essence was found first
+
+				if len(contents.Rip) != 0 {
+					contents.essenceTests()
+				}
 
 				if klvItem.Key[13] == 17 {
 					// fmt.Println("RIP", klvItem.TotalLength())
@@ -163,6 +170,18 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 					}
 				}
 			} else {
+
+				contents.essenceCheck(klvItem)
+				// some key handling
+
+				/*
+					seg testing function to be closed when the result is run
+					a new test is generated for the keys of partition
+
+					test the keys as they come in
+					and stash some in the partition cache for later
+				*/
+
 				contents.TotalByteCount += klvItem.TotalLength()
 				// decode the essence key - don't look in it what the data is
 				/*
@@ -192,6 +211,7 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 	// fmt.Println(err, "potential error here")
 	if err != nil {
 		// log the fatal error
+		// errors do not contribute to the testing process
 		return nil, err
 	}
 
@@ -202,7 +222,8 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 }
 
 type layout struct {
-	current int
+	currentPartPos   int
+	currentPartition *Partition
 	// log of partitions []array -> for comparing with the rip - also count footer
 	// and headers etc and generic stream partition
 	// current key layout map[essenceKeys]incase a streamID is replaced
@@ -213,7 +234,12 @@ type layout struct {
 	// completed tests body here There needs to be this
 	Rip []RIP
 
+	Cache *context.Context // any
+
+	cache essenceCache
 	// error save destination
+	// @TODO upgrade so that writers are dispersed to preserve the order
+	// add some methods new writer branch or the likes
 	testLog io.Writer
 }
 

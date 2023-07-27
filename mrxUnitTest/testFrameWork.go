@@ -19,7 +19,7 @@ func newSegmentTest(dest io.Writer, segmentHeader string) *segmentTest {
 
 }
 
-func (s segmentTest) result() {
+func (s *segmentTest) result() {
 
 	s.log.Write([]byte(fmt.Sprintf("Running %s tests:\n", s.header)))
 	s.log.Write(s.testBuffer.Bytes())

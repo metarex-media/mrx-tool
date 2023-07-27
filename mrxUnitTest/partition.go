@@ -40,6 +40,7 @@ func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error
 	partitionLayout := partitionExtract(klvItem)
 
 	seg := newSegmentTest(l.testLog, fmt.Sprintf("Partiton %0d Tests", len(l.Rip))) // the length of the RIP gives the relative partition count
+	defer seg.result()
 	tester := NewGomegaWithT(seg)
 
 	seg.Test("Checking the this partition pointer matches the actual byte offset of the file", func() bool {
@@ -48,15 +49,15 @@ func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error
 	})
 
 	seg.Test("Checking the previous partition pointer is the correct byte position", func() bool {
-		return tester.Expect(uint64(l.current)).To(Equal(partitionLayout.PreviousPartition),
-			fmt.Sprintf("The previous partition at %v, did not match the declared previous partition value %v", l.current, partitionLayout.PreviousPartition))
+		return tester.Expect(uint64(l.currentPartPos)).To(Equal(partitionLayout.PreviousPartition),
+			fmt.Sprintf("The previous partition at %v, did not match the declared previous partition value %v", l.currentPartPos, partitionLayout.PreviousPartition))
 	})
 
 	//  implement a test case here
 	//	fmt.Println(partitionLayout.ThisPartition, l.TotalByteCount)
 	l.Rip = append(l.Rip, RIP{byteOffset: uint64(l.TotalByteCount), sid: partitionLayout.BodySID})
 	//	fmt.Println(klvItem.TotalLength())
-	l.current = l.TotalByteCount
+	l.currentPartPos = l.TotalByteCount
 	l.TotalByteCount += klvItem.TotalLength()
 
 	// flush out the header metadata
@@ -71,6 +72,9 @@ func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error
 		flushedMeta += flush.TotalLength()
 
 	}
+
+	// @TODO check the flushed header metadata matches the length it says
+
 	l.TotalByteCount += flushedMeta
 	//hoover up the indextable and remove it to prevent it being mistaken as essence
 	if partitionLayout.IndexTable {
@@ -81,7 +85,7 @@ func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error
 		l.TotalByteCount += index.TotalLength()
 	}
 	// position += md.currentContainer.HeaderLength
-	seg.result()
+
 	return nil
 }
 
@@ -122,7 +126,11 @@ func partitionExtract(partionKLV *klv.KLV) mxfPartition {
 		partPack.PartitionType = "header"
 	case 03:
 		//body
-		partPack.PartitionType = "body"
+		if partionKLV.Key[14] == 17 {
+			partPack.PartitionType = "generic stream partition"
+		} else {
+			partPack.PartitionType = "body"
+		}
 	case 04:
 		//footer
 		partPack.PartitionType = "footer"
@@ -200,6 +208,7 @@ func (l *layout) ripHandle(rip *klv.KLV) {
 	//	defer GinkgoRecover()
 	//RegisterFailHandler(Fail)
 	seg := newSegmentTest(l.testLog, "Random Index Pack Tests")
+	defer seg.result()
 	res := NewGomegaWithT(seg)
 
 	// res.Expect()
@@ -215,7 +224,7 @@ func (l *layout) ripHandle(rip *klv.KLV) {
 
 	// fmt.Println(gotRip)
 	//Expect(l.Rip).To(Equal(gotRip))
-	seg.result()
+
 }
 
 /*
