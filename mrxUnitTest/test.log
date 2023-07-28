@@ -3,13 +3,17 @@ Running Partiton 0 Tests tests:
         Pass
 	Checking the previous partition pointer is the correct byte position
         Pass
-Ran 2 tests: Passed:2 , Failed: 0
+	Checking the header metadata count matches the actual count of the metadata
+        Pass
+Ran 3 tests: Passed:3 , Failed: 0
 Running Partiton 1 Tests tests:
 	Checking the this partition pointer matches the actual byte offset of the file
         Pass
 	Checking the previous partition pointer is the correct byte position
         Pass
-Ran 2 tests: Passed:2 , Failed: 0
+	Checking the header metadata count matches the actual count of the metadata
+        Pass
+Ran 3 tests: Passed:3 , Failed: 0
 Running Partiton 1 Essence Tests tests:
 	Checking the essence keys do not change order
         Pass
@@ -19,7 +23,9 @@ Running Partiton 2 Tests tests:
         Pass
 	Checking the previous partition pointer is the correct byte position
         Pass
-Ran 2 tests: Passed:2 , Failed: 0
+	Checking the header metadata count matches the actual count of the metadata
+        Pass
+Ran 3 tests: Passed:3 , Failed: 0
 Running Partiton 2 Essence Tests tests:
 	Checking the essence keys do not change order
         Pass
@@ -29,7 +35,9 @@ Running Partiton 3 Tests tests:
         Pass
 	Checking the previous partition pointer is the correct byte position
         Pass
-Ran 2 tests: Passed:2 , Failed: 0
+	Checking the header metadata count matches the actual count of the metadata
+        Pass
+Ran 3 tests: Passed:3 , Failed: 0
 Running Partiton 3 Essence Tests tests:
 	Checking the essence keys do not change order
         Pass
@@ -39,7 +47,9 @@ Running Partiton 4 Tests tests:
         Pass
 	Checking the previous partition pointer is the correct byte position
         Pass
-Ran 2 tests: Passed:2 , Failed: 0
+	Checking the header metadata count matches the actual count of the metadata
+        Pass
+Ran 3 tests: Passed:3 , Failed: 0
 Running Random Index Pack Tests tests:
 	Checking the partition positions in the file match those in the supplied random index pack
         Fail!

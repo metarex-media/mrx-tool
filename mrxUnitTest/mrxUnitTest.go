@@ -237,6 +237,13 @@ type layout struct {
 	Cache *context.Context // any
 
 	cache essenceCache
+	/*
+	things to cache:
+		partition positions (the rip)
+		essence per partition (which is then removed per partition)
+		the primer pack
+
+	*/
 	// error save destination
 	// @TODO upgrade so that writers are dispersed to preserve the order
 	// add some methods new writer branch or the likes

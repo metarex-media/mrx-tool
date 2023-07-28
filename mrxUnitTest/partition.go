@@ -39,7 +39,7 @@ func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error
 	// /	e.essenceCount = 0
 	//	shift, lengthlength := klvItem
 
-	// TODO break into three sections for handling the partitoins on a per partiton basis
+	// TODO break into three sections for handling the partitions on a per partition basis
 	// and defer the writing in the order they should happen
 	partitionLayout := partitionExtract(klvItem)
 
@@ -58,10 +58,7 @@ func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error
 	})
 
 	l.currentPartition = &partitionLayout
-	//  implement a test case here
-	//	fmt.Println(partitionLayout.ThisPartition, l.TotalByteCount)
 	l.Rip = append(l.Rip, RIP{byteOffset: uint64(l.TotalByteCount), sid: partitionLayout.BodySID})
-	//	fmt.Println(klvItem.TotalLength())
 	l.currentPartPos = l.TotalByteCount
 	l.TotalByteCount += klvItem.TotalLength()
 
@@ -72,20 +69,24 @@ func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error
 		flush, open := <-metadata
 
 		if !open {
-			return fmt.Errorf("Error when using klv data klv stream interrupted")
+			return fmt.Errorf("error when using klv data klv stream interrupted")
 		}
 		flushedMeta += flush.TotalLength()
 
 	}
 
-	// @TODO check the flushed header metadata matches the length it says it
-	// and implement more style tests with it
+	//check the header metadata count
+	seg.Test("Checking the header metadata count matches the actual count of the metadata", func() bool {
+		return tester.Expect(uint64(flushedMeta)).To(Equal(partitionLayout.HeaderByteCount),
+			fmt.Sprintf("The metadata count %v, did not match the declared partition header byte count %v", flushedMeta, partitionLayout.HeaderByteCount))
+	})
+
 	l.TotalByteCount += flushedMeta
 	//hoover up the indextable and remove it to prevent it being mistaken as essence
 	if partitionLayout.IndexTable {
 		index, open := <-metadata
 		if !open {
-			return fmt.Errorf("Error when using klv data klv stream interrupted")
+			return fmt.Errorf("error when using klv data klv stream interrupted")
 		}
 		l.TotalByteCount += index.TotalLength()
 	}

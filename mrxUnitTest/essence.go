@@ -51,6 +51,14 @@ func (l *layout) essenceTests() {
 			fmt.Sprintf("The essence keys deviate from their original pattern of %s", "xyz"))
 	})
 
+	// check the keys contain the correct element counts etc
+	// run an individual key checker on the pattern 
+	/*
+		for essKey := range pattern {
+			if key matches a metarex key then check
+		}
+	*/
+
 	// the case statment to the specific type of partiton
 
 	// if the current partition is a stream check the key length should be 1
@@ -61,8 +69,7 @@ func (l *layout) essenceTests() {
 	//			fmt.Sprintf("The byte offset %v, did not match the this partition value %v", l.TotalByteCount, partitionLayout.ThisPartition))
 	//	})
 
-
-	// are there any exact tests in the 
+	// are there any exact tests in the
 	switch l.currentPartition.PartitionType {
 	case bodyPartition:
 	case genericStreamPartition:
