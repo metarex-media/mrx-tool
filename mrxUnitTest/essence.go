@@ -1,12 +1,18 @@
 package mrxUnitTest
 
 import (
+	"bytes"
 	"fmt"
 	"reflect"
 
 	"github.com/metarex-media/mrx-tool/klv"
 	. "github.com/onsi/gomega"
 )
+
+var embeddedTextKey = [16]byte{06, 0x0e, 0x2b, 0x34, 01, 01, 01, 0x0c, 0x0d, 01, 05, 0b1101, 0b0000, 0, 0, 0}
+var embeddedBinaryKey = [16]byte{06, 0x0e, 0x2b, 0x34, 01, 01, 01, 0x0c, 0x0d, 01, 05, 0b1101, 0b0001, 0, 0, 0}
+var binaryClockedKey = [16]byte{0x06, 0x0E, 0x2B, 0x34, 0x01, 0x02, 0x01, 0x01, 0x0f, 0x02, 0x01, 0x01, 0x01, 0x7f, 0x00, 0x7f}
+var textClockedKey = [16]byte{0x06, 0x0E, 0x2B, 0x34, 0x01, 0x02, 0x01, 0x05, 0x0e, 0x09, 0x05, 0x02, 0x01, 0x7f, 0x01, 0x7f}
 
 type essenceCache struct {
 	keys [][]byte
@@ -19,6 +25,8 @@ func (l *layout) essenceCheck(ess *klv.KLV) {
 	// do the stashing then run all the checks afterwards
 	l.cache.keys = append(l.cache.keys, ess.Key)
 
+	// process the layout dynamically to reduce the need for post processing in the test
+
 }
 
 type pattern struct {
@@ -26,8 +34,19 @@ type pattern struct {
 	length  int
 }
 
+type presentKey struct {
+	clockBinary, clockFrame []int
+}
+
+// implement keys here
+// remove the need for an essence tag
 func (l *layout) essenceTests() {
-	test := newSegmentTest(l.testLog, fmt.Sprintf("Partiton %0d Essence Tests", len(l.Rip)-1)) //-1 for the partition has been extracted
+
+	if len(l.cache.keys) == 0 {
+		return // there's no essence to test!
+	}
+
+	test := newSegmentTest(l.testLog, fmt.Sprintf("Partition %0d Essence Tests", len(l.Rip)-1)) //-1 for the partition has been extracted
 	defer test.result()
 	tester := NewGomegaWithT(test)
 
@@ -52,7 +71,7 @@ func (l *layout) essenceTests() {
 	})
 
 	// check the keys contain the correct element counts etc
-	// run an individual key checker on the pattern 
+	// run an individual key checker on the pattern
 	/*
 		for essKey := range pattern {
 			if key matches a metarex key then check
@@ -68,6 +87,75 @@ func (l *layout) essenceTests() {
 	//		return tester.Expect(uint64(l.TotalByteCount)).To(Equal(partitionLayout.ThisPartition),
 	//			fmt.Sprintf("The byte offset %v, did not match the this partition value %v", l.TotalByteCount, partitionLayout.ThisPartition))
 	//	})
+
+	// check the keys are assigned to the right partition
+	// ensure there's no mix
+
+	// check the pattern for the moment
+	/*
+		pattern check algorithim
+		if key is a metarex ID - check that it is in the right header
+		check the element ad count. Add messages to the fail bit
+		fail message to be dynamically sonctructed
+
+		have a struct that tracks this for a pattern
+
+		update these bits
+		error message := pattern = has element count(2) should be 3 has position 01 should be 1
+	*/
+	errMessage := ""
+	fail := false
+	// embedded and clocked data
+	Pos := 0
+	// process chunks of elements at the time
+	for Pos < len(pattern.pattern) {
+
+		key := pattern.pattern[Pos]
+
+		keyCopy := make([]byte, len(key))
+		copy(keyCopy, key)
+		keyCopy[13], keyCopy[15] = 0x7f, 0x7f
+		// TODO split
+		if bytes.Equal(keyCopy, binaryClockedKey[:]) || bytes.Equal(keyCopy, textClockedKey[:]) {
+			if Pos == 0 && key[13] != 1 { //first element must have a count of 1
+				fail = true
+				errMessage += fmt.Sprintf("The first clocked element must have an element count of 1, received a value of %v for %s\n", key[13], fullName(key))
+			}
+
+			// @TODO inlcude a 0 bit as then the count is wrong
+			//
+			count := int(key[13])
+			checkPos := 1
+			for checkPos < count {
+				var nextKey []byte
+				// fence the array lengths
+				if len(pattern.pattern) < Pos+checkPos-1 {
+					nextKey = pattern.pattern[Pos+checkPos]
+				} else {
+					nextKey = []byte("a string to made to fail")
+				}
+
+				if !bytes.Equal(key, nextKey) {
+					errMessage += fmt.Sprintf("Expected an element count of %v only got %v for %s\n", key[13], checkPos, fullName(key))
+
+					break
+				}
+				checkPos++
+
+			}
+			Pos += checkPos
+		} else {
+			Pos++
+		} /*
+			else if bytes.Equal(key, embeddedTextKey[:]) || bytes.Equal(key, embeddedBinaryKey[:]) {
+
+			}*/
+	}
+
+	test.Test("Checking the metarex essence keys have the correct element number and count", func() bool {
+		return tester.Expect(fail).To(BeFalse(),
+			errMessage)
+	})
 
 	// are there any exact tests in the
 	switch l.currentPartition.PartitionType {

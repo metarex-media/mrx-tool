@@ -7,6 +7,7 @@ import (
 	"github.com/metarex-media/mrx-tool/klv"
 
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/internal"
 )
 
 func fullName(namebytes []byte) string {
@@ -47,6 +48,8 @@ func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error
 	defer seg.result()
 	tester := NewGomegaWithT(seg)
 
+	// @TODO run save each test as seperate function
+	// then describe the goal of each test and how those bits are achieved
 	seg.Test("Checking the this partition pointer matches the actual byte offset of the file", func() bool {
 		return tester.Expect(uint64(l.TotalByteCount)).To(Equal(partitionLayout.ThisPartition),
 			fmt.Sprintf("The byte offset %v, did not match the this partition value %v", l.TotalByteCount, partitionLayout.ThisPartition))
@@ -64,35 +67,57 @@ func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error
 
 	// flush out the header metadata
 	// as it is not used yet (apart from the primer)
-	flushedMeta := 0
-	for flushedMeta < int(partitionLayout.HeaderByteCount) {
+	metaByteCount := 0
+	flushedMeta := make([]*klv.KLV, 0)
+	// store the metadata for handling as part of the tests
+	for metaByteCount < int(partitionLayout.HeaderByteCount) {
 		flush, open := <-metadata
 
 		if !open {
 			return fmt.Errorf("error when using klv data klv stream interrupted")
 		}
-		flushedMeta += flush.TotalLength()
+		flushedMeta = append(flushedMeta, flush)
+		metaByteCount += flush.TotalLength()
 
 	}
 
+	defer l.metadataTest(flushedMeta)
+	// defer metadata hanlding defer()metadata hndling (which generates a new thing)
+
 	//check the header metadata count
 	seg.Test("Checking the header metadata count matches the actual count of the metadata", func() bool {
-		return tester.Expect(uint64(flushedMeta)).To(Equal(partitionLayout.HeaderByteCount),
-			fmt.Sprintf("The metadata count %v, did not match the declared partition header byte count %v", flushedMeta, partitionLayout.HeaderByteCount))
+		return tester.Expect(uint64(metaByteCount)).To(Equal(partitionLayout.HeaderByteCount),
+			fmt.Sprintf("The metadata count %v, did not match the declared partition header byte count %v", metaByteCount, partitionLayout.HeaderByteCount))
 	})
 
-	l.TotalByteCount += flushedMeta
+	l.TotalByteCount += metaByteCount
 	//hoover up the indextable and remove it to prevent it being mistaken as essence
 	if partitionLayout.IndexTable {
 		index, open := <-metadata
 		if !open {
-			return fmt.Errorf("error when using klv data klv stream interrupted")
+			return fmt.Errorf("error when using klv data klv stream interrupted") //explain which partition this occured in.
 		}
 		l.TotalByteCount += index.TotalLength()
 	}
 	// position += md.currentContainer.HeaderLength
 
+	/* handle the essence here
+
+	using the channel have a dynamic key manager.
+	for the moment copy the hoover technique
+
+	*/
+
 	return nil
+}
+
+// Test is a demo tes of how to log each individual test to be used
+// these are exported so godocs can read it
+func Test(tester *internal.Gomega, seg *segmentTest, totalByte, ThisPartition int) {
+	seg.Test("Checking the this partition pointer matches the actual byte offset of the file", func() bool {
+		return tester.Expect(totalByte).To(Equal(ThisPartition),
+			fmt.Sprintf("The byte offset %v, did not match the this partition value %v", totalByte, ThisPartition))
+	})
 }
 
 type mxfPartition struct {

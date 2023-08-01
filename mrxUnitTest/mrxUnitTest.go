@@ -171,6 +171,8 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 				}
 			} else {
 
+				// throw a warning here saying expected partition got KEY : fullname
+
 				contents.essenceCheck(klvItem)
 				// some key handling
 
@@ -238,10 +240,10 @@ type layout struct {
 
 	cache essenceCache
 	/*
-	things to cache:
-		partition positions (the rip)
-		essence per partition (which is then removed per partition)
-		the primer pack
+		things to cache:
+			partition positions (the rip)
+			essence per partition (which is then removed per partition)
+			the primer pack
 
 	*/
 	// error save destination

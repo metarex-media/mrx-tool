@@ -1,3 +1,7 @@
+Running Partiton 0 MetaData Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+Ran 1 tests: Passed:1 , Failed: 0
 Running Partiton 0 Tests tests:
 	Checking the this partition pointer matches the actual byte offset of the file
         Pass
@@ -6,6 +10,10 @@ Running Partiton 0 Tests tests:
 	Checking the header metadata count matches the actual count of the metadata
         Pass
 Ran 3 tests: Passed:3 , Failed: 0
+Running Partiton 1 MetaData Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+Ran 1 tests: Passed:1 , Failed: 0
 Running Partiton 1 Tests tests:
 	Checking the this partition pointer matches the actual byte offset of the file
         Pass
@@ -16,6 +24,12 @@ Running Partiton 1 Tests tests:
 Ran 3 tests: Passed:3 , Failed: 0
 Running Partiton 1 Essence Tests tests:
 	Checking the essence keys do not change order
+        Pass
+	Checking the metarex essence keys have the correct element number and count
+        Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Partiton 2 MetaData Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
         Pass
 Ran 1 tests: Passed:1 , Failed: 0
 Running Partiton 2 Tests tests:
@@ -29,6 +43,18 @@ Ran 3 tests: Passed:3 , Failed: 0
 Running Partiton 2 Essence Tests tests:
 	Checking the essence keys do not change order
         Pass
+	Checking the metarex essence keys have the correct element number and count
+        Fail!
+            The first clocked element must have an element count of 1, received a value of 4 for 060e2b34.01020101.0f020101.01040000
+            Expected an element count of 4 only got 1 for 060e2b34.01020101.0f020101.01040000
+            
+            Expected
+                <bool>: true
+            to be false
+Ran 2 tests: Passed:1 , Failed: 1
+Running Partiton 3 MetaData Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
 Ran 1 tests: Passed:1 , Failed: 0
 Running Partiton 3 Tests tests:
 	Checking the this partition pointer matches the actual byte offset of the file
@@ -40,6 +66,18 @@ Running Partiton 3 Tests tests:
 Ran 3 tests: Passed:3 , Failed: 0
 Running Partiton 3 Essence Tests tests:
 	Checking the essence keys do not change order
+        Pass
+	Checking the metarex essence keys have the correct element number and count
+        Fail!
+            The first clocked element must have an element count of 1, received a value of 4 for 060e2b34.01020101.0f020101.01040000
+            Expected an element count of 4 only got 1 for 060e2b34.01020101.0f020101.01040000
+            
+            Expected
+                <bool>: true
+            to be false
+Ran 2 tests: Passed:1 , Failed: 1
+Running Partiton 4 MetaData Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
         Pass
 Ran 1 tests: Passed:1 , Failed: 0
 Running Partiton 4 Tests tests:
