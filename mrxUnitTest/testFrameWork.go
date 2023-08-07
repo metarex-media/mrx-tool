@@ -5,7 +5,36 @@ import (
 	"fmt"
 	"io"
 	"strings"
+
+	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/types"
 )
+
+func newTester(dest io.Writer, segmentHeader string) *CompleteTest {
+
+	var log bytes.Buffer
+	seg := &segmentTest{header: segmentHeader, errChannel: make(chan string, 5), testBuffer: log, log: dest}
+
+	return &CompleteTest{
+		segment: seg,
+		t:       NewWithT(seg),
+	}
+
+}
+
+func (c *CompleteTest) Result() {
+	c.segment.result()
+}
+
+type CompleteTest struct {
+	segment *segmentTest
+	t       tester
+}
+
+// tester is a workaround to wrap the gomega/internal object
+type tester interface {
+	Expect(actual interface{}, extra ...interface{}) types.Assertion
+}
 
 type mrxTest struct {
 	// this will be a parent struct that handles all the different segments

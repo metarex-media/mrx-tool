@@ -7,7 +7,6 @@ import (
 	"github.com/metarex-media/mrx-tool/klv"
 
 	. "github.com/onsi/gomega"
-	"github.com/onsi/gomega/internal"
 )
 
 func fullName(namebytes []byte) string {
@@ -44,21 +43,12 @@ func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error
 	// and defer the writing in the order they should happen
 	partitionLayout := partitionExtract(klvItem)
 
-	seg := newSegmentTest(l.testLog, fmt.Sprintf("Partiton %0d Tests", len(l.Rip))) // the length of the RIP gives the relative partition count
-	defer seg.result()
-	tester := NewGomegaWithT(seg)
+	tester := newTester(l.testLog, fmt.Sprintf("Partition %0d Tests", len(l.Rip)))
+	defer tester.Result()
 
-	// @TODO run save each test as seperate function
-	// then describe the goal of each test and how those bits are achieved
-	seg.Test("Checking the this partition pointer matches the actual byte offset of the file", func() bool {
-		return tester.Expect(uint64(l.TotalByteCount)).To(Equal(partitionLayout.ThisPartition),
-			fmt.Sprintf("The byte offset %v, did not match the this partition value %v", l.TotalByteCount, partitionLayout.ThisPartition))
-	})
-
-	seg.Test("Checking the previous partition pointer is the correct byte position", func() bool {
-		return tester.Expect(uint64(l.currentPartPos)).To(Equal(partitionLayout.PreviousPartition),
-			fmt.Sprintf("The previous partition at %v, did not match the declared previous partition value %v", l.currentPartPos, partitionLayout.PreviousPartition))
-	})
+	// test partition positions
+	tester.TestPartitionPosition(l.TotalByteCount, int(partitionLayout.ThisPartition))
+	tester.TestPartitionPrevPosition(l.currentPartPos, int(partitionLayout.PreviousPartition))
 
 	l.currentPartition = &partitionLayout
 	l.Rip = append(l.Rip, RIP{byteOffset: uint64(l.TotalByteCount), sid: partitionLayout.BodySID})
@@ -85,10 +75,7 @@ func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error
 	// defer metadata hanlding defer()metadata hndling (which generates a new thing)
 
 	//check the header metadata count
-	seg.Test("Checking the header metadata count matches the actual count of the metadata", func() bool {
-		return tester.Expect(uint64(metaByteCount)).To(Equal(partitionLayout.HeaderByteCount),
-			fmt.Sprintf("The metadata count %v, did not match the declared partition header byte count %v", metaByteCount, partitionLayout.HeaderByteCount))
-	})
+	tester.TestPartitionMetadataCount(metaByteCount, int(partitionLayout.HeaderByteCount))
 
 	l.TotalByteCount += metaByteCount
 	//hoover up the indextable and remove it to prevent it being mistaken as essence
@@ -111,14 +98,41 @@ func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error
 	return nil
 }
 
+// TestPartitionPrevPosition checks the partition metadata of the previous partition
+// matches the actual location of the previous partition.
+func (c *CompleteTest) TestPartitionPrevPosition(actualPrevPosition, declaredPrevPosition int) {
+	c.segment.Test("Checking the previous partition pointer is the correct byte position", func() bool {
+		return c.t.Expect(actualPrevPosition).To(Equal(declaredPrevPosition),
+			fmt.Sprintf("The previous partition at %v, did not match the declared previous partition value %v", actualPrevPosition, declaredPrevPosition))
+	})
+}
+
+// TestPartitionPosition checks the partition metadata of the current partition
+// matches the actual location of the current partition.
+func (c *CompleteTest) TestPartitionPosition(actualPosition, declaredPosition int) {
+	c.segment.Test("Checking the this partition pointer matches the actual byte offset of the file", func() bool {
+		return c.t.Expect(actualPosition).To(Equal(declaredPosition),
+			fmt.Sprintf("The byte offset %v, did not match the this partition value %v", actualPosition, declaredPosition))
+	})
+}
+
+// TestPartitionMetadataCount checks the byte count of the processed metadata matches
+// the declared byte count in the partition header.
+func (c *CompleteTest) TestPartitionMetadataCount(actualMdCount, declaredMdCount int) {
+	c.segment.Test("Checking the header metadata count matches the actual count of the metadata", func() bool {
+		return c.t.Expect(actualMdCount).To(Equal(declaredMdCount),
+			fmt.Sprintf("The metadata count %v, did not match the declared partition header byte count %v", actualMdCount, declaredMdCount))
+	})
+}
+
 // Test is a demo tes of how to log each individual test to be used
 // these are exported so godocs can read it
-func Test(tester *internal.Gomega, seg *segmentTest, totalByte, ThisPartition int) {
+/*func Test(tester *internal.Gomega, seg *segmentTest, totalByte, ThisPartition int) {
 	seg.Test("Checking the this partition pointer matches the actual byte offset of the file", func() bool {
 		return tester.Expect(totalByte).To(Equal(ThisPartition),
 			fmt.Sprintf("The byte offset %v, did not match the this partition value %v", totalByte, ThisPartition))
 	})
-}
+} */
 
 type mxfPartition struct {
 	Signature         string // Must be, hex: 06 0E 2B 34
@@ -243,27 +257,19 @@ func (l *layout) ripHandle(rip *klv.KLV) {
 	// var t *testing.T
 	//	defer GinkgoRecover()
 	//RegisterFailHandler(Fail)
-	seg := newSegmentTest(l.testLog, "Random Index Pack Tests")
-	defer seg.result()
-	res := NewGomegaWithT(seg)
 
+	tester := newTester(l.testLog, "Random Index Pack Tests")
+	defer tester.Result()
 	// res.Expect()
+	tester.TestRandomIndexPack(l.Rip, gotRip)
 
-	seg.Test("Checking the partition positions in the file match those in the supplied random index pack", func() bool {
-		return res.Expect(l.Rip).To(Equal(gotRip), "The generated index pack did not match")
-	})
-
-	//fmt.Println(res.Expect(l.Rip).To(Equal(gotRip)), "some ingo", "more desc", "lots of stuff", 342)
-	//fmt.Println(res.Expect(4).To(Equal(6), "some ingo"))
-
-	//	fmt.Println("MIDDLE")
-
-	// fmt.Println(gotRip)
-	//Expect(l.Rip).To(Equal(gotRip))
 
 }
 
-/*
-
-use go convey assertions with wrapping in the testing.T method?
-*/
+// TestRandomIndexPack compares the index pack in the file with what the random index pack should be
+// changes in total byte count and SID of partitions are logged in the RIP
+func (c *CompleteTest) TestRandomIndexPack(actualRip, declaredRip []RIP) {
+	c.segment.Test("Checking the partition positions in the file match those in the supplied random index pack", func() bool {
+		return c.t.Expect(actualRip).To(Equal(declaredRip), "The generated index pack did not match the file index Pack")
+	})
+}

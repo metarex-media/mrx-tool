@@ -20,13 +20,18 @@ func (l *layout) metadataTest(metaData []*klv.KLV) {
 
 	// implement other metadata tests checking if things like primer packs are where they should be
 
-	seg := newSegmentTest(l.testLog, fmt.Sprintf("Partiton %0d MetaData Tests", len(l.Rip)-1)) // the length of the RIP gives the relative partition count
-	defer seg.result()
-	tester := NewGomegaWithT(seg)
-	seg.Test("Checking the this partition pointer matches the actual byte offset of the file", func() bool {
-		return tester.Expect(0).To(Equal(0),
-			fmt.Sprintf("The byte offset %v, did not match the this partition value %v", l.TotalByteCount, 0))
-	})
+	//seg := newSegmentTest(l.testLog, fmt.Sprintf("Partiton %0d MetaData Tests", len(l.Rip)-1)) // the length of the RIP gives the relative partition count
+	//defer seg.result()
+	//tester := NewGomegaWithT(seg)
+	tester := newTester(l.testLog, fmt.Sprintf("Partiton %0d MetaData Tests", len(l.Rip)-1))
+	defer tester.Result()
+
+	tester.TestMetaData()
+
+	//	seg.Test("Checking the this partition pointer matches the actual byte offset of the file", func() bool {
+	///		return tester.Expect(0).To(Equal(0),
+	//			fmt.Sprintf("The byte offset %v, did not match the this partition value %v", l.TotalByteCount, 0))
+	//	})
 
 	// if first.name != primer throw a wobbly
 	// cache the primer
@@ -56,6 +61,14 @@ func (l *layout) metadataTest(metaData []*klv.KLV) {
 		}
 
 	}
+}
+
+// TestMetaData runs tests on these bits of the metadata
+func (c *CompleteTest) TestMetaData() {
+	c.segment.Test("Checking the this partition pointer matches the actual byte offset of the file", func() bool {
+		return c.t.Expect(0).To(Equal(0),
+			fmt.Sprintf("The byte offset %v, did not match the this partition value %v", 0, 0))
+	})
 }
 
 func metadataName(namebytes []byte) string {

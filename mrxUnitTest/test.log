@@ -2,7 +2,7 @@ Running Partiton 0 MetaData Tests tests:
 	Checking the this partition pointer matches the actual byte offset of the file
         Pass
 Ran 1 tests: Passed:1 , Failed: 0
-Running Partiton 0 Tests tests:
+Running Partition 0 Tests tests:
 	Checking the this partition pointer matches the actual byte offset of the file
         Pass
 	Checking the previous partition pointer is the correct byte position
@@ -14,7 +14,7 @@ Running Partiton 1 MetaData Tests tests:
 	Checking the this partition pointer matches the actual byte offset of the file
         Pass
 Ran 1 tests: Passed:1 , Failed: 0
-Running Partiton 1 Tests tests:
+Running Partition 1 Tests tests:
 	Checking the this partition pointer matches the actual byte offset of the file
         Pass
 	Checking the previous partition pointer is the correct byte position
@@ -22,7 +22,7 @@ Running Partiton 1 Tests tests:
 	Checking the header metadata count matches the actual count of the metadata
         Pass
 Ran 3 tests: Passed:3 , Failed: 0
-Running Partiton 1 Essence Tests tests:
+Running Partition 1 Essence Tests tests:
 	Checking the essence keys do not change order
         Pass
 	Checking the metarex essence keys have the correct element number and count
@@ -32,7 +32,7 @@ Running Partiton 2 MetaData Tests tests:
 	Checking the this partition pointer matches the actual byte offset of the file
         Pass
 Ran 1 tests: Passed:1 , Failed: 0
-Running Partiton 2 Tests tests:
+Running Partition 2 Tests tests:
 	Checking the this partition pointer matches the actual byte offset of the file
         Pass
 	Checking the previous partition pointer is the correct byte position
@@ -40,7 +40,7 @@ Running Partiton 2 Tests tests:
 	Checking the header metadata count matches the actual count of the metadata
         Pass
 Ran 3 tests: Passed:3 , Failed: 0
-Running Partiton 2 Essence Tests tests:
+Running Partition 2 Essence Tests tests:
 	Checking the essence keys do not change order
         Pass
 	Checking the metarex essence keys have the correct element number and count
@@ -56,7 +56,7 @@ Running Partiton 3 MetaData Tests tests:
 	Checking the this partition pointer matches the actual byte offset of the file
         Pass
 Ran 1 tests: Passed:1 , Failed: 0
-Running Partiton 3 Tests tests:
+Running Partition 3 Tests tests:
 	Checking the this partition pointer matches the actual byte offset of the file
         Pass
 	Checking the previous partition pointer is the correct byte position
@@ -64,7 +64,7 @@ Running Partiton 3 Tests tests:
 	Checking the header metadata count matches the actual count of the metadata
         Pass
 Ran 3 tests: Passed:3 , Failed: 0
-Running Partiton 3 Essence Tests tests:
+Running Partition 3 Essence Tests tests:
 	Checking the essence keys do not change order
         Pass
 	Checking the metarex essence keys have the correct element number and count
@@ -80,7 +80,7 @@ Running Partiton 4 MetaData Tests tests:
 	Checking the this partition pointer matches the actual byte offset of the file
         Pass
 Ran 1 tests: Passed:1 , Failed: 0
-Running Partiton 4 Tests tests:
+Running Partition 4 Tests tests:
 	Checking the this partition pointer matches the actual byte offset of the file
         Pass
 	Checking the previous partition pointer is the correct byte position
@@ -91,7 +91,7 @@ Ran 3 tests: Passed:3 , Failed: 0
 Running Random Index Pack Tests tests:
 	Checking the partition positions in the file match those in the supplied random index pack
         Fail!
-            The generated index pack did not match
+            The generated index pack did not match the file indexPack
             Expected
                 <[]mrxUnitTest.RIP | len:5, cap:8>: [
                     {sid: 0, byteOffset: 0},
