@@ -91,7 +91,7 @@ Ran 3 tests: Passed:3 , Failed: 0
 Running Random Index Pack Tests tests:
 	Checking the partition positions in the file match those in the supplied random index pack
         Fail!
-            The generated index pack did not match the file indexPack
+            The generated index pack did not match the file index Pack
             Expected
                 <[]mrxUnitTest.RIP | len:5, cap:8>: [
                     {sid: 0, byteOffset: 0},

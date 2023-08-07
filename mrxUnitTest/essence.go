@@ -46,9 +46,8 @@ func (l *layout) essenceTests() {
 		return // there's no essence to test!
 	}
 
-	test := newSegmentTest(l.testLog, fmt.Sprintf("Partition %0d Essence Tests", len(l.Rip)-1)) //-1 for the partition has been extracted
-	defer test.result()
-	tester := NewGomegaWithT(test)
+	tester := newTester(l.testLog, fmt.Sprintf("Partition %0d Essence Tests", len(l.Rip)-1))
+	defer tester.Result()
 
 	// run generic tests first:
 	/*
@@ -58,18 +57,7 @@ func (l *layout) essenceTests() {
 
 	*/
 	pattern := getPattern(l.cache.keys)
-	allMatch := true
-	for keyPos, key := range l.cache.keys {
-		if !reflect.DeepEqual(pattern.pattern[keyPos%pattern.length], key) {
-			allMatch = false
-		}
-	}
-
-	test.Test("Checking the essence keys do not change order", func() bool {
-		return tester.Expect(allMatch).To(BeTrue(),
-			fmt.Sprintf("The essence keys deviate from their original pattern of %s", "xyz"))
-	})
-
+	tester.TestEssenceKeyFramePattern(pattern, l.cache.keys)
 	// check the keys contain the correct element counts etc
 	// run an individual key checker on the pattern
 	/*
@@ -103,6 +91,45 @@ func (l *layout) essenceTests() {
 		update these bits
 		error message := pattern = has element count(2) should be 3 has position 01 should be 1
 	*/
+	tester.TestEssenceKeyLayouts(pattern)
+
+	// @TODO insert more elements tests
+	// loop through the keys and ensure they match the partition type ignoring the unknown
+	//figure out if we want to cove them
+
+	// are there any exact tests in the
+	switch l.currentPartition.PartitionType {
+	case bodyPartition:
+	case genericStreamPartition:
+		/*
+			check the length if more than one bit is found, not illegal
+		*/
+	default:
+		// do nothing
+	}
+	// reset the cache at the end
+	l.cache.keys = make([][]byte, 0)
+}
+
+// TestEssenceKeyFramePattern checks the key order in the initial frame are repeated throughout the
+// partition
+func (c *CompleteTest) TestEssenceKeyFramePattern(pattern pattern, keys [][]byte) {
+	allMatch := true
+	for keyPos, key := range keys {
+		if !reflect.DeepEqual(pattern.pattern[keyPos%pattern.length], key) {
+			allMatch = false
+		}
+	}
+
+	c.segment.Test("Checking the essence keys do not change order", func() bool {
+		return c.t.Expect(allMatch).To(BeTrue(),
+			fmt.Sprintf("The essence keys deviate from their original pattern of %s", "xyz"))
+	})
+}
+
+// TestEssenceKeyLayouts checks the structure of the metarex essence keys.
+// ensuring that the element count etc is preserved.
+func (c *CompleteTest) TestEssenceKeyLayouts(pattern pattern) {
 	errMessage := ""
 	fail := false
 	// embedded and clocked data
@@ -152,23 +179,10 @@ func (l *layout) essenceTests() {
 			}*/
 	}
 
-	test.Test("Checking the metarex essence keys have the correct element number and count", func() bool {
-		return tester.Expect(fail).To(BeFalse(),
+	c.segment.Test("Checking the metarex essence keys have the correct element number and count", func() bool {
+		return c.t.Expect(fail).To(BeFalse(),
 			errMessage)
 	})
-
-	// are there any exact tests in the
-	switch l.currentPartition.PartitionType {
-	case bodyPartition:
-	case genericStreamPartition:
-		/*
-			check the length if more than one bit is found
-		*/
-	default:
-		// do nothing
-	}
-	// reset the cache at the end
-	l.cache.keys = make([][]byte, 0)
 }
 
 func getPattern(keys [][]byte) pattern {
