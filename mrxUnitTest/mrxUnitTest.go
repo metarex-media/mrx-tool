@@ -145,10 +145,10 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 			if partitionName(klvItem.Key) == "060e2b34.020501  .0d010201.01    00" {
 
 				// test the previous partitions essence as the final step
-				// if len(contents.RipLayout) ==0 and the cache length !=0 emit an error that essence was found first
+				// if len(contents.RipLayout) == 0 and the cache length !=0 emit an error that essence was found first
 
 				if len(contents.cache.keys) != 0 {
-					contents.essenceTests()
+					contents.essenceTests(*contents.currentPartition)
 				}
 
 				if klvItem.Key[13] == 17 {
