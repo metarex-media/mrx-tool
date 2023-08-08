@@ -1,4 +1,4 @@
-Running Partiton 0 MetaData Tests tests:
+Running Partition 0 MetaData Tests tests:
 	Checking the this partition pointer matches the actual byte offset of the file
         Pass
 Ran 1 tests: Passed:1 , Failed: 0
@@ -10,7 +10,7 @@ Running Partition 0 Tests tests:
 	Checking the header metadata count matches the actual count of the metadata
         Pass
 Ran 3 tests: Passed:3 , Failed: 0
-Running Partiton 1 MetaData Tests tests:
+Running Partition 1 MetaData Tests tests:
 	Checking the this partition pointer matches the actual byte offset of the file
         Pass
 Ran 1 tests: Passed:1 , Failed: 0
@@ -25,10 +25,12 @@ Ran 3 tests: Passed:3 , Failed: 0
 Running Partition 1 Essence Tests tests:
 	Checking the essence keys do not change order
         Pass
+	Checking the metarex essence keys are located in the correct partition
+        Pass
 	Checking the metarex essence keys have the correct element number and count
         Pass
-Ran 2 tests: Passed:2 , Failed: 0
-Running Partiton 2 MetaData Tests tests:
+Ran 3 tests: Passed:3 , Failed: 0
+Running Partition 2 MetaData Tests tests:
 	Checking the this partition pointer matches the actual byte offset of the file
         Pass
 Ran 1 tests: Passed:1 , Failed: 0
@@ -43,6 +45,8 @@ Ran 3 tests: Passed:3 , Failed: 0
 Running Partition 2 Essence Tests tests:
 	Checking the essence keys do not change order
         Pass
+	Checking the metarex essence keys are located in the correct partition
+        Pass
 	Checking the metarex essence keys have the correct element number and count
         Fail!
             The first clocked element must have an element count of 1, received a value of 4 for 060e2b34.01020101.0f020101.01040000
@@ -51,8 +55,8 @@ Running Partition 2 Essence Tests tests:
             Expected
                 <bool>: true
             to be false
-Ran 2 tests: Passed:1 , Failed: 1
-Running Partiton 3 MetaData Tests tests:
+Ran 3 tests: Passed:2 , Failed: 1
+Running Partition 3 MetaData Tests tests:
 	Checking the this partition pointer matches the actual byte offset of the file
         Pass
 Ran 1 tests: Passed:1 , Failed: 0
@@ -67,6 +71,8 @@ Ran 3 tests: Passed:3 , Failed: 0
 Running Partition 3 Essence Tests tests:
 	Checking the essence keys do not change order
         Pass
+	Checking the metarex essence keys are located in the correct partition
+        Pass
 	Checking the metarex essence keys have the correct element number and count
         Fail!
             The first clocked element must have an element count of 1, received a value of 4 for 060e2b34.01020101.0f020101.01040000
@@ -75,8 +81,8 @@ Running Partition 3 Essence Tests tests:
             Expected
                 <bool>: true
             to be false
-Ran 2 tests: Passed:1 , Failed: 1
-Running Partiton 4 MetaData Tests tests:
+Ran 3 tests: Passed:2 , Failed: 1
+Running Partition 4 MetaData Tests tests:
 	Checking the this partition pointer matches the actual byte offset of the file
         Pass
 Ran 1 tests: Passed:1 , Failed: 0

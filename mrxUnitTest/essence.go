@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"reflect"
+	"sort"
 
 	"github.com/metarex-media/mrx-tool/klv"
 	. "github.com/onsi/gomega"
@@ -40,7 +41,7 @@ type presentKey struct {
 
 // implement keys here
 // remove the need for an essence tag
-func (l *layout) essenceTests() {
+func (l *layout) essenceTests(partition mxfPartition) {
 
 	if len(l.cache.keys) == 0 {
 		return // there's no essence to test!
@@ -58,6 +59,8 @@ func (l *layout) essenceTests() {
 	*/
 	pattern := getPattern(l.cache.keys)
 	tester.TestEssenceKeyFramePattern(pattern, l.cache.keys)
+
+	tester.TestEssenceKeyPartitionType(pattern, partition.PartitionType)
 	// check the keys contain the correct element counts etc
 	// run an individual key checker on the pattern
 	/*
@@ -98,6 +101,7 @@ func (l *layout) essenceTests() {
 	//figure out if we want to cove them
 
 	// are there any exact tests in the
+	// check just the pattern for the moment
 	switch l.currentPartition.PartitionType {
 	case bodyPartition:
 	case genericStreamPartition:
@@ -163,7 +167,7 @@ func (c *CompleteTest) TestEssenceKeyLayouts(pattern pattern) {
 				}
 
 				if !bytes.Equal(key, nextKey) {
-					errMessage += fmt.Sprintf("Expected an element count of %v only got %v for %s\n", key[13], checkPos, fullName(key))
+					errMessage += fmt.Sprintf("Expected an element count of %v only got %v elements for %s\n", key[13], checkPos, fullName(key))
 
 					break
 				}
@@ -183,6 +187,49 @@ func (c *CompleteTest) TestEssenceKeyLayouts(pattern pattern) {
 		return c.t.Expect(fail).To(BeFalse(),
 			errMessage)
 	})
+}
+
+// TestEssenceKeyPartitionType checks the essence keys are within the right partition.
+func (c *CompleteTest) TestEssenceKeyPartitionType(pattern pattern, partition string) {
+
+	//
+	fails := make(map[string]string)
+	for _, key := range pattern.pattern {
+		var expectedP string
+
+		keyCopy := make([]byte, len(key))
+		copy(keyCopy, key)
+		keyCopy[13], keyCopy[15] = 0x7f, 0x7f
+
+		if bytes.Equal(keyCopy, binaryClockedKey[:]) || bytes.Equal(keyCopy, textClockedKey[:]) {
+			expectedP = bodyPartition
+
+		} else if bytes.Equal(key, embeddedBinaryKey[:]) || bytes.Equal(key, embeddedTextKey[:]) {
+			expectedP = genericStreamPartition
+		}
+
+		if expectedP != partition && expectedP != "" {
+			fails[string(key)] = fmt.Sprintf("The key %s was found in a %s partition when it is expected to be in a %s partition \n", fullName(key), expectedP, partition)
+		}
+	}
+
+	var fail bool
+	var errMessage string
+	if len(fails) > 0 {
+		fail = true
+
+		order := orderKeys(fails)
+
+		for i := 0; i < len(fails); i++ {
+			errMessage += fails[order[i]]
+		}
+	}
+
+	c.segment.Test("Checking the metarex essence keys are located in the correct partition types", func() bool {
+		return c.t.Expect(fail).To(BeFalse(),
+			errMessage)
+	})
+
 }
 
 func getPattern(keys [][]byte) pattern {
@@ -214,4 +261,17 @@ func getPattern(keys [][]byte) pattern {
 
 	return base
 
+}
+
+func orderKeys[T any](long map[string]T) []string {
+	keys := make([]string, len(long))
+	i := 0
+	for position := range long {
+		keys[i] = position
+		i++
+	}
+
+	sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
+
+	return keys
 }

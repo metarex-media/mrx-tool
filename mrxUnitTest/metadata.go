@@ -20,10 +20,10 @@ func (l *layout) metadataTest(metaData []*klv.KLV) {
 
 	// implement other metadata tests checking if things like primer packs are where they should be
 
-	//seg := newSegmentTest(l.testLog, fmt.Sprintf("Partiton %0d MetaData Tests", len(l.Rip)-1)) // the length of the RIP gives the relative partition count
+	//seg := newSegmentTest(l.testLog, fmt.Sprintf("Partition %0d MetaData Tests", len(l.Rip)-1)) // the length of the RIP gives the relative partition count
 	//defer seg.result()
 	//tester := NewGomegaWithT(seg)
-	tester := newTester(l.testLog, fmt.Sprintf("Partiton %0d MetaData Tests", len(l.Rip)-1))
+	tester := newTester(l.testLog, fmt.Sprintf("Partition %0d MetaData Tests", len(l.Rip)-1))
 	defer tester.Result()
 
 	tester.TestMetaData()
