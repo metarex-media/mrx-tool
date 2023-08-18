@@ -1,35 +1,16 @@
+// mrxUnitTest runs tests on mrx files, to help locate errors within the mrx file
 package mrxUnitTest
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"os"
-	"sync"
 
 	"github.com/metarex-media/mrx-tool/klv"
 	"golang.org/x/sync/errgroup"
 )
 
 // set up a utility bit for the decodes?
-
-type Partition struct {
-	// jus have the partition Infomation embedded
-
-	actualPosition int
-}
-
-func (pp Partition) Compare(next Partition) error {
-
-	/*
-		compare the positional of this partition and previous partition
-
-		error needs to call on this partition and its previous partition
-	*/
-
-	return nil
-
-}
 
 var Prefix = "Byte Offset %v"
 
@@ -114,15 +95,12 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 		return klv.BufferWrap(stream, buffer, size)
 	})
 
-	var wg sync.WaitGroup
 	var contents layout
 	f, _ := os.Create("test.log")
 	contents.testLog = f
 
-	wg.Add(1)
-
 	// @TODO set this up with errs so test breaking errors are returned
-	go func() {
+	errs.Go(func() error {
 
 		defer func() {
 			// this only runs when an error occurs to stop blocking
@@ -131,7 +109,6 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 				_, klvOpen = <-buffer
 			}
 
-			wg.Done()
 		}()
 
 		// get the first bit of stream
@@ -166,7 +143,7 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 
 					if err != nil {
 						//handle it
-						fmt.Println(err)
+						return err
 					}
 				}
 			} else {
@@ -204,9 +181,8 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 			klvItem, klvOpen = <-buffer
 		}
 
-	}()
-
-	wg.Wait()
+		return nil
+	})
 
 	// collect any errors from the decode process
 	err := errs.Wait()
