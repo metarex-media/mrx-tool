@@ -1,12 +1,34 @@
 # MRX Tool
 
-MRX Tool is a command line tool, for all your mrx parsing needs. This tool is designed to help unravel the mysteries of an mrx file, with what it contains, how it contains it and any other questions you may have about a certain file.
+MRX Tool is a utility tool for interacting with [Metarex](https://metarex.media/) MRX files. It is used for encoding and decoding MRX files,
+with a focus on improving the transparency of what makes an mrx file. If you need help understanding mrx files, or want to make your own mrx files
+and don't know where to start, then this is the tool for you.
+
+This tool is designed for the following use cases.
+
+- validating an mrx file against the [Metarex specification](https://metarex.media/docs/specifications/)
+- decoding mrx files into the metadata file
+- decoding the structural layout of an mrx file in yaml form
+- encoding metadata file(s) into a single mrx file
+
+Using this tool allows you to understand the contents and requirements of the mrx files and the ability to
+make your own mrx files.
+With the option to generate your own mrx test vectors,  for if make your own mrx implementations.
 
 ## getting the MRX Tool
 
 Please get the latest version for your operating system from the downloads page.
+Or alternatively, download the repo and compile using `go build`.
 
-This tool is designed to be run from the command line
+This tool only runs on the command line.
+
+## MRX Tool functions
+
+The following interactions are available, link to each flag
+
+- [decoding](#the-decode-flag) the structural layout of an mrx file in yaml form
+- [decoding](#the-decodesave-flag) mrx files into the metadata sub components
+- [encoding](#the-encode-flag) metadata file(s) into a single mrx file
 
 ### The decode flag
 
@@ -78,12 +100,12 @@ content packages with the key "00000000.00000000.00000000.00000000" are skipped 
 
 ## Streaming data layout
 
-The data is formatted in three distinct decoupling phases. These are designed to send the data in th eorder it is found in the reader.
+The data is formatted in three distinct decoupling phases. These are designed to send the data in the order it is found in the reader.
 
 Using an io.Reader interface the data is split into buffered data and fed into a channel.
 This buffer channel is then split into KeyLengthValue (klv) packets, where each packet is a self contained klv.
 
-The klv is then organised into the yaml layout as described earlier. Header metadata KLVs are discarded, as is the data as we are only intersted in the key and length of the data.
+The klv is then organised into the yaml layout as described earlier. Header metadata KLVs are discarded, as is the data as we are only interested in the key and length of the data.
 
 ## Internal Usage Example
 

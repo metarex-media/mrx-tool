@@ -25,7 +25,7 @@ Ran 3 tests: Passed:3 , Failed: 0
 Running Partition 1 Essence Tests tests:
 	Checking the essence keys do not change order
         Pass
-	Checking the metarex essence keys are located in the correct partition
+	Checking the metarex essence keys are located in the correct partition types
         Pass
 	Checking the metarex essence keys have the correct element number and count
         Pass
@@ -45,12 +45,12 @@ Ran 3 tests: Passed:3 , Failed: 0
 Running Partition 2 Essence Tests tests:
 	Checking the essence keys do not change order
         Pass
-	Checking the metarex essence keys are located in the correct partition
+	Checking the metarex essence keys are located in the correct partition types
         Pass
 	Checking the metarex essence keys have the correct element number and count
         Fail!
             The first clocked element must have an element count of 1, received a value of 4 for 060e2b34.01020101.0f020101.01040000
-            Expected an element count of 4 only got 1 for 060e2b34.01020101.0f020101.01040000
+            Expected an element count of 4 only got 1 elements for 060e2b34.01020101.0f020101.01040000
             
             Expected
                 <bool>: true
@@ -71,12 +71,12 @@ Ran 3 tests: Passed:3 , Failed: 0
 Running Partition 3 Essence Tests tests:
 	Checking the essence keys do not change order
         Pass
-	Checking the metarex essence keys are located in the correct partition
+	Checking the metarex essence keys are located in the correct partition types
         Pass
 	Checking the metarex essence keys have the correct element number and count
         Fail!
             The first clocked element must have an element count of 1, received a value of 4 for 060e2b34.01020101.0f020101.01040000
-            Expected an element count of 4 only got 1 for 060e2b34.01020101.0f020101.01040000
+            Expected an element count of 4 only got 1 elements for 060e2b34.01020101.0f020101.01040000
             
             Expected
                 <bool>: true
