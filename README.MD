@@ -15,6 +15,9 @@ Using this tool allows you to understand the contents and requirements of the mr
 make your own mrx files.
 With the option to generate your own mrx test vectors,  for if make your own mrx implementations.
 
+Please check out the [Demo](https://github.com/metarex-media/mrx-demo)
+which gives a introduction to the features.
+
 ## getting the MRX Tool
 
 Please get the latest version for your operating system from the downloads page.
