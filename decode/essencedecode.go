@@ -231,7 +231,7 @@ func (e *mrxPartitionPosition) essenceSave(parentFolder string, data *klv.KLV, l
 
 	if _, err := os.Stat(basePath); os.IsNotExist(err) {
 
-		err := os.Mkdir(basePath, 0777)
+		err := os.MkdirAll(basePath, 0777)
 
 		if err != nil {
 			return err

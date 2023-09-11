@@ -11,12 +11,11 @@ This tool is designed for the following use cases.
 - decoding the structural layout of an mrx file in yaml form
 - encoding metadata file(s) into a single mrx file
 
-Using this tool allows you to understand the contents and requirements of the mrx files and the ability to
-make your own mrx files.
-With the option to generate your own mrx test vectors,  for if make your own mrx implementations.
+Using this tool allows you to understand the contents and requirements of the mrx files.
+A primary aim of this tool is to let you generate mrx test vectors.
 
 Please check out the [Demo](https://github.com/metarex-media/mrx-demo)
-which gives a introduction to the features.
+which gives an introduction and walkthrough of the features and how to use them.
 
 ## getting the MRX Tool
 
@@ -35,36 +34,44 @@ The following interactions are available, link to each flag
 
 ### The decode flag
 
-The decode flag breaks down the selected mrx file into a [yaml file](#yaml-layout), detailing the labels of its contents and the overall file structure.
+The decode flag breaks down the selected mrx file into a [yaml file](#yaml-layout), detailing the 
+labels of its contents and the overall file structure.
 
-The --input and --output flags must be used for selecting the file and saving the output, it also contains an optional [--split flag](#split-function-usage), incase you want to reduce the yaml size.
+The --input and --output flags must be used for selecting the file and saving the output, it also contains an optional 
+[--split flag](#split-function-usage), incase you want to reduce the yaml size, by not having every single metadata item's properties saved.
 
-Run the following commands as an example and check the difference between the two files that are generated.
+Run the following commands as an example of the split function, check the difference between the two yaml files that 
+are generated, especially in their overall size.
 
 ```console
 ./mrxtool.exe decode --input ./testdata/rexy_sunbathe_mrx.mxf --output result/rexy_sunbathe_mrx.yaml
-./mrxtool.exe decode --input ./testdata/rexy_sunbathe_mrx.mxf --output result/rexy_sunbathe_mrx2.yaml --split 3,5,6,7,3
+./mrxtool.exe decode --input ./testdata/rexy_sunbathe_mrx.mxf --output result/rexy_sunbathe_mrx_Split.yaml --split 3,5,6,7,3
 ```
 
 ### The decodesave flag
 
-The decodesave flag extracts every bit of essence and saves it in a folder relative to the partition it was found in. The following command
+The decodesave flag extracts every single metadata file and saves it in a folder relative to the partition it was found in. The following command
 
 ```console
 ./mrxtool.exe decodesave --input ./testdata/rexy_sunbathe_mrx.mxf --output result/rexy_sunbathe_mrx_contents/
 ```
 
-would generate three folders, each labeled body1, body2 and body3. Each folder would contain essence files sequentially ordered from essence0, in the order they are found in the file.
+would generate three folders, each labeled 0000StreamTC, 0001StreamBC and 0002StreamBC. Where each folder
+contains a stream of metadata files, in the order they are found in the file.
+Check [here](HELP.md#suggested-workflow-for-encoding) for more information about the naming of folders
+and how metadata streams are expected.
 
 ### The encode flag
 
-The encode flag groups together a collection of data files and collates them as an mrx file. See the help.md for more detail on the encoding methods.
+The encode flag groups together a collection of data file streams and collates them as an mrx file. See the [help.md](HELP.md) for more detail on the encoding methods.
+
+The example command will generate an mrx file.
 
 ``` ./mrxtool.exe encode --input ./encode/testdata/testbase --output ./testdata/newrexy.mrx --framerate 24/1 ```
 
 ### split function usage
 
-The split flag is only for the decode command. It compresses the user selected content packages into a skipped content package, shortening the overall length of the resulting yaml, but keeping the neccessary information, such as total size. The skipped packages still effect the results of the statistic field.
+The split flag is only for the decode command. It compresses the user selected content packages into a skipped content package, shortening the overall length of the resulting yaml, but keeping the necessary information, such as total size. The skipped packages still effect the results of the statistic field.
 
 - not using split does not skip any essence and extracts everything in the file.
 - 1 element e.g. ```--split 4``` , this extracts the essence from the middle of the file.
