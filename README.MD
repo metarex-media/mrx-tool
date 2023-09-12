@@ -1,7 +1,9 @@
 # MRX Tool
 
-MRX Tool is a utility tool for interacting with [Metarex](https://metarex.media/) MRX files. It is used for encoding and decoding MRX files,
-with a focus on improving the transparency of what makes an mrx file. If you need help understanding mrx files, or want to make your own mrx files
+MRX Tool is a utility tool for interacting with [Metarex](https://metarex.media/) MRX files.
+It is used for encoding and decoding MRX files,
+with a focus on improving the transparency of what makes an mrx file.
+If you need help understanding mrx files, or want to make your own mrx files
 and don't know where to start, then this is the tool for you.
 
 This tool is designed for the following use cases.
@@ -11,10 +13,10 @@ This tool is designed for the following use cases.
 - decoding the structural layout of an mrx file in yaml form
 - encoding metadata file(s) into a single mrx file
 
-Using this tool allows you to understand the contents and requirements of the mrx files.
-A primary aim of this tool is to let you generate mrx test vectors.
+Using this tool allows you to understand the contents and requirements of the mrx files
+and it can let you generate mrx test vectors.
 
-Please check out the [Demo](https://github.com/metarex-media/mrx-demo)
+Please check out the [Demo](https://github.com/metarex-media/mrx-demo),
 which gives an introduction and walkthrough of the features and how to use them.
 
 ## getting the MRX Tool
@@ -34,13 +36,14 @@ The following interactions are available, link to each flag
 
 ### The decode flag
 
-The decode flag breaks down the selected mrx file into a [yaml file](#yaml-layout), detailing the 
+The decode flag breaks down the selected mrx file into a [yaml file](#yaml-layout), detailing the
 labels of its contents and the overall file structure.
 
-The --input and --output flags must be used for selecting the file and saving the output, it also contains an optional 
-[--split flag](#split-function-usage), incase you want to reduce the yaml size, by not having every single metadata item's properties saved.
+The --input and --output flags must be used for selecting the file and saving the output, it also contains an optional
+[--split flag](#split-function-usage), incase you want to reduce the yaml size, 
+by not having every single metadata item's properties saved.
 
-Run the following commands as an example of the split function, check the difference between the two yaml files that 
+Run the following commands as an example of the split function, check the difference between the two yaml files that
 are generated, especially in their overall size.
 
 ```console
@@ -57,9 +60,10 @@ The decodesave flag extracts every single metadata file and saves it in a folder
 ```
 
 would generate three folders, each labeled 0000StreamTC, 0001StreamBC and 0002StreamBC. Where each folder
-contains a stream of metadata files, in the order they are found in the file.
+contains a stream of metadata files, in the order they are found in the file. check out
+`result/rexy_sunbathe_mrx_contents/` after running the command.
 Check [here](HELP.md#suggested-workflow-for-encoding) for more information about the naming of folders
-and how metadata streams are expected.
+and information about metadata streams.
 
 ### The encode flag
 
@@ -78,7 +82,7 @@ The split flag is only for the decode command. It compresses the user selected c
 - 2 elements e.g. ```--split 2,3``` , this extracts the first x amount of essence then the last y count of essence.
 - 3+ elements e.g. ```--split 2,4,5,3``` , this extracts the first count of essence and then the last count of essence, with the remaining counts extracted from evenly interspersed positions in the file.
 
-When odd numbers are used for extracting the middle essence, the count is split to be the "smaller half" from the mid point, then the "larger half". E.g. 3 at the 50th essence would strart the count from 49 to 52.
+When odd numbers are used for extracting the middle essence, the count is split to be the "smaller half" from the mid point, then the "larger half". E.g. 3 at the 50th essence would take positions from 49 to 52, instead of 48 to 51.
 
 ## YAML Layout
 
