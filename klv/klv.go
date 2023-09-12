@@ -309,7 +309,7 @@ func berLength(length byte) int {
 
 // BerDecode decodes BERenocded lengths up to 9 bytes long
 // including the indentifier byte.
-func BerDecode(num []byte) (int, int) {
+func BerDecode(num []byte) (length int, encodeLength int) {
 
 	if len(num) == 0 {
 		return 0, 0

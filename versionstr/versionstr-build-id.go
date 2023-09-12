@@ -1,3 +1,3 @@
 package versionstr  //auto-generated (versionstr.go)
-const build = "a810c38f06129bbd15e4b326ffd343d554358e27"
-const date = "2023-06-14"
+const build = "cda6e8ddea173750262ae7b0f83f7c6d1776b0c0"
+const date = "2023-07-19"

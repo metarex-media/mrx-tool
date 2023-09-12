@@ -12,6 +12,7 @@ var encodeIn string
 var encodeOut string
 var encodeFrameRate string
 var encodeManifestCount int
+var overWrite string
 
 func init() {
 	//set up flags for the two different decode commands
@@ -19,6 +20,7 @@ func init() {
 	EncodeCmd.Flags().StringVar(&encodeOut, "output", "", "the name of the file to be generated")
 	EncodeCmd.Flags().StringVar(&encodeFrameRate, "framerate", "", "gives the frame rate of the video in the form x/y e.g. 29.97 fps is 30000/1001")
 	EncodeCmd.Flags().IntVar(&encodeManifestCount, "previousManifest", 0, "The count of previous manifests to be included in the manifest, from 0 upwards. -1 is show all")
+	EncodeCmd.Flags().StringVar(&overWrite, "overwrite", "", "a json string to overwrite some or all of the configuration file")
 
 }
 
@@ -88,7 +90,7 @@ func DecodeRun(Command *cobra.Command, args []string) error {
 
 	writeMethod := &folderScanner{folder: encodeIn}
 	mw.UpdateWriteMethod(writeMethod)
-	err = mw.Write(f, &encode.MrxEncodeOptions{ManifestHistoryCount: encodeManifestCount})
+	err = mw.Write(f, &encode.MrxEncodeOptions{ManifestHistoryCount: encodeManifestCount, ConfigOverWrite: []byte(overWrite)})
 
 	if err != nil {
 		return err

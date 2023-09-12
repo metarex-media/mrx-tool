@@ -1,6 +1,7 @@
 package encode
 
 import (
+	"fmt"
 	"io"
 	"sync"
 	"testing"
@@ -112,4 +113,37 @@ func (st simpleTest) EssenceChannels(essChan chan *ChannelPackets) error {
 
 	wg.Wait()
 	return nil
+}
+
+func TestUpdateBytes(t *testing.T) {
+
+	//base := Configuration{Version: "any thing"}
+	update := `{
+        "MrxVersion": 0,
+		"Bad":0,
+        "DefaultStreamProperties": {
+            "FrameRate" : "24/1",
+            "Type" : "some data to track"
+        },
+        "StreamProperties" : {
+            "1":{
+                "FrameRate" : "24/1",
+                "Type" : "CameraComponent"
+            },
+            "2": {
+                "FrameRate"  : "static",
+                "Type" : "Camera Schema"
+            },
+            "3": {
+                "FrameRate"  : "static",
+                "Type" : "Static Tail Data"
+            }
+        } }`
+
+	base := Configuration{}
+
+	err := configUpdate(&base, []byte(update))
+
+	fmt.Println(base, err)
+
 }
