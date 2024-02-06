@@ -803,7 +803,7 @@ func (mw *MxfWriter) encodeRoundTrip(setup *Roundtrip, manifesters []Overview, m
 	if mrxChans.reorder {
 
 		reorder := Configuration{Version: setup.Config.Version, Default: setup.Config.Default,
-			StreamProperties: make(map[int]streamProperties)}
+			StreamProperties: make(map[int]StreamProperties)}
 		fwCount := 0
 		clipWrapped := []int{}
 		for i, mrxChan := range mrxChans.dataStreams {

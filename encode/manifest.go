@@ -64,9 +64,9 @@ type Roundtrip struct {
 
 type Configuration struct {
 	Version string           `json:"MRXVersion"`
-	Default streamProperties `json:"DefaultStreamProperties"`
+	Default StreamProperties `json:"DefaultStreamProperties"`
 
-	StreamProperties map[int]streamProperties `json:"StreamProperties"`
+	StreamProperties map[int]StreamProperties `json:"StreamProperties"`
 
 	/*
 	 configuration ideas
@@ -77,7 +77,7 @@ type Configuration struct {
 	*/
 }
 
-type streamProperties struct {
+type StreamProperties struct {
 	StreamType string `json:"Type"`
 	FrameRate  string `json:"FrameRate"`
 	NameSpace  string `json:"NameSpace"`
