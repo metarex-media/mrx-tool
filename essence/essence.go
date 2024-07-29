@@ -74,4 +74,5 @@ var EssenceLookUp = map[string]EssenceInformation{
 	"urn:smpte:ul:060e2b34.01020101.0f020101.017f007f": {UL: "urn:smpte:ul:060e2b34.01020101.0f020101.017f007f", Name: "Frame Wrapped Binary Data", Symbol: "FrameWrappedBinaryData", Definition: "Identifies Frame Wrapped Binary Data", DefiningDocument: "MRX TestSpec", IsDeprecated: false},
 	"urn:smpte:ul:060e2b34.0101010c.0d01050d.01000000": {UL: "urn:smpte:ul:060e2b34.0101010c.0d01050d.01000000", Name: "Clip Wrapped Binary Data", Symbol: "ClipWrappedBinaryData", Definition: "Identifies Clip Wrapped Binary Data", DefiningDocument: "MRX TestSpec", IsDeprecated: false},
 	"urn:smpte:ul:060e2b34.0101010c.0d01050d.00000000": {UL: "urn:smpte:ul:060e2b34.0101010c.0d01050d.00000000", Name: "Clip Wrapped Text Data", Symbol: "ClipWrappedTextData", Definition: "Identifies Clip Wrapped Text Data", DefiningDocument: "MRX TestSpec", IsDeprecated: false},
+	"urn:smpte:ul:060e2b34.01020101.0f020101.05000000": {UL: "urn:smpte:ul:060e2b34.0101010c.0d01050d.00000000", Name: "Metarex Manifest", Symbol: "MetarexManifest", Definition: "Identifies the Metarex Manifest", DefiningDocument: "MRX TestSpec", IsDeprecated: false},
 }

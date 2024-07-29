@@ -15,6 +15,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// StreamDecode takes an MRX stream and decodes the layout
 func StreamDecode(mrxStream io.Reader, w io.Writer, contentPackageLimit []int, jsonFile bool) error {
 
 	internalLayout, err := klvStream(mrxStream, contentPackageLimit, 10)
@@ -41,6 +42,35 @@ func StreamDecode(mrxStream io.Reader, w io.Writer, contentPackageLimit []int, j
 	_, err = w.Write(layoutBytes)
 
 	return err
+}
+
+// Dataformat has the stream ID and the data within
+type DataFormat struct {
+	MRXID     string
+	FrameRate string
+	Data      [][]byte
+}
+
+// Extract streamData takes an MRX file and
+// extracts each metadata stream into a seperate data stream
+// in the order it is found in the file.
+func ExtractStreamData(mrxStream io.Reader) ([]*DataFormat, error) {
+
+	// get the decoder here
+	// utilise  DecodeKLVToFile copy and pasting code to do something with it.
+	// then work on making something more generic
+	klvChan := make(chan *klv.KLV, 1000)
+	internalLayout, err := DecodeKLVToWriter(mrxStream, klvChan)
+
+	return internalLayout, err
+	//fmt.Println(internalLayout, err)
+	/*if err != nil {
+		return err
+	}
+
+	//output format
+
+	return nil*/
 }
 
 func klvStream(stream io.Reader, contentPackageLimit []int, size int) (essenceLayout, error) {

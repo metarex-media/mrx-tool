@@ -18,3 +18,18 @@ func TestFileExtract(t *testing.T) {
 	streamer, _ = os.Open("../mrx/rexy_sunbathe_mrx.mxf")
 	fmt.Println(EssenceDecode(streamer, "./testdata/flat", true, 4))
 }
+
+func TestStreamEncode(t *testing.T) {
+
+	/*
+
+		these tests need to check each bit of the chain works for a data input
+		due to the nature the files should probably be generate before each test
+
+		and one that does the errors
+
+	*/
+	f, err := os.Open("../encode/testdata/demo.mrx")
+	fmt.Println(err)
+	ExtractStreamData(f)
+}

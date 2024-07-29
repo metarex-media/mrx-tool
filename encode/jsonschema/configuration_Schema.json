@@ -1,0 +1,61 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "MRX Manifest Schema",
+    "description": "The Schema for the MRX configuration, version 0.0.0.1",
+    "type": "object",
+    "properties": {
+        "MrxVersion": {
+            "type": "string",
+            "description": "The version of the configuration"
+        },
+        "DefaultStreamProperties": {
+            "$ref": "#/$defs/StreamProperties"
+        },
+        "StreamProperties": {
+            "patternProperties": {
+                "^(\\d){1,}$": {
+                    "$ref": "#/$defs/StreamProperties"
+                }
+            },
+            "description" :"only allow numbered stream IDs",
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false,
+    "$defs": {
+        "StreamProperties": {
+            "properties": {
+                "NameSpace": {
+                    "type": "string"
+                },
+                "FrameRate": {
+                    "type": "string",
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/FrameRates/Static"
+                        },
+                        {
+                            "$ref": "#/$defs/FrameRates/frames"
+                        }
+                    ]
+                },
+                "Type": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "FrameRates": {
+            "Static": {
+                "enum": [
+                    "Static",
+                    "static"
+                ]
+            },
+            "frames": {
+                "type": "string",
+                "pattern": "^(\\d){1,}/(\\d){1,}$"
+            }
+        }
+    }
+}

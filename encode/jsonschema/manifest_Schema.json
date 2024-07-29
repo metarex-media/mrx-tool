@@ -1,12 +1,12 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "MRX Manifest Schema",
-    "description": "The Schmea for the MRX Manifest schema, version 0.0.0.1",
+    "description": "The Schema for the MRX Manifest schema, version 0.0.0.1",
     "type": "object",
     "properties": {
         "UMID": {
             "type": "string",
-            "description": "The UUID of the MRX file the manifest is attached to"
+            "description": "The UMID of the MRX file the manifest is attached to"
         },
         "Mrx Manifest Version": {
             "type": "string"

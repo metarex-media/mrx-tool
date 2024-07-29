@@ -1,0 +1,117 @@
+Running Partition 0 MetaData Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+Ran 1 tests: Passed:1 , Failed: 0
+Running Partition 0 Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+	Checking the previous partition pointer is the correct byte position
+        Pass
+	Checking the header metadata count matches the actual count of the metadata
+        Pass
+Ran 3 tests: Passed:3 , Failed: 0
+Running Partition 1 MetaData Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+Ran 1 tests: Passed:1 , Failed: 0
+Running Partition 1 Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+	Checking the previous partition pointer is the correct byte position
+        Pass
+	Checking the header metadata count matches the actual count of the metadata
+        Pass
+Ran 3 tests: Passed:3 , Failed: 0
+Running Partition 1 Essence Tests tests:
+	Checking the essence keys do not change order
+        Pass
+	Checking the metarex essence keys are located in the correct partition types
+        Pass
+	Checking the metarex essence keys have the correct element number and count
+        Pass
+Ran 3 tests: Passed:3 , Failed: 0
+Running Partition 2 MetaData Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+Ran 1 tests: Passed:1 , Failed: 0
+Running Partition 2 Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+	Checking the previous partition pointer is the correct byte position
+        Pass
+	Checking the header metadata count matches the actual count of the metadata
+        Pass
+Ran 3 tests: Passed:3 , Failed: 0
+Running Partition 2 Essence Tests tests:
+	Checking the essence keys do not change order
+        Pass
+	Checking the metarex essence keys are located in the correct partition types
+        Pass
+	Checking the metarex essence keys have the correct element number and count
+        Fail!
+            The first clocked element must have an element count of 1, received a value of 4 for 060e2b34.01020101.0f020101.01040000
+            Expected an element count of 4 only got 1 elements for 060e2b34.01020101.0f020101.01040000
+            
+            Expected
+                <bool>: true
+            to be false
+Ran 3 tests: Passed:2 , Failed: 1
+Running Partition 3 MetaData Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+Ran 1 tests: Passed:1 , Failed: 0
+Running Partition 3 Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+	Checking the previous partition pointer is the correct byte position
+        Pass
+	Checking the header metadata count matches the actual count of the metadata
+        Pass
+Ran 3 tests: Passed:3 , Failed: 0
+Running Partition 3 Essence Tests tests:
+	Checking the essence keys do not change order
+        Pass
+	Checking the metarex essence keys are located in the correct partition types
+        Pass
+	Checking the metarex essence keys have the correct element number and count
+        Fail!
+            The first clocked element must have an element count of 1, received a value of 4 for 060e2b34.01020101.0f020101.01040000
+            Expected an element count of 4 only got 1 elements for 060e2b34.01020101.0f020101.01040000
+            
+            Expected
+                <bool>: true
+            to be false
+Ran 3 tests: Passed:2 , Failed: 1
+Running Partition 4 MetaData Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+Ran 1 tests: Passed:1 , Failed: 0
+Running Partition 4 Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+	Checking the previous partition pointer is the correct byte position
+        Pass
+	Checking the header metadata count matches the actual count of the metadata
+        Pass
+Ran 3 tests: Passed:3 , Failed: 0
+Running Random Index Pack Tests tests:
+	Checking the partition positions in the file match those in the supplied random index pack
+        Fail!
+            The generated index pack did not match the file index Pack
+            Expected
+                <[]mrxUnitTest.RIP | len:5, cap:8>: [
+                    {sid: 0, byteOffset: 0},
+                    {sid: 1, byteOffset: 2243},
+                    {sid: 1, byteOffset: 21103},
+                    {sid: 2, byteOffset: 21535},
+                    {sid: 0, byteOffset: 27541},
+                ]
+            to equal
+                <[]mrxUnitTest.RIP | len:5, cap:8>: [
+                    {sid: 0, byteOffset: 0},
+                    {sid: 2, byteOffset: 2243},
+                    {sid: 2, byteOffset: 21103},
+                    {sid: 2, byteOffset: 21535},
+                    {sid: 0, byteOffset: 27541},
+                ]
+Ran 1 tests: Passed:0 , Failed: 1
