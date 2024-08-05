@@ -41,7 +41,16 @@ func TestStreamEncode(t *testing.T) {
 
 	var nonMatchErr error
 
-	for _, data := range dec[0].Data {
+	// set up a test to prevent the manifest coming out first
+	var d *decode.DataFormat
+	for _, dat := range dec {
+		if dat.MRXID != "060e2b34.01020101.0f020101.05000000" {
+			d = dat
+		}
+
+	}
+
+	for _, data := range d.Data {
 		if string(data) != `{"test":true}` {
 			nonMatchErr = fmt.Errorf("data not sent got %s instead of {\"test\":true}", string(data))
 		}
