@@ -1,4 +1,7 @@
-// mrxUnitTest runs tests on mrx files, to help locate errors within the mrx file
+// mrxUnitTest runs tests on mrx files, to help locate errors within the mrx file.
+// @TODO finish writing and intergrating the code into the CLI.
+// This package is very experimental and should not be used,
+// as the API design hasn't even been finished.
 package mrxUnitTest
 
 import (
@@ -85,14 +88,14 @@ func decode(stream io.Reader) error {
 }
 
 // inlcude the logger? if there's any errors flush them - discard ifo for unkown keys fro the moment
-func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, error) { //wg *sync.WaitGroup, buffer chan packet, errChan chan error) {
+func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, error) { // wg *sync.WaitGroup, buffer chan packet, errChan chan error) {
 
 	// use errs to handle errors while runnig concurrently
 	errs, _ := errgroup.WithContext(context.Background())
 
-	//initiate the klv stream
+	// initiate the klv stream
 	errs.Go(func() error {
-		return klv.BufferWrap(stream, buffer, size)
+		return klv.StartKLVStream(stream, buffer, size)
 	})
 
 	var contents layout
@@ -114,7 +117,7 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 		// get the first bit of stream
 		klvItem, klvOpen := <-buffer
 
-		//handle each klv packet
+		// handle each klv packet
 		for klvOpen {
 
 			// check if it is a partition key
@@ -142,7 +145,7 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 					err := contents.partitionDecode(klvItem, buffer)
 
 					if err != nil {
-						//handle it
+						// handle it
 						return err
 					}
 				}
@@ -229,9 +232,9 @@ type layout struct {
 }
 
 type EssenceKeys struct {
-	FrameKeys       [][]byte // this is built along
-	maxCount        int      // for clip wrapped this should be 1 or clipWrapped bool
-	completeFrame   bool
+	FrameKeys [][]byte // this is built along
+	//	maxCount        int      // for clip wrapped this should be 1 or clipWrapped bool
+	//	completeFrame   bool
 	ParentPartition int // is this needed or will the layout be part of the proessing
 
 }
@@ -240,7 +243,7 @@ type MrxContents struct {
 	FrameWrapped []StreamContents
 	ClipWrapped  []StreamContents
 
-	header, footer any
+	// header, footer any
 }
 
 // StreamContents contains the layout for a single dataStream
@@ -248,9 +251,10 @@ type MrxContents struct {
 // an error will have been returned if the keys do not follow the same pattern throughout.
 type StreamContents struct {
 	SID       int
-	FrameKeys [][]byte //so i can discern the order
+	FrameKeys [][]byte // so i can discern the order
 }
 
+/*
 func essHandle(*klv.KLV) {
 	/*
 	   get the essence, see if can be identified.
@@ -263,5 +267,5 @@ func essHandle(*klv.KLV) {
 	   clip wrapped:
 	   - check there is only one key
 	   - check the partition key is generic partition
-	*/
-}
+*/
+//}

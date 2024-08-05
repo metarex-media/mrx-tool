@@ -2,6 +2,7 @@
 #**/*.yaml
 
 user/*
+megalinter-reports/*
 
 stream/testdata/testfile.txt
 

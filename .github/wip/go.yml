@@ -1,0 +1,54 @@
+# This workflow will build a golang project
+# And push the changes to a forked parent repo to create a pull request
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+---
+name: Go
+
+# Leave ENVs up here so they can be accessed by every Job that may be called
+env:
+  PAT: ${{ secrets.PULL_PAT }}
+  MSG: ${{ github.event.head_commit.message }}
+  TAG: ${{ github.event.release.tag_name }}
+
+
+# change this to only trigger on main pushes as we will want publish repos
+on: # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - "main"
+      - "staging"
+      - "dev"
+
+jobs:
+  test:
+    runs-on: [self-hosted, linux]
+    # needs: build
+    steps:
+      - name: Run go test
+        uses: actions/checkout@v3
+      - run: whoami
+      - run: echo $PATH
+      - run: echo "/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/usr/local/go/bin:$PATH" >> $GITHUB_PATH
+      - run: echo "$PATH, $HOME"
+      - run: go env -w GOPRIVATE=gitlab.com/*,github.com/*
+      - run: go test -v ./...  # test the rest of them later
+
+
+  pull:
+    needs: test
+    runs-on: [self-hosted, linux] # for when there's a bash script making the changes
+    steps:
+      # - uses: actions/checkout@v3
+      - name: push to a different repo
+        uses: actions/checkout@v3
+      - run: rm .github/workflows/go.yml
+      - run: chmod u+x ./clogrc/pullRequest.sh
+      - run: echo "/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/usr/local/go/bin:$PATH" >> $GITHUB_PATH
+      # run the replacements for the repo
+      - run: chmod u+x ./clogrc/goReplace.sh
+      - run: ./clogrc/goReplace.sh "$PWD" "github.com/mmTristan/tpg-widgets-private" "github.com/mmTristan/tpg-widgets"
+      - run: ./clogrc/goReplace.sh "$PWD" "github.com/mmTristan/tpg-core-private" "github.com/mmTristan/tpg-core"
+      - run: ./clogrc/goReplace.sh "$PWD" "github.com/mmTristan/tpg-io-private" "github.com/mmTristan/tpg-io"
+      - run: ./clogrc/goReplace.sh "$PWD" "github.com/mmTristan/private-tpg" "github.com/mmTristan/open-tpg"
+      - run: go env -w GOPRIVATE=gitlab.com/*,github.com/*
+      - run: ./clogrc/pullRequest.sh "$PAT" "$MSG" "open-tpg"

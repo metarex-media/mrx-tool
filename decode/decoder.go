@@ -20,13 +20,14 @@ func oneNameKL(namebytes []byte) (string, int) {
 	return fmt.Sprintf("%02x", namebytes[0:1:1]), 1
 }
 
+/*
 func oneLengthKL(lengthbytes []byte) (int, int) {
 	if len(lengthbytes) != 1 {
 		return 0, 0
 	}
 
 	return int(lengthbytes[0]), 1
-}
+} */
 
 func twoNameKL(namebytes []byte) (string, int) {
 	if len(namebytes) != 2 {
@@ -105,7 +106,7 @@ func primerUnpack(input []byte, shorthand map[string]string) {
 
 	offset := 8
 	for i := uint32(0); i < count; i++ {
-		//fmt.Printf("%x: %v\n", input[offset:offset+2], fullName(input[offset+2:offset+18]))
+		// fmt.Printf("%x: %v\n", input[offset:offset+2], fullName(input[offset+2:offset+18]))
 		short := fmt.Sprintf("%04x", input[offset:offset+2])
 		shorthand[short] = fullName(input[offset+2 : offset+18])
 		offset += int(length)

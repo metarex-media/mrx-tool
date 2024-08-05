@@ -36,18 +36,19 @@ type tester interface {
 	Expect(actual interface{}, extra ...interface{}) types.Assertion
 }
 
+/*
 type mrxTest struct {
 	// this will be a parent struct that handles all the different segments
 	// or at least supplies the writer
-}
-
+}*/
+/*
 func newSegmentTest(dest io.Writer, segmentHeader string) *segmentTest {
 	var log bytes.Buffer
 
 	return &segmentTest{header: segmentHeader, errChannel: make(chan string, 5), testBuffer: log, log: dest}
 
 }
-
+*/
 func (s *segmentTest) result() {
 
 	s.log.Write([]byte(fmt.Sprintf("Running %s tests:\n", s.header)))
@@ -66,7 +67,7 @@ type segmentTest struct {
 
 	// segment pass
 
-	//total test count
+	// total test count
 	errChannel chan string
 	// testPass bool
 	testBuffer bytes.Buffer
@@ -75,10 +76,10 @@ type segmentTest struct {
 
 // have a function to defer that does all the cleaning up when the tests
 
-func (s *segmentTest) Test(Message string, assert func() bool) {
+func (s *segmentTest) Test(message string, assert func() bool) {
 	s.testCount++
 
-	s.testBuffer.Write([]byte(fmt.Sprintf("	%v\n", Message)))
+	s.testBuffer.Write([]byte(fmt.Sprintf("	%v\n", message)))
 	if assert() {
 		s.testBuffer.Write([]byte("        Pass\n"))
 	} else {

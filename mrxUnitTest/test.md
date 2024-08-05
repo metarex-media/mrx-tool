@@ -13,6 +13,6 @@ Check the random index pack information matches the file layout
 
 ## Essence tests
 
-this is a note for essence tests. How do i persevere teh tests.
+this is a note for essence tests. How do i persevere the tests.
 Do i test each essence with an assertion? or run things as they go,
  specially for tests that are just long standing repeats

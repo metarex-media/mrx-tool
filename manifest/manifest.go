@@ -1,4 +1,4 @@
-package encode
+package manifest
 
 import (
 	_ "embed"
@@ -11,6 +11,10 @@ import (
 //go:embed jsonschema/manifest_Schema.json
 var ManifestSchema []byte
 
+//go:embed jsonschema/configuration_Schema.json
+var ConfigSchema []byte
+
+// PreviousManifest updates the manifest with the previous manifest.
 func PreviousManifest(manifest []byte) ([]TaggedManifest, error) {
 
 	var oldManifest TaggedManifest
@@ -57,26 +61,24 @@ func ManifestValidator(manifest []byte, verbose bool) error {
 	// anifest validator will just wrap all that schema info
 }
 
+// Roundtrip is the json structure for
+// for the configuration and manifest.
 type Roundtrip struct {
 	Config   Configuration `json:"Configuration"`
 	Manifest Manifest      `json:"Manifest"`
 }
 
+// Configuration is the configuration for the global
+// file and each data stream.
 type Configuration struct {
 	Version string           `json:"MRXVersion"`
 	Default StreamProperties `json:"DefaultStreamProperties"`
 
 	StreamProperties map[int]StreamProperties `json:"StreamProperties"`
-
-	/*
-	 configuration ideas
-
-
-	 name space for the data
-	 anyhtign else for the headers
-	*/
 }
 
+// StreamProperties are the individual properties
+// of the metadata
 type StreamProperties struct {
 	StreamType string `json:"Type"`
 	FrameRate  string `json:"FrameRate"`
@@ -90,7 +92,7 @@ type Manifest struct {
 	MRXTool string // MRXTool if the program that generated ut
 	// An array of the partitions and their contents
 	DataStreams []Overview `json:"Data Streams"`
-	//Only the highest Manifest shall have the previous section
+	// Only the highest Manifest shall have the previous section
 	// Manifests in the previous array shall keep the array open
 	History []TaggedManifest `json:"History,omitempty" yaml:"History,omitempty"`
 }
@@ -113,7 +115,7 @@ type GroupProperties struct {
 	StreamID          int    `json:"StreamID,omitempty"`
 	StreamType        string `json:"StreamType,omitempty"`
 	StreamContentType string `json:"StreamContentType,omitempty"`
-	//DataOriginBasePAth
+	// DataOriginBasePAth
 	// Maybe another bit of data
 	CustomMeta any `json:"Extra Group Metadata,omitempty" yaml:"Extra Group Metadata,omitempty"`
 }

@@ -1,0 +1,26 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+---
+name: Go
+
+# Leave ENVs up here so they can be accessed by every Job
+env:
+  PAT: ${{ secrets.PAT }}
+  MSG: ${{ github.event.head_commit.message }}
+  TAG: ${{ github.event.release.tag_name }}
+
+on: # yamllint disable-line rule:truthy
+  pull_request:
+    types: [opened]
+
+jobs:
+  test:
+    runs-on: [self-hosted, linux] # for when there's a bash script making the changes
+    steps:
+      # - uses: actions/checkout@v3
+      - name: push to a different repo
+        uses: actions/checkout@v3
+      - run: echo "I need to check my pull requests here"
+      - run: echo "my tag is $TAG"
+      # - run: chmod u+x ./clogrc/privatepublic.sh
+      # - run: sudo ./gitupdate.sh "$PAT" "$MSG"

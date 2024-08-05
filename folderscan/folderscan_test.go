@@ -30,7 +30,7 @@ func TestFileExtract(t *testing.T) {
 
 	for i := 0; i < 144; i++ {
 		f, _ := os.Create(fmt.Sprintf("./testdata/testbase2/0003Stream/%vd", i))
-		f.Write(empty)
+		_, _ = f.Write(empty)
 	}
 
 	/*
@@ -44,7 +44,7 @@ func TestFileExtract(t *testing.T) {
 	targets := []string{"./testdata/testbase", "./testdata/testbase/flat"}
 
 	for _, target := range targets {
-		goodTest := folderScanner{folder: target}
+		goodTest := FolderScanner{ParentFolder: target}
 
 		// run the test as if it was being run  by encode, checking each step of the process.
 		Convey(fmt.Sprintf("Checking that each stage of the interface writer runs without error, using %v as the input folder", target), t, func() {
@@ -55,7 +55,7 @@ func TestFileExtract(t *testing.T) {
 					si, folderErr := goodTest.GetStreamInformation()
 					So(folderErr, ShouldBeNil)
 					fakePipes := make(chan *encode.ChannelPackets, si.ChannelCount)
-					go pipeClear(fakePipes)
+					go pipeClear(fakePipes) // clear the pipes to prevent errors
 					StreamErr := goodTest.EssenceChannels(fakePipes)
 					So(StreamErr, ShouldBeNil)
 				})
@@ -83,12 +83,12 @@ func TestEncodeErrors(t *testing.T) {
 
 	targets := []string{"./testdata/errors/not/a/real/location", "./testdata/errors/mixedEssence"}
 	expectedErr := []string{
-		fmt.Sprintf("Error reading folder {{location}} : open {{location}}: %v", syscall.ENOENT), //syscall.ENOENT is used when a file is not found
-		"Mixed essence file types found in {{location}}, please ensure they are all the same type"}
+		fmt.Sprintf("error reading folder {{location}} : open {{location}}: %v", syscall.ENOENT), // syscall.ENOENT is used when a file is not found
+		"mixed essence file types found in {{location}}, please ensure they are all the same type"}
 
 	for i, target := range targets {
 		target, _ = filepath.Abs(target)
-		extractError := folderScanner{folder: target}
+		extractError := FolderScanner{ParentFolder: target}
 		errMessage, _ := mustache.Render(expectedErr[i], map[string]string{"location": target})
 
 		// run the test as if it was being run  by encode, checking each step of the process.
@@ -107,15 +107,15 @@ func TestEncodeErrors(t *testing.T) {
 
 	pipeTarget := "./testdata/errors/deleted"
 	target, _ := filepath.Abs("./testdata/errors/deleted/0000StreamTC0001d")
-	pipeBreak := folderScanner{folder: pipeTarget}
+	pipeBreak := FolderScanner{ParentFolder: pipeTarget}
 
 	// write the deleted file
 	f, _ := os.Create("./testdata/errors/deleted/0000StreamTC0001d")
-	f.Write([]byte("{\"A test json\":\"designed to be deleted\"}"))
+	_, _ = f.Write([]byte("{\"A test json\":\"designed to be deleted\"}"))
 	f.Close()
 
 	errMessage, _ := mustache.Render(
-		fmt.Sprintf("Error extracting data to encode from {{location}}:open {{location}}: %v", syscall.ENOENT), map[string]string{"location": target})
+		fmt.Sprintf("error extracting data to encode from {{location}}:open {{location}}: %v", syscall.ENOENT), map[string]string{"location": target})
 	// run the test as if it was being run  by encode, checking each step of the process.
 
 	Convey("Checking that the pipe errors are returned", t, func() {
@@ -127,7 +127,7 @@ func TestEncodeErrors(t *testing.T) {
 				So(folderErr, ShouldBeNil)
 
 				fakePipes := make(chan *encode.ChannelPackets, si.ChannelCount)
-				//delete the file to invoke an error
+				// delete the file to invoke an error
 				os.Remove("./testdata/errors/deleted/0000StreamTC0001d")
 
 				go pipeClear(fakePipes)

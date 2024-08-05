@@ -20,9 +20,9 @@ func (l *layout) metadataTest(metaData []*klv.KLV) {
 
 	// implement other metadata tests checking if things like primer packs are where they should be
 
-	//seg := newSegmentTest(l.testLog, fmt.Sprintf("Partition %0d MetaData Tests", len(l.Rip)-1)) // the length of the RIP gives the relative partition count
-	//defer seg.result()
-	//tester := NewGomegaWithT(seg)
+	// seg := newSegmentTest(l.testLog, fmt.Sprintf("Partition %0d MetaData Tests", len(l.Rip)-1)) // the length of the RIP gives the relative partition count
+	// defer seg.result()
+	// tester := NewGomegaWithT(seg)
 	tester := newTester(l.testLog, fmt.Sprintf("Partition %0d MetaData Tests", len(l.Rip)-1))
 	defer tester.Result()
 
@@ -35,32 +35,32 @@ func (l *layout) metadataTest(metaData []*klv.KLV) {
 
 	// if first.name != primer throw a wobbly
 	// cache the primer
+	/*
+		for _, md := range metaData {
 
-	for _, md := range metaData {
+			name := fullName(md.Key)
 
-		name := fullName(md.Key)
-
-		if name == "060e2b34.01010102.03010210.01000000" || name == "060e2b34.01010101.03010210.01000000" || name == "060e2b34.01020101.03010210.01000000" {
-			// skip for the moment
-		} else {
-			/*
+			if name == "060e2b34.01010102.03010210.01000000" || name == "060e2b34.01010101.03010210.01000000" || name == "060e2b34.01020101.03010210.01000000" {
+				// skip for the moment
+			} else {
+				/*
 
 
-				get the generated mrx name
+					get the generated mrx name
 
-				check all the children as you go along and make the map[string]any for each metadata
+					check all the children as you go along and make the map[string]any for each metadata
 
-				if name Contains strong reference vector then record teh contents.
-				record the UUID bytes and mark them as true. in a map
-				map of found and parent? unless there's dark sessence
+					if name Contains strong reference vector then record the contents.
+					record the UUID bytes and mark them as true. in a map
+					map of found and parent? unless there's dark sessence
 
-				utilise the fixed pack decodes from elsewhere. If length == 0 then do some other stuff
+					utilise the fixed pack decodes from elsewhere. If length == 0 then do some other stuff
 
-			*/
 
-		}
 
-	}
+			}
+
+		}*/
 }
 
 // TestMetaData runs tests on these bits of the metadata
@@ -71,6 +71,7 @@ func (c *CompleteTest) TestMetaData() {
 	})
 }
 
+/*
 func metadataName(namebytes []byte) string {
 
 	if len(namebytes) != 16 {
@@ -80,4 +81,4 @@ func metadataName(namebytes []byte) string {
 	return fmt.Sprintf("%02x%02x%02x%02x.%02x%02x%02x%02x.%02x%02x%02x%02x.%02x%02x%02x%02x",
 		namebytes[0], namebytes[1], namebytes[2], namebytes[3], namebytes[4], namebytes[5], namebytes[6], namebytes[7],
 		namebytes[8], namebytes[9], namebytes[10], namebytes[11], namebytes[12], namebytes[13], namebytes[14], namebytes[15])
-}
+}*/
