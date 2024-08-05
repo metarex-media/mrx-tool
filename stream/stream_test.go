@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"fmt"
 	"os"
+	"path/filepath"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -60,7 +61,14 @@ func TestBadStream(t *testing.T) {
 }
 
 func fileMake(files []string) error {
+
 	for _, fn := range files {
+		dir, _ := filepath.Abs(fn)
+		err := os.MkdirAll(dir, 0777)
+		if err != nil {
+			return err
+		}
+
 		fb := make([]byte, 250000)
 		rand.Read(fb)
 		f, err := os.Create(fn)
