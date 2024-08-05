@@ -63,7 +63,7 @@ func TestBadStream(t *testing.T) {
 func fileMake(files []string) error {
 
 	for _, fn := range files {
-		dir, _ := filepath.Abs(fn)
+		dir := filepath.Dir(fn)
 		err := os.MkdirAll(dir, 0777)
 		if err != nil {
 			return err
