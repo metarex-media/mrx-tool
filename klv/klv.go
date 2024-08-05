@@ -10,20 +10,20 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-func BufferWrap(fStream io.Reader, klvStream chan *KLV, size int) error {
+// StartKLVStream breaks the reader into a stream of the MRX klv values.
+func StartKLVStream(fStream io.Reader, klvStream chan *KLV, size int) error {
 
 	bufferStream := make(chan *stream.Packet, 1*size)
 
 	errs, _ := errgroup.WithContext(context.Background())
 
-	//initiate the klv stream
+	// initiate the stream of packets
 	errs.Go(func() error {
 		return stream.BufferManager(fStream, bufferStream, size)
 
 	})
 
-	//go stream.BufferManager(fStream, size, bufferStream)
-
+	// decode the packets to their klv values
 	errs.Go(func() error {
 		return klvDecode(bufferStream, klvStream)
 
@@ -42,18 +42,12 @@ type KLV struct {
 	LengthValue int
 }
 
-func klvEncode() {
-
-	// simple way of handling all these bits
-	// just smash them until the packet size is reached
-}
-
 /*
 func KLV encode that goes the other way
 // wonder if theres a buffer that will be generated to fit it
 */
 
-func klvDecode(buffer chan *stream.Packet, klvOut chan *KLV) error { //wg *sync.WaitGroup, buffer chan packet, errChan chan error) {
+func klvDecode(buffer chan *stream.Packet, klvOut chan *KLV) error { // wg *sync.WaitGroup, buffer chan packet, errChan chan error) {
 
 	defer close(klvOut)
 
@@ -63,7 +57,7 @@ func klvDecode(buffer chan *stream.Packet, klvOut chan *KLV) error { //wg *sync.
 
 	var partStream []byte
 	if !streamOpen { // stop pointer errors
-		return fmt.Errorf("Empty data stream")
+		return fmt.Errorf("empty data stream")
 	}
 
 	partStream = partStreamP.Packet
@@ -83,43 +77,8 @@ func klvDecode(buffer chan *stream.Packet, klvOut chan *KLV) error { //wg *sync.
 			return err
 		}
 
+		// set the key
 		section.Key = keyBytes
-		// check there's enough file to get a key and length
-		// if not extend the buffer
-		/*if len(partStream) < position+16 {
-			//	fmt.Println("trigger", position+16, len(partStream))
-			section.Key = streamContents.partStream[position:]
-			//	fmt.Println(partStream[position:])
-			runoff := position + 16 - len(streamContents.partStream)
-			partStreamP, streamOpen = <-streamContents.buffer
-			if !streamOpen {
-
-				break
-			}
-			streamContents.partStream = partStreamP.Packet
-
-			if !streamOpen {
-				//	errChan <- fmt.Errorf("Data stream unexpectedly closed")
-				return fmt.Errorf("Data stream unexpectedly closed")
-			}
-			//	fmt.Println(runoff, partStream[:runoff])
-			section.Key = append(section.Key, partStream[:runoff]...)
-			position = runoff
-
-		} else {
-			section.Key = partStream[position : position+16 : position+16]
-			position += 16
-		}*/
-
-		// get the BERDecode length
-		/*if position >= len(streamContents.partStream) {
-			partStreamP, streamOpen = <-streamContents.buffer
-			if !streamOpen {
-				return fmt.Errorf("unexpected end of data stream")
-			}
-			streamContents.partStream = partStreamP.Packet
-			position = 0
-		}*/
 
 		berDecodeLength := 1 + (berLength(streamContents.partStream[position]))
 		lengthBytes, err := streamContents.bridger(&position, berDecodeLength)
@@ -127,34 +86,11 @@ func klvDecode(buffer chan *stream.Packet, klvOut chan *KLV) error { //wg *sync.
 			return err
 		}
 
+		// Set the length
 		section.Length = lengthBytes
-		/*
-			if len(partStream) < position+berDecodeLength {
-				section.Length = partStream[position:]
-				//	fmt.Println(partStream[position:])
-				runoff := position + berDecodeLength - len(partStream)
-				partStreamP, streamOpen = <-buffer
-				if !streamOpen {
-					break
-				}
-				partStream = partStreamP.Packet
-				if !streamOpen {
-					//	errChan <- fmt.Errorf("Data stream unexpectedly closed")
-					return fmt.Errorf("Data stream unexpectedly closed")
-				}
-				//	fmt.Println(runoff, partStream[:runoff])
-				section.Length = append(section.Key, partStream[:runoff]...)
-				position = runoff
 
-			} else {
-				section.Length = partStream[position : position+berDecodeLength : position+berDecodeLength]
-				position += berDecodeLength
-			}*/
-
+		// find the value bytes
 		partLength, _ := BerDecode(section.Length)
-
-		//	section.Length = section.Length[:BERlength:BERlength]
-
 		section.LengthValue = partLength
 
 		valueBytes, err := streamContents.bridger(&position, partLength)
@@ -164,43 +100,6 @@ func klvDecode(buffer chan *stream.Packet, klvOut chan *KLV) error { //wg *sync.
 
 		section.Value = valueBytes
 
-		// go through the stream until all the data has been hooverd up
-		/*
-			remain := partLength
-			endPosition := position + partLength
-
-			if endPosition > len(streamContents.partStream) {
-				endPosition = len(streamContents.partStream)
-			}
-			//	fmt.Println("STOP2")
-			//position += +BERlength
-			for remain > 0 {
-				//fmt.Println(remain, position, endPosition, "BER LENGTH", section.key, total)
-
-				section.Value = append(section.Value, streamContents.partStream[position:endPosition:endPosition]...)
-
-				remain -= (endPosition - position)
-				if endPosition == len(streamContents.partStream) {
-					position = 0
-					endPosition = remain
-					partStreamP, streamOpen = <-streamContents.buffer
-					if !streamOpen {
-						if remain != 0 {
-							return fmt.Errorf("Buffer stream unexpectantly closed, was expecting at least %v bytes", remain)
-						}
-
-						break
-					}
-					streamContents.partStream = partStreamP.Packet
-					if endPosition > len(streamContents.partStream) {
-						endPosition = len(streamContents.partStream)
-					}
-				} else {
-					position = endPosition
-				}
-			}
-		*/
-		//	fmt.Println(section)
 		// return klv Section
 		klvOut <- &section
 	}
@@ -214,6 +113,7 @@ type streamer struct {
 	streamOpen bool
 }
 
+// bridger bridges the bytes between two packets
 func (s *streamer) bridger(positionPoint *int, bridgeSize int) ([]byte, error) {
 	position := *positionPoint
 	remain := bridgeSize
@@ -224,10 +124,9 @@ func (s *streamer) bridger(positionPoint *int, bridgeSize int) ([]byte, error) {
 	if endPosition > len(s.partStream) {
 		endPosition = len(s.partStream)
 	}
-	//	fmt.Println("STOP2")
-	//position += +BERlength
+
 	for remain > 0 {
-		//fmt.Println(remain, position, endPosition, "BER LENGTH", section.key, total)
+		// fmt.Println(remain, position, endPosition, "BER LENGTH", section.key, total)
 
 		bridged = append(bridged, s.partStream[position:endPosition:endPosition]...)
 
@@ -245,7 +144,7 @@ func (s *streamer) bridger(positionPoint *int, bridgeSize int) ([]byte, error) {
 				return bridged, nil
 			}
 
-			//else keep hoovering up the stream
+			// else keep hoovering up the stream
 			s.partStream = partStreamP.Packet
 			if endPosition > len(s.partStream) {
 				endPosition = len(s.partStream)
@@ -259,36 +158,6 @@ func (s *streamer) bridger(positionPoint *int, bridgeSize int) ([]byte, error) {
 	*positionPoint = position
 	return bridged, nil
 }
-
-/*
-// bridgeBytes searches across the buffer for when the data runs across a data point.
-func (s *streamer) bridgeBytes(positionPoint *int, bridgeSize int) ([]byte, error) {
-	var bridged []byte
-
-	position := *positionPoint
-	if len(s.partStream) < position+bridgeSize {
-		bridged = s.partStream[position:]
-		//	fmt.Println(partStream[position:])
-		runoff := position + bridgeSize - len(s.partStream)
-		partStreamP, streamOpen := <-s.buffer
-		fmt.Println(position, len(s.partStream))
-		if !streamOpen {
-			//	errChan <- fmt.Errorf("Data stream unexpectedly closed")
-			return bridged, fmt.Errorf("Data stream unexpectedly closed")
-		}
-		s.partStream = partStreamP.Packet
-		//	fmt.Println(runoff, partStream[:runoff])
-		bridged = append(bridged, s.partStream[:runoff]...)
-		position = runoff
-
-	} else {
-		bridged = s.partStream[position : position+bridgeSize : position+bridgeSize]
-		position += bridgeSize
-	}
-
-	*positionPoint = position
-	return bridged, nil
-}*/
 
 // TotalLength returns the total length of a klv packet
 func (k *KLV) TotalLength() int {
@@ -307,7 +176,7 @@ func berLength(length byte) int {
 	return int(0x0f & length)
 }
 
-// BerDecode decodes BERenocded lengths up to 9 bytes long
+// BerDecode decodes BERencoded lengths up to 9 bytes long
 // including the indentifier byte.
 func BerDecode(num []byte) (length int, encodeLength int) {
 
@@ -315,7 +184,7 @@ func BerDecode(num []byte) (length int, encodeLength int) {
 		return 0, 0
 	}
 	// mxf doesn;t exceed a length of 9
-	// which is 1 giving the lenght and 8 bytes
+	// which is 1 giving the length and 8 bytes
 	start := num[0]
 	if start < 0x7f {
 		return int(start), 1
@@ -329,7 +198,7 @@ func BerDecode(num []byte) (length int, encodeLength int) {
 		}
 
 		complete := make([]byte, 8)
-		//lengthproxy := int(length)
+		// lengthproxy := int(length)
 		postion := 7
 
 		if int(length) > len(num)-1 {
@@ -339,7 +208,7 @@ func BerDecode(num []byte) (length int, encodeLength int) {
 		for lengthproxy := int(length); lengthproxy > 0; lengthproxy-- {
 			complete[postion] = num[lengthproxy]
 			postion--
-			//lengthproxy--
+			// lengthproxy--
 		}
 
 		// 8 is the identifier

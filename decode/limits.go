@@ -2,6 +2,7 @@ package decode
 
 import "math"
 
+// contentPackageLimiter finds which keys need to be decoded.
 func contentPackageLimiter(allKeys []contentPackage, containers []container, contentPackageLimit []int) []container {
 
 	total := 0
@@ -21,48 +22,8 @@ func contentPackageLimiter(allKeys []contentPackage, containers []container, con
 		if len(groups) == 0 {
 			return containers
 		}
-		/*	var groups []int
-			switch len(contentPackageLimit) {
-			case 0:
 
-				// return the unfiltered containers
-				return containers
-			case 1:
-				//return an average of the middles
-				width := contentPackageLimit[0]
-				startPoint := keyCount / 2 // 10/11 both go to 5
-				essWidthMin := width / 2   // 3 goes to instead of 1.5
-				essWidthMax := int(math.Round(float64(width) / 2))
-
-				groups = []int{startPoint - essWidthMin, startPoint + essWidthMax}
-			case 2:
-				width := contentPackageLimit[0]
-				lastwidth := contentPackageLimit[1]
-				groups = []int{0, width, keyCount - lastwidth, keyCount} // return [:first] and [last:]
-			default:
-
-				width := contentPackageLimit[0]
-				lastwidth := contentPackageLimit[len(contentPackageLimit)-1]
-				groups = []int{0, width}
-
-				for i, limits := range contentPackageLimit[1 : len(contentPackageLimit)-1] {
-
-					// position is i+1 / fraction count
-					// the denominator is the count - 1 as the start and ends total one position
-					mid := ((i + 1) * len(allKeys)) / (len(contentPackageLimit) - 1)
-
-					essWidthMin := limits / 2 // 3 goes to instead of 1.5
-					essWidthMax := int(math.Round(float64(limits) / 2))
-					position := []int{mid - essWidthMin, mid + essWidthMax}
-					groups = append(groups, position...)
-
-				}
-				groups = append(groups, []int{keyCount - lastwidth, keyCount}...)
-
-				// return [:first] and [last:] and the middle formula
-			}*/
-
-		//	fmt.Println(groups, contentPackageLimit)
+		//	find the start and ends of every key based on their groups
 		for position := 0; position < len(groups); position += 2 {
 			start := groups[position]
 			end := groups[position+1]
@@ -140,7 +101,7 @@ func contentPackageLimiter(allKeys []contentPackage, containers []container, con
 			}
 			i++
 		}
-		//fmt.Println(newContentPackages)
+		// fmt.Println(newContentPackages)
 		containers[partition].ContentPackages = newContentPackages
 	}
 
@@ -148,6 +109,7 @@ func contentPackageLimiter(allKeys []contentPackage, containers []container, con
 
 }
 
+// skip generates the skip information of a content package
 func skip(count, skipCumlative int) contentPackage {
 	return contentPackage{ContentPackageLength: count,
 		ContentPackage: []keyLength{{Key: "00000000.00000000.00000000.00000000", Description: "A collection of skipped content packages", TotalByteCount: count, TotalContainerCount: skipCumlative}}, keep: true}
@@ -162,7 +124,7 @@ func groupSplit(contentPackageLimit []int, keyCount int) []int {
 		// return the unfiltered containers
 		return groups
 	case 1:
-		//return an average of the middles
+		// return an average of the middles
 		width := contentPackageLimit[0]
 		startPoint := keyCount / 2 // 10/11 both go to 5
 		essWidthMin := width / 2   // 3 goes to instead of 1.5

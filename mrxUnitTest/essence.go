@@ -35,9 +35,10 @@ type pattern struct {
 	length  int
 }
 
+/*
 type presentKey struct {
 	clockBinary, clockFrame []int
-}
+}*/
 
 // implement keys here
 // remove the need for an essence tag
@@ -74,7 +75,7 @@ func (l *layout) essenceTests(partition mxfPartition) {
 	// if the current partition is a stream check the key length should be 1
 	// and that the key is of a correct type
 
-	//test.Test("Checking the this partition pointer matches the actual byte offset of the file", func() bool {
+	// test.Test("Checking the this partition pointer matches the actual byte offset of the file", func() bool {
 	//		return tester.Expect(uint64(l.TotalByteCount)).To(Equal(partitionLayout.ThisPartition),
 	//			fmt.Sprintf("The byte offset %v, did not match the this partition value %v", l.TotalByteCount, partitionLayout.ThisPartition))
 	//	})
@@ -98,7 +99,7 @@ func (l *layout) essenceTests(partition mxfPartition) {
 
 	// @TODO insert more elements tests
 	// loop through the keys and ensure they match the partition type ignoring the unknown
-	//figure out if we want to cove them
+	// figure out if we want to cove them
 
 	// are there any exact tests in the
 	// check just the pattern for the moment
@@ -148,7 +149,7 @@ func (c *CompleteTest) TestEssenceKeyLayouts(pattern pattern) {
 		keyCopy[13], keyCopy[15] = 0x7f, 0x7f
 		// TODO split
 		if bytes.Equal(keyCopy, binaryClockedKey[:]) || bytes.Equal(keyCopy, textClockedKey[:]) {
-			if Pos == 0 && key[13] != 1 { //first element must have a count of 1
+			if Pos == 0 && key[13] != 1 { // first element must have a count of 1
 				fail = true
 				errMessage += fmt.Sprintf("The first clocked element must have an element count of 1, received a value of %v for %s\n", key[13], fullName(key))
 			}

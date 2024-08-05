@@ -14,7 +14,7 @@ The data that can be containerised as is categorised as one of four data types:
 - Text Clip Data
 - Text Frame Data
 
-Frame data is clocked, it has explicit timing information generated in the mrx
+Frame data is clocked, this means it has explicit timing information generated in the mrx
 file header. Clip wrapped data can contain embedded timing information
 (clocked), or contain unclocked data, such as a schema.
 
@@ -32,38 +32,30 @@ up to you.
 
 ## How to Use
 
-The command line currently has three methods of interacting with an mrx file:
-
-- Encoding a folder of metadata channels as an MRX file.
-- Decoding a mrx file to a folder of data.
-- Decoding the overview of an mrx file into a yaml file.
-
-The encoding and decoding methods are cyclic, a mrx file that has been decoded
-into a folder and then the folder can then be encoded into a new mrx file, which
-can then be decoded and so on. Please check the readme for technical use of the
-command line, or by using the help command.
+Check out the [readme](./README.MD) for running MRX tool.
 
 ## Suggested workflow for encoding
 
 The recommended workflow for encoding mrx files using this tool, is to generate
 your metadata channels into an ordered file system with format described below.
 Then using the CLI, encode that file system as an mrx file, ensuring to declare
-the frame rates of in the configuration file. The default frame rate is 24 fps
+the frame rates of in the configuration file.
+
+The default frame rate is 24 fps
 if no configuration is found. The first frame wrapped metadata encountered in
 the encoding process sets the frame rate for the rest of the frame wrapped data.
+So ensure the quickest metadata is declared first, to avoid timing issues.
 
 When generating your data into the file system, for it to be encoded, the
 following file system layout is to be used. The folder naming layout has a
-header which identifies the channel with the naming format 0000Stream, each  is
-to hold only one type of data, please note a channel will be multiplexed with
+header which identifies the channel with the naming format 0000Stream{{DataType}},
+where each channel is to hold only one type of data,
+please note a channel will be multiplexed with
 other channels if these contain frame wrapped data. The channels must start as
-0000Stream and increase incrementally, so they can be configuration. Then each
-child folder is numerically ordered from 0000 to 9999 with the naming format
-0000mrxrip, these are partitions to split up the data when the count exceeds
-9999 and may not represent the partitions in the generated mxf file. Where each
-folder is to contain only one type of data (e.g. Binary Unclocked Data), which
-is numerically listed. The data files within the folder must follow the naming
-sequence of 0000{{dataType}}, with no file extension.
+0000Stream and increase incrementally, so they can be configured correctly.
+The data files within the folder must follow the naming
+sequence of 0000d, with no file extension. Where their numerical order in the
+folder is order they will be generated in the file.
 
 The dataType values and their meaning are:
 
@@ -100,13 +92,16 @@ for example this layout
 
 - 0000StreamTC0000d
 - 0001StreamTE0000d
-- 0002StreamTCp0000d
+- 0002StreamTC0000d
 
 would be reordered to if the cli was used to encode and decode and mrx file.
 
 - 0000StreamTC0000d
 - 0001StreamTC0000d
 - 0002StreamTE0000d
+
+See how the embedded stream `StreamTE` was moved to the end
+of the folders.
 
 ## The Mrx Roundtrip File
 
@@ -120,7 +115,7 @@ The layout of the json is two top level fields of the Manifest and Configuration
 ```json
 {
 
-    "Configuration" : {"json data" },
+    "Configuration" : {"json data"},
     "Manifest" : {"json data"}
 }
 ```
@@ -130,12 +125,17 @@ The layout of the json is two top level fields of the Manifest and Configuration
 The configuration contains the MRX file version, the default channel properties
 and the stream properties of the individual channels. The default stream
 properties and stream properties contain the same fields, so that substitutions
-can be easily made.
+can be easily made. As the default properties are used if no stream properties
+are declared.
 
-These fields are the frame rate in the form "x/y" or "static" and a label of the
-data. "static" does not need to be declared but may be useful for reading over
+These fields are the:
+
+- `FrameRate` - this is in the form "x/y" or "static" and a label of the
+data. "static" does not need to be declared, as it is not used internally for identifying
+embedded data, but may be useful for reading over
 the configuration to understand the metadata channel properties.
-The NameSpace field, identifies the namespace of the metadata.
+- `NameSpace` this identifies the namespace of the metadata.
+- `Type` a description of the metadata.
 
 An example configuration is below.
 
@@ -174,14 +174,16 @@ and the tool that made the manifest. Then the channel field, which is an array
 of the individual channels, these share a "Common Data Properties" key that
 contains metadata for that channel, such as the stream ID. Each channel contains
 the essence array, which represents each metadata item in the channel. An
-example is below.
+example manifest is given below.
 
 ```json
-"Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
-"DataOrigin": "C:\\example\\location\\0000frameText",
-"EditDate": "2023-06-15 14:14:15.4862202 +0100 BST",
-"Extra User Metadata" : {
-    "An example" : "of the user data to be added"
+{
+  "Hash": "db9da06cb619f3884d533c9e6cfd9bf8335f19f34bdbd948d2b4bc67e8dbe945",
+  "DataOrigin": "C:\\example\\location\\0000frameText",
+  "EditDate": "2023-06-15 14:14:15.4862202 +0100 BST",
+  "Extra User Metadata" : {
+      "An example" : "of the user data to be added"
+  }
 }
 ```
 
@@ -207,7 +209,7 @@ aligned grouping, where the frame rate content is declared first. As in SMPTE
 
 The essence data keys cover:
 
-1. The type of metadata,  frame wrapped etc.
+1. The type of metadata, frame wrapped etc.
 2. The essence count in that content package, e.g. third frame wrapped data
    type.
 3. The count of that essence type (up to 127) in a content package.
@@ -218,8 +220,9 @@ essence in a single content package. A single frame (at the frame rate set by
 the the first essence) is encompassed in a single content package, which may
 contain several essence keys, until a new key frame essence is encountered. The
 essence keys for the frame wrapped data, follow the generic container pattern.
-Each essence key one has an essence count,  at the 14 byte, with a count from 1
-to 127 the essence count is the number of essence items in the content package .
+
+Each essence key one has an essence count, at the 14th byte, with a count from 1
+to 127 the essence count is the number of essence items in the content package.
 The 16th byte is the element number, this is a unique value amongst essence keys
 of the same type. The element number is the incremental count of this element
 type, if three frame wrapped data elements are present then they will have
@@ -227,10 +230,12 @@ element numbers of 00, 01 and 02 respectively.
 
 The IXSD essence key from does not follow this format. The 14th byte is the
 element number and the 16th byte is the element type. This is different from the
-generic partition key and the rdd 47 key has been used so that the 14th byte is
-the essence count and the 16th byte is the element number.
+generic partition key and the rdd 47 key values in their documents.
+In this instance the 14th byte is
+the essence count and the 16th byte is the element number,
+to keep conformity across Metarex.
 
-Clip wrapped data follows the methods layed out in RP2057 and rdd 47, where text
+Clip wrapped data (binary and text) follows the methods layed out in RP2057 and rdd 47, where text
 based documents are stored in generic partitions. Each generic partition has an
 incremental stream id, they are placed immediately before the manifest
 partition. Then the footer partition follows the manifest partition.

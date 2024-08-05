@@ -1,0 +1,97 @@
+Partitions:
+    - PartitionType: header
+      HeaderLength: 3602
+      EssenceByteCount: 0
+      ContentPackageCount: 0
+    - PartitionType: body
+      HeaderLength: 140
+      EssenceByteCount: 180
+      ContentPackageCount: 3
+      ContentPackages:
+        - ContentPackage:
+            - Key: 060e2b34.01020101.0f020101.01010000
+              Symbol: FrameWrappedBinaryData
+              Description: Identifies Frame Wrapped Binary Data
+              FileOffset: 3742
+              Length: 13
+              TotalByteCount: 30
+            - Key: 060e2b34.01020105.0e090502.01010100
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 3772
+              Length: 13
+              TotalByteCount: 30
+          ContentPackageLength: 60
+        - ContentPackage:
+            - Key: 060e2b34.01020101.0f020101.01010000
+              Symbol: FrameWrappedBinaryData
+              Description: Identifies Frame Wrapped Binary Data
+              FileOffset: 3802
+              Length: 13
+              TotalByteCount: 30
+            - Key: 060e2b34.01020105.0e090502.01010100
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 3832
+              Length: 13
+              TotalByteCount: 30
+          ContentPackageLength: 60
+        - ContentPackage:
+            - Key: 060e2b34.01020101.0f020101.01010000
+              Symbol: FrameWrappedBinaryData
+              Description: Identifies Frame Wrapped Binary Data
+              FileOffset: 3862
+              Length: 13
+              TotalByteCount: 30
+            - Key: 060e2b34.01020105.0e090502.01010100
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 3892
+              Length: 13
+              TotalByteCount: 30
+          ContentPackageLength: 60
+      ContentPackageStatistics:
+        Mean: 60
+        Variance: 0
+        StandardDeviation: 0
+        Minimum: 60
+        Maximum: 60
+    - PartitionType: body
+      HeaderLength: 140
+      EssenceByteCount: 30
+      ContentPackageCount: 1
+      ContentPackages:
+        - ContentPackage:
+            - Key: 060e2b34.0101010c.0d01050d.00000000
+              Symbol: ClipWrappedTextData
+              Description: Identifies Clip Wrapped Text Data
+              FileOffset: 4062
+              Length: 13
+              TotalByteCount: 30
+          ContentPackageLength: 30
+    - PartitionType: body
+      HeaderLength: 140
+      EssenceByteCount: 30
+      ContentPackageCount: 1
+      ContentPackages:
+        - ContentPackage:
+            - Key: 060e2b34.0101010c.0d01050d.01000000
+              Symbol: ClipWrappedBinaryData
+              Description: Identifies Clip Wrapped Binary Data
+              FileOffset: 4232
+              Length: 13
+              TotalByteCount: 30
+          ContentPackageLength: 30
+    - PartitionType: body
+      HeaderLength: 140
+      EssenceByteCount: 2125
+      ContentPackageCount: 1
+      ContentPackages:
+        - ContentPackage:
+            - Key: 060e2b34.01020101.0f020101.05000000
+              Symbol: MetarexManifest
+              Description: Identifies the Metarex Manifest
+              FileOffset: 4402
+              Length: 2106
+              TotalByteCount: 2125
+          ContentPackageLength: 2125

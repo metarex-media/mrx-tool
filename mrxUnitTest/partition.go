@@ -74,15 +74,15 @@ func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error
 	defer l.metadataTest(flushedMeta)
 	// defer metadata hanlding defer()metadata hndling (which generates a new thing)
 
-	//check the header metadata count
+	// check the header metadata count
 	tester.TestPartitionMetadataCount(metaByteCount, int(partitionLayout.HeaderByteCount))
 
 	l.TotalByteCount += metaByteCount
-	//hoover up the indextable and remove it to prevent it being mistaken as essence
+	// hoover up the indextable and remove it to prevent it being mistaken as essence
 	if partitionLayout.IndexTable {
 		index, open := <-metadata
 		if !open {
-			return fmt.Errorf("error when using klv data klv stream interrupted") //explain which partition this occured in.
+			return fmt.Errorf("error when using klv data klv stream interrupted") // explain which partition this occured in.
 		}
 		l.TotalByteCount += index.TotalLength()
 	}
@@ -172,20 +172,20 @@ func partitionExtract(partionKLV *klv.KLV) mxfPartition {
 	var partPack mxfPartition
 	switch partionKLV.Key[13] {
 	case 02:
-		//header
+		// header
 		partPack.PartitionType = headerPartition
 	case 03:
-		//body
+		// body
 		if partionKLV.Key[14] == 17 {
 			partPack.PartitionType = genericStreamPartition
 		} else {
 			partPack.PartitionType = bodyPartition
 		}
 	case 04:
-		//footer
+		// footer
 		partPack.PartitionType = footerPartition
 	default:
-		//is nothing
+		// is nothing
 		partPack.PartitionType = "invalid"
 		return partPack
 	}
@@ -222,7 +222,7 @@ func partitionExtract(partionKLV *klv.KLV) mxfPartition {
 
 	if indexLength > 0 {
 
-		//develop and index table body to use
+		// develop and index table body to use
 		partPack.IndexTable = true
 	}
 
@@ -256,13 +256,12 @@ func (l *layout) ripHandle(rip *klv.KLV) {
 	// GinkgoWriter
 	// var t *testing.T
 	//	defer GinkgoRecover()
-	//RegisterFailHandler(Fail)
+	// RegisterFailHandler(Fail)
 
 	tester := newTester(l.testLog, "Random Index Pack Tests")
 	defer tester.Result()
 	// res.Expect()
 	tester.TestRandomIndexPack(l.Rip, gotRip)
-
 
 }
 

@@ -21,7 +21,7 @@ var decodeSaveOut string
 var zeroCount int
 
 func init() {
-	//set up flags for the two different decode commands
+	// set up flags for the two different decode commands
 	DecodeCmd.Flags().StringVar(&decodeIn, "input", "", "identifies the file to be decoded")
 	DecodeCmd.Flags().StringVar(&decodeOut, "output", "", "the file to be generated and the decode infomration to be saved to")
 	DecodeCmd.Flags().StringVar(&decodeSplit, "split", "", "split gives an input")
@@ -80,12 +80,12 @@ The essence array contains the following information in each element. It has the
 content packages with the key "00000000.00000000.00000000.00000000" are skipped content packages, these represent an array of content packages as a single item.	`,
 
 	// Run interactively unless told to be batch / server
-	RunE: DecodeRun,
+	RunE: decodeStructure,
 }
 
-func DecodeRun(Command *cobra.Command, args []string) error {
+func decodeStructure(_ *cobra.Command, _ []string) error {
 
-	//check the input file was given
+	// check the input file was given
 	if decodeIn == "" {
 		return fmt.Errorf("no input file chosen please use the --input flag")
 	}
@@ -100,22 +100,34 @@ func DecodeRun(Command *cobra.Command, args []string) error {
 
 	f, err := os.Open(decodeIn)
 	if err != nil {
-		return fmt.Errorf("Error reading %v: %v", decodeIn, err)
+		return fmt.Errorf("error reading %v: %v", decodeIn, err)
 	}
 
 	// check if the outwriter is a stream or straight to stdout
 	var fout io.Writer
 	if decodeOut != "" {
 		decodeOut, _ := filepath.Abs(decodeOut)
+
+		parentFolder := filepath.Dir(decodeOut)
+
+		// check if the folder exits
+		_, err := os.Stat(parentFolder)
+		if os.IsNotExist(err) {
+			err = os.MkdirAll(parentFolder, os.ModePerm)
+			if err != nil {
+				return fmt.Errorf("error generating the output folder %v: %v", parentFolder, err)
+			}
+		}
+
 		fout, err = os.Create(decodeOut)
 		if err != nil {
-			return fmt.Errorf("Error generating the output file %v: %v", decodeIn, err)
+			return fmt.Errorf("error generating the output file %v: %v", decodeIn, err)
 		}
 	} else {
 		fout = os.Stdout
 	}
 
-	err = StreamDecode(f, fout, decodespl, jsonFile)
+	err = MRXStructureExtractor(f, fout, decodespl, jsonFile)
 	if err != nil {
 		return err
 	}
@@ -146,7 +158,7 @@ func decodeSpliter(splitString string) ([]int, error) {
 		size, err := strconv.Atoi(s)
 
 		if err != nil {
-			return []int{}, fmt.Errorf("Error encouterd splitting %v: %v", splitString, err)
+			return []int{}, fmt.Errorf("error encouterd splitting %v: %v", splitString, err)
 		}
 
 		splitSlice[i] = size
@@ -176,11 +188,11 @@ The esskeyTypes are:
 	`,
 
 	// Run interactively unless told to be batch / server
-	RunE: DecodeSaveRun,
+	RunE: decodeAndSave,
 }
 
-// DecodeSaveRun is the function called to extract the esence
-func DecodeSaveRun(Command *cobra.Command, args []string) error {
+// decodeAndSave is the function called to extract the esence
+func decodeAndSave(_ *cobra.Command, _ []string) error {
 
 	err := inoutCheck(decodeSaveIn, decodeSaveOut)
 	if err != nil {
@@ -196,7 +208,7 @@ func DecodeSaveRun(Command *cobra.Command, args []string) error {
 		return fmt.Errorf("The leadingZeroCount of %d is invalid please choose a number between 0 and 8", zeroCount)
 	}
 
-	err = EssenceDecode(f, decodeSaveOut, false, zeroCount)
+	err = EssenceExtractToFile(f, decodeSaveOut, false, zeroCount)
 
 	if err != nil {
 		return err

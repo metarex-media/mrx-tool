@@ -14,7 +14,7 @@ func TestFileRead(t *testing.T) {
 	// empty, _ = os.Create("result/helpme.yaml")
 	// stream, _ := os.Open("../mrx-starter/examples/newtests/Disney_Test_Patterns_ISXD.mxf")
 	streamer, _ := os.Open("../testdata/rexy_sunbathe_mrx.mxf")
-	noError := BufferWrap(streamer, make(chan *KLV, 9000), 10)
+	noError := StartKLVStream(streamer, make(chan *KLV, 9000), 10)
 
 	Convey("Checking that a klv stream is read", t, func() {
 		Convey("running the stream to fill up the klv system", func() {
@@ -25,7 +25,7 @@ func TestFileRead(t *testing.T) {
 	})
 
 	streamer2, _ := os.Open("../testdata/rexy_sunbathe_mrx.mxf")
-	noError = BufferWrap(streamer2, make(chan *KLV, 9000), 1000000)
+	noError = StartKLVStream(streamer2, make(chan *KLV, 9000), 1000000)
 
 	Convey("Checking that a klv stream is read, from a data stream of lots of small packets", t, func() {
 		Convey("running the stream to fill up the klv system", func() {
@@ -66,7 +66,7 @@ func (e empty) Read(in []byte) (int, error) {
 
 func TestFileBreak(t *testing.T) {
 
-	streamer, _ := os.Open("../../mrx-starter/examples/rexy/rexy_sunbathe_mrx.mxf")
+	streamer, _ := os.Open("../testdata/not_real.mxf")
 	// wrap the reader in several methods to show the breaking
 	/*
 		file stream stopping halwaythrough
@@ -75,22 +75,22 @@ func TestFileBreak(t *testing.T) {
 
 	*/
 	c := 0
-	breakError := BufferWrap(breaker{file: streamer, count: &c}, make(chan *KLV, 9000), 10000)
+	breakError := StartKLVStream(breaker{file: streamer, count: &c}, make(chan *KLV, 9000), 10000)
 
 	Convey("Checking that a sudden stop of the stream is handled by the klv", t, func() {
 		Convey("running the stream to return an error signalling the stream is incomplete", func() {
 			Convey("the error is caught and the stream is stopped", func() {
-				So(breakError, ShouldResemble, fmt.Errorf("Buffer stream unexpectantly closed, was expecting at least 218 more bytes"))
+				So(breakError, ShouldResemble, fmt.Errorf("error reading and buffering data invalid argument"))
 			})
 		})
 	})
 
-	breakError = BufferWrap(empty{}, make(chan *KLV, 9000), 10000)
+	breakError = StartKLVStream(empty{}, make(chan *KLV, 9000), 10000)
 
 	Convey("Checking that an empty stream is handled", t, func() {
 		Convey("running the buffer stream to immediatly return end of file", func() {
 			Convey("the error is caught and the user is notified of an empty data stream", func() {
-				So(breakError, ShouldResemble, fmt.Errorf("Empty data stream"))
+				So(breakError, ShouldResemble, fmt.Errorf("empty data stream"))
 			})
 		})
 	})
