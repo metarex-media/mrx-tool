@@ -13,7 +13,14 @@ func TestGoodStream(t *testing.T) {
 
 	// os.Create("./testdata/testfile.txt")
 
-	fileMake([]string{"./testdata/testfile.txt"})
+	setErr := fileMake([]string{"./testdata/testfile.txt"})
+	Convey("Setting test files to read", t, func() {
+		Convey("setting up  test file with random bytes", func() {
+			Convey("no error is generated and the test file is set up", func() {
+				So(setErr, ShouldBeNil)
+			})
+		})
+	})
 
 	f, _ := os.Open("./testdata/testfile.txt")
 
@@ -52,12 +59,20 @@ func TestBadStream(t *testing.T) {
 
 }
 
-func fileMake(files []string) {
+func fileMake(files []string) error {
 	for _, fn := range files {
 		fb := make([]byte, 250000)
 		rand.Read(fb)
-		f, _ := os.Create(fn)
+		f, err := os.Create(fn)
+		if err != nil {
+			return err
+		}
 		defer f.Close()
-		f.Write(fb)
+		_, err = f.Write(fb)
+		if err != nil {
+			return err
+		}
 	}
+
+	return nil
 }
