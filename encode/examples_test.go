@@ -49,7 +49,7 @@ func TestStreamEncode(t *testing.T) {
 		}
 		fmt.Println(dat.MRXID, dat.FrameRate, len(dat.Data))
 	}
-	fmt.Println(len(dec))
+	fmt.Println(len(dec), err, decErr, nonMatchErr)
 	if d != nil {
 		for _, data := range d.Data {
 			if string(data) != `{"test":true}` {
