@@ -47,9 +47,9 @@ func TestStreamEncode(t *testing.T) {
 		if dat.MRXID != "060e2b34.01020101.0f020101.05000000" {
 			d = dat
 		}
-		//	fmt.Println(dat.MRXID, dat.FrameRate, len(dat.Data))
+		fmt.Println(dat.MRXID, dat.FrameRate, len(dat.Data))
 	}
-	//	fmt.Println(len(dec), err, decErr, nonMatchErr)
+	fmt.Println(len(dec), err, decErr, nonMatchErr)
 	if d != nil {
 		for _, data := range d.Data {
 			if string(data) != `{"test":true}` {

@@ -24,7 +24,7 @@ bark:
 tester:
   stage: test
   script:
-    - go test ./...
+    - go test ./... -v
 
 mega-linter:
   stage: lint
