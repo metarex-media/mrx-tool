@@ -47,19 +47,20 @@ func TestStreamEncode(t *testing.T) {
 		if dat.MRXID != "060e2b34.01020101.0f020101.05000000" {
 			d = dat
 		}
-
 	}
 
-	for _, data := range d.Data {
-		if string(data) != `{"test":true}` {
-			nonMatchErr = fmt.Errorf("data not sent got %s instead of {\"test\":true}", string(data))
+	if d != nil {
+		for _, data := range d.Data {
+			if string(data) != `{"test":true}` {
+				nonMatchErr = fmt.Errorf("data not sent got %s instead of {\"test\":true}", string(data))
+			}
 		}
 	}
 	// run the test as if it was being run  by encode, checking each step of the process.
 	Convey("Checking that a simple version of the write function works, with a basic set of clipwrapped data", t, func() {
 		Convey("checking the write generates an file without error", func() {
 			Convey("No error is returned for the encoding", func() {
-
+				So(d, ShouldNotBeNil)
 				So(err, ShouldBeNil)
 				So(decErr, ShouldBeNil)
 				So(nonMatchErr, ShouldBeNil)
