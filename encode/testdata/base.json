@@ -1,0 +1,20 @@
+{
+    "Configuration": {
+        "MRXVersion": "pre alpha",
+        "DefaultStreamProperties": {
+            "FrameRate": "24/1"
+        },
+        "StreamProperties": {
+            "0": {
+                "Type": "CameraComponent",
+                "FrameRate": "24/1",
+                "NameSpace": "https://metarex.media/ui/reg/MRX.123.456.789.ghi"
+            },
+            "1": {
+                "Type": "Static Tail Data",
+                "FrameRate": "",
+                "NameSpace": "https://metarex.media/reg/MRX.123.456.789.def"
+            }
+        }
+    }
+}

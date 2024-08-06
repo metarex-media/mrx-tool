@@ -297,7 +297,6 @@ func streamClean(foundStream StreamInformation, userStream manifest.Configuratio
 func configUpdate(base *manifest.Configuration, overWrite manifest.Configuration) error {
 
 	updateBytes, err := json.Marshal(overWrite)
-
 	if err != nil {
 		return fmt.Errorf("error handling the configuration overwrite struct: %v", err)
 	}
@@ -825,7 +824,6 @@ const (
 // using any previous manifests if required
 func (mw *MrxWriter) encodeRoundTrip(setup *manifest.Roundtrip, manifesters []manifest.Overview, mrxChans mrxLayout, manifestCount int) ([]byte, error) {
 	prevManifest := setup.Manifest
-
 	prevManifestTag := manifest.TaggedManifest{Manifest: prevManifest}
 
 	UUIDb, _ := mw.writeInformation.mrxUMID.MarshalText()

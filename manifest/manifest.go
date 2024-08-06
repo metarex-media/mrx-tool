@@ -64,34 +64,34 @@ func ManifestValidator(manifest []byte, verbose bool) error {
 // Roundtrip is the json structure for
 // for the configuration and manifest.
 type Roundtrip struct {
-	Config   Configuration `json:"Configuration"`
-	Manifest Manifest      `json:"Manifest"`
+	Config   Configuration `json:"Configuration,omitempty"`
+	Manifest Manifest      `json:"Manifest,omitempty"`
 }
 
 // Configuration is the configuration for the global
 // file and each data stream.
 type Configuration struct {
-	Version string           `json:"MRXVersion"`
-	Default StreamProperties `json:"DefaultStreamProperties"`
+	Version string           `json:"MRXVersion,omitempty"`
+	Default StreamProperties `json:"DefaultStreamProperties,omitempty"`
 
-	StreamProperties map[int]StreamProperties `json:"StreamProperties"`
+	StreamProperties map[int]StreamProperties `json:"StreamProperties,omitempty"`
 }
 
 // StreamProperties are the individual properties
 // of the metadata
 type StreamProperties struct {
-	StreamType string `json:"Type"`
-	FrameRate  string `json:"FrameRate"`
-	NameSpace  string `json:"NameSpace"`
+	StreamType string `json:"Type,omitempty"`
+	FrameRate  string `json:"FrameRate,omitempty"`
+	NameSpace  string `json:"NameSpace,omitempty"`
 }
 
 // add this to the main mrx writer body
 type Manifest struct {
-	UMID    string // UMID of the mrx file
-	Version string `json:"Mrx Manifest Version"` // what mainfest version was this generated to
+	UMID    string `json:"UMID,omitempty"`                 // UMID of the mrx file
+	Version string `json:"Mrx Manifest Version,omitempty"` // what mainfest version was this generated to
 	MRXTool string // MRXTool if the program that generated ut
 	// An array of the partitions and their contents
-	DataStreams []Overview `json:"Data Streams"`
+	DataStreams []Overview `json:"Data Streams,omitempty"`
 	// Only the highest Manifest shall have the previous section
 	// Manifests in the previous array shall keep the array open
 	History []TaggedManifest `json:"History,omitempty" yaml:"History,omitempty"`
@@ -100,14 +100,14 @@ type Manifest struct {
 // TaggedManifest is the same as a Manifest,
 // with addition of the date the manifest was last edited.
 type TaggedManifest struct {
-	Date string `json:"SnapShot Date"`
+	Date string `json:"SnapShot Date,omitempty"`
 	Manifest
 }
 
 type Overview struct {
 	// give any metadata more localised metadata here
 	// have the list of properties here
-	Common  GroupProperties `json:"Common Data Properties"`
+	Common  GroupProperties `json:"Common Data Properties,omitempty"`
 	Essence []EssenceProperties
 }
 

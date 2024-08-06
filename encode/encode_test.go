@@ -2,6 +2,8 @@ package encode
 
 import (
 	"bytes"
+	"encoding/json"
+	"os"
 	"sync"
 	"testing"
 
@@ -112,6 +114,61 @@ func TestFileWrite(t *testing.T) {
 				Convey("The key order matches the expected", func() {
 					So(keyOrder, ShouldResemble, expectedOrder[i])
 
+				})
+			})
+		})
+	}
+
+	// Checking the manifest
+	embedAndClipsManifest := [][]simpleContents{
+		// clip text then frame text
+		{{key: TextClip, contents: [][]byte{[]byte("test metadata")}},
+			{key: TextFrame, contents: [][]byte{[]byte("test metadata"), []byte("test metadata"), []byte("test metadata")}}},
+	}
+
+	// the exepected order of the file handlers
+	expectedOrderManifest := [][]string{
+		{"060e2b34.01020105.0e090502.01010100", "060e2b34.0101010c.0d01050d.00000000", "060e2b34.01020101.0f020101.05000000"},
+	}
+
+	b, _ := os.ReadFile("./testdata/base.json")
+	var rt manifest.Roundtrip
+	json.Unmarshal(b, &rt)
+	for i, embedAndClip := range embedAndClipsManifest {
+		embedAndClipFrame := simpleTest{contents: embedAndClip, fakeRoundTrip: &rt}
+
+		writerembedAndClip, newMXRerr := NewMRXWriterFR("24/1")
+
+		writerembedAndClip.UpdateWriteMethod(embedAndClipFrame)
+
+		fileBufTCTE := bytes.NewBuffer([]byte{})
+		err = writerembedAndClip.Write(fileBufTCTE, &MrxEncodeOptions{})
+
+		order, decodeErrTCTE := decode.ExtractStreamData(fileBufTCTE)
+		// run the test as if it was being run  by encode, checking each step of the process.
+
+		keyOrder := make([]string, len(order))
+		var outConf manifest.Roundtrip
+		for i, key := range order {
+			keyOrder[i] = key.MRXID
+
+			if key.MRXID == "060e2b34.01020101.0f020101.05000000" {
+				json.Unmarshal(key.Data[0], &outConf)
+			}
+		}
+
+		Convey("Checking that a simple version of the write function works, with a mix of data types and the manifest is preserved", t, func() {
+			Convey("checking the write generates an file without error, and that the file can be decoded without err", func() {
+				Convey("No error is returned for the encoding", func() {
+					So(newMXRerr, ShouldBeNil)
+					So(err, ShouldBeNil)
+					So(decodeErrTCTE, ShouldBeNil)
+				})
+			})
+			Convey("The file is written frame data first, then embedded", func() {
+				Convey("The key order and manifest matches the expected", func() {
+					So(keyOrder, ShouldResemble, expectedOrderManifest[i])
+					So(rt.Config, ShouldResemble, outConf.Config)
 				})
 			})
 		})
