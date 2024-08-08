@@ -1,13 +1,32 @@
 # MRX Tool
 
+This is the technical documentation for MRX-tool, with
+MRX design information and file design guides.
+Please make sure you have read the [README][rm] and
+are familiar with mrx-tool before reading this
+documentation.
+
+## Contents
+
+- [Scope](#scope)
+- [How to use](#how-to-use)
+- [Suggested workflow for encoding](#suggested-workflow-for-encoding)
+- [Metadata Timing](#metadata-timing)
+- [The Mrx Roundtrip File](#the-mrx-roundtrip-file)
+  - [Configuration](#configuration)
+  - [The manifest](#the-manifest)
+  - [Optional Parameters](#optional-parameters)
+- [MRX Design Documentation](#mrx-design-documentation)
+- [Metarex Glossary](#metarex-glossary)
+
 ## Scope
 
 mrx-tool is a command line tool for containerising and uncontainerising
 metadata, to and from a single Metadata Resource Express (MRX) file. This
 command line tool will contain the means for simple encoding and decoding of mrx
-files and not methods for handling the metadata.
+files and not any methods for handling the metadata.
 
-The data that can be containerised as is categorised as one of four data types:
+All metadata can be categorised using Metarex as one of four data types:
 
 - Binary Clip Data
 - Binary Frame Data
@@ -22,13 +41,13 @@ This command line tool does not feature custom data types, e.g. data for private
 use. However, it is still designed to unwrap them, but they will be flagged as
 generic essence, instead of the private data type.
 
-This project is currently in development and may not be reflective of the final
-MRX file design.
-
 This command line is not designed for creating metadata to encode, or for
 handling decoded metadata. It is only intended to encode and decode the metadata
 into a file so it can be transported. What you do with the extracted metadata is
 up to you.
+
+This project is currently in development and may not be reflective of the final
+MRX file design.
 
 ## How to Use
 
@@ -36,15 +55,13 @@ Check out the [readme](./README.MD) for running MRX tool.
 
 ## Suggested workflow for encoding
 
+This section takes you through using mrx-tool for encoding groups of
+metadata files as MRX files.
+
 The recommended workflow for encoding mrx files using this tool, is to generate
 your metadata channels into an ordered file system with format described below.
-Then using the CLI, encode that file system as an mrx file, ensuring to declare
-the frame rates of in the configuration file.
-
-The default frame rate is 24 fps
-if no configuration is found. The first frame wrapped metadata encountered in
-the encoding process sets the frame rate for the rest of the frame wrapped data.
-So ensure the quickest metadata is declared first, to avoid timing issues.
+Then using the CLI, encode that file system as an mrx file, making sure to declare
+the frame rates of the metadata in the [configuration file](#configuration).
 
 When generating your data into the file system, for it to be encoded, the
 following file system layout is to be used. The folder naming layout has a
@@ -66,49 +83,86 @@ The dataType values and their meaning are:
 
 So an example file system may look like:
 
-- 0000StreamTC0000d
-- 0000StreamTC0001d
-- 0001StreamBE0000d
+- `0000StreamTC0000d`
+- `0000StreamTC0001d`
+- `0001StreamBE0000d`
 
 or
 
-- 0000StreamTC
-  - 0000d
-  - 0001d
-  - 0002d
-  - 0003d
-  - 0004d
-- 0001streamTE
-  - 0000d
+- `0000StreamTC`
+  - `0000d`
+  - `0001d`
+  - `0002d`
+  - `0003d`
+  - `0004d`
+- `0001streamTE`
+  - `0000d`
 
 The mrx file can be validated by running the CLI again to extract the contents,
 including the generated [manifest](#the-manifest), the extracted file system
 should match the layout of the input filesystem. However due to the internal mrx
-layout described [here](#design-documentation), the channels may be reordered
+layout described [here](#mrx-design-documentation), the channels may be reordered
 when being encoded and decoded again, this will occur if clip wrapped data is
 placed before frame wrapped data.
 
-for example this layout
+for example this folder layout
 
-- 0000StreamTC0000d
-- 0001StreamTE0000d
-- 0002StreamTC0000d
+- `0000StreamTC0000d`
+- `0001StreamTE0000d`
+- `0002StreamTC0000d`
 
 would be reordered to if the cli was used to encode and decode and mrx file.
 
-- 0000StreamTC0000d
-- 0001StreamTC0000d
-- 0002StreamTE0000d
+- `0000StreamTC0000d`
+- `0001StreamTC0000d`
+- `0002StreamTE0000d`
 
 See how the embedded stream `StreamTE` was moved to the end
-of the folders.
+of the folders, because it is clip wrapped data.
+
+## Metadata Timing
+
+MRX is based off of the [Material Exchange Format (MXF)][MXFspec], which is
+a video and audio file format, therefore it has inbuilt timing
+for the metadata.
+
+Metadata is currently measured in frames per second (fps) in an MRX file,
+and the metadata within the file can be any fps. For frame wrapped data the default
+frame rate is 24 fps if no configuration is provided or found.
+The first frame wrapped metadata encountered in
+the encoding process sets the frame rate for the rest of the frame wrapped data
+and the mrx file.
+This is because of the multiplexing of the metadata in MRX file, multiplexing
+is the interlacing of all frame wrapped data together, so instead of being
+a stream of x data and then a stream of y data, its a series of groups of x and y data
+at each timing step.
+
+For example if the first
+frame wrapped data source has a timing of 24fps and the next data
+is 48fps, then there will be one file of source 1 (24fps) for
+every 2 files from source 2 (48fps) saved in the MRX file.
+
+The data stream in the file would be
+multiplexed together and look like so
+
+- Source 1 (24fps)
+- Source 2 (48fps)
+- Source 2 (48fps)
+- Source 1 (24fps)
+- Source 2 (48fps)
+- Source 2 (48fps)
+- Source 1 (24fps)
+- Source 2 (48fps)
+- Source 2 (48fps)
+
+It is good practice to ensure the metadata timings are integer multiples of each other,
+to avoid timing and multiplexing issues. As you can't have half a metadata in a stream!
 
 ## The Mrx Roundtrip File
 
-The final partition of the mrx contains the history of the generated data and
-the configuration settings of the channels. When this extracted by the command
-line it is saved as config.json. The config.json can be created as an additional
-input in the folder the data is saved in.
+The final partition of the mrx contains the "RoundTrip file", which contains
+the history of the generated data and
+the configuration settings of the metadata channels.
 
 The layout of the json is two top level fields of the Manifest and Configuration
 
@@ -120,7 +174,14 @@ The layout of the json is two top level fields of the Manifest and Configuration
 }
 ```
 
+When this extracted by the command
+line from an MRX it is saved as `config.json` in the parent folder.
+It is also searched for by the encoder.
+
 ### Configuration
+
+The configuration contains all the information about how
+the file and its metadata was made.
 
 The configuration contains the MRX file version, the default channel properties
 and the stream properties of the individual channels. The default stream
@@ -162,6 +223,9 @@ An example configuration is below.
 
 ### The manifest
 
+The manifest logs the history of the metadata, including
+previous MRX iterations and previous manifests.
+
 As the mrx file is encoded, an extra metadata component is generated in the file
 called the manifest. The manifest logs the sha256 hash and other optional
 metadata about the individual pieces of metadata in the mrx file. The order of
@@ -196,11 +260,14 @@ manifest, then it will be added on to the history metadata field of the new
 manifest. The user can limit the number of manifests in the history field so
 that the manifest does not contain redundant information.
 
-## Design Documentation
+## MRX Design Documentation
+
+This section goes over the design for the MRX file and the similarities
+and differences it has from MXF.
 
 The overall design utilises a few current mxf methods and standards for wrapping
 data, with some new additions being used when these do not cover our use cases.
-With the generated files following the op1a operational pattern.
+All MRX files have been generated following the op1a operational pattern.
 
 The frame wrapped data is multiplexed into a mxf stream, which shares the same
 base timing for all the frame wrapped data. This is to be wrapped with left
@@ -231,8 +298,8 @@ element numbers of 00, 01 and 02 respectively.
 The IXSD essence key from does not follow this format. The 14th byte is the
 element number and the 16th byte is the element type. This is different from the
 generic partition key and the rdd 47 key values in their documents.
-In this instance the 14th byte is
-the essence count and the 16th byte is the element number,
+In the MRX specification we use the 14th byte as
+the essence count and the 16th byte as the element number,
 to keep conformity across Metarex.
 
 Clip wrapped data (binary and text) follows the methods layed out in RP2057 and rdd 47, where text
@@ -247,7 +314,7 @@ data, it remains 0 for text data.
 
 The timing rules are as follows:
 
-- All clip wrapped data follows the timing method in rdd47, where they are all
+- All clip wrapped data follows the timing method in rdd 47, where they are all
   linked to the same static track in the upper most file package. Even if they
   have embedded timing information.
 - The first clocked channel is the frame rate for the rest of the data, and this
@@ -264,3 +331,6 @@ metadata within a Channel, this will relate to a content package InstanceID -
 PostionID + (if contentPackage > 1) sub frame edit rate, the ID of a specific
 file within a frame, If the content package is a single item then the positionID
 and ChannelID are the same.
+
+[rm]: ./README.MD
+[mxfspec]: https://pub.smpte.org/doc/377/
