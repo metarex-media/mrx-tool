@@ -18,7 +18,7 @@ type MrxWriter struct {
 	// saver is the object
 	// that handles the metadata streams
 	// and lets the engine know what keys are in use etc/
-	saver Writer
+	saver Encoder
 }
 
 // writerInformation contains the time the file was made and the UMID
@@ -58,10 +58,10 @@ func NewMRXWriterFR(framRate string) (*MrxWriter, error) {
 
 }
 
-// UpdateWriteMethod sets the write handler for the mrx file.
+// UpdateEncoder sets the write handler for the mrx file.
 // Example writers include the EncodeSingleDataStream() function in
 // the example folders.
-func (mw *MrxWriter) UpdateWriteMethod(writeMethod Writer) {
+func (mw *MrxWriter) UpdateEncoder(writeMethod Encoder) {
 	mw.saver = writeMethod
 }
 

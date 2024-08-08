@@ -20,9 +20,9 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-// The Writer interface is a way to plug in the essence generator into an MRX file to save
+// The Encoder interface is a way to plug in the essence generator into an MRX file to save
 // the essence, in an generic way without having to deal with the MRX file internal data, such as headers.
-type Writer interface {
+type Encoder interface {
 
 	// GetEssenceKeys gives the array of the essence Keys
 	// to be used in this mrx file
@@ -71,8 +71,8 @@ type MrxEncodeOptions struct {
 	ConfigOverWrite manifest.Configuration
 }
 
-// Write writes the data to an mrx file, default options are used if MrxEncodeOptions is nil
-func (mw *MrxWriter) Write(w io.Writer, encodeOptions *MrxEncodeOptions) error {
+// Encode writes the data to an mrx file, default options are used if MrxEncodeOptions is nil
+func (mw *MrxWriter) Encode(w io.Writer, encodeOptions *MrxEncodeOptions) error {
 
 	// get the mrxWriter methods
 	mrxwriter := mw.saver
@@ -373,7 +373,7 @@ func writePartition(w io.Writer, filePosition *partitionPosition, header [16]byt
 	return nil
 }
 
-func encodeEssence(w io.Writer, filePosition *partitionPosition, mrxwriter Writer, essSetup mrxLayout) ([]manifest.Overview, error) {
+func encodeEssence(w io.Writer, filePosition *partitionPosition, mrxwriter Encoder, essSetup mrxLayout) ([]manifest.Overview, error) {
 
 	// set up the partition channels, generating as many channels as there are streams
 	essenceContainers := make(chan *ChannelPackets, len(essSetup.dataStreams))

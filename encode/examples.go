@@ -1,6 +1,7 @@
 package encode
 
 import (
+	"fmt"
 	"io"
 
 	"github.com/metarex-media/mrx-tool/manifest"
@@ -44,9 +45,9 @@ func EncodeSingleDataStream(destination io.Writer, dataStream chan []byte, strea
 	writer := NewMRXWriter()
 
 	input := ExampleFileStream{FakeRoundTrip: &manifest.Roundtrip{Config: streamConfig}, Contents: SingleStream{MdStream: dataStream}}
-	writer.UpdateWriteMethod(&input)
+	writer.UpdateEncoder(&input)
 
-	return writer.Write(destination, &MrxEncodeOptions{})
+	return writer.Encode(destination, &MrxEncodeOptions{})
 }
 
 // An example for a multi stream encoder
@@ -65,10 +66,11 @@ func (st ExampleFileStream) GetStreamInformation() (StreamInformation, error) {
 	return base, nil
 }
 
-// EssenceChannels is a simple essemce pipe that just puts the data straight through
+// EssenceChannels is a simple essence pipe that just puts the data straight through
 func (st *ExampleFileStream) EssenceChannels(essChan chan *ChannelPackets) error {
 
 	dataTrain := make(chan *DataCarriage, 10)
+	defer close(dataTrain)
 	mrxData := ChannelPackets{Packets: dataTrain}
 
 	// send the single channel into the essence channel
@@ -80,14 +82,14 @@ func (st *ExampleFileStream) EssenceChannels(essChan chan *ChannelPackets) error
 		d, ok := <-data.MdStream
 
 		if !ok {
-			break
+			return fmt.Errorf("data channel unexpectedly closed")
 		}
 		deref := d
 		dataTrain <- &DataCarriage{Data: &deref, MetaData: &manifest.EssenceProperties{}}
 
 	}
 	// close the channel to stop deadlocks
-	close(dataTrain)
+
 	return nil
 }
 
@@ -103,6 +105,6 @@ type ExampleFileStream struct {
 // SingleStream contains a singe metadata channel
 // for a data stream
 type SingleStream struct {
-	//	key      EssenceKey
+	Key      EssenceKey
 	MdStream chan []byte
 }

@@ -29,9 +29,9 @@ func TestFileWrite(t *testing.T) {
 
 	writer, newMXR := NewMRXWriterFR("24/1")
 
-	writer.UpdateWriteMethod(simple)
+	writer.UpdateEncoder(simple)
 	fileBuf := bytes.NewBuffer([]byte{})
-	err := writer.Write(fileBuf, &MrxEncodeOptions{})
+	err := writer.Encode(fileBuf, &MrxEncodeOptions{})
 	_, decodeErr := decode.ExtractStreamData(fileBuf)
 	// run the test as if it was being run  by encode, checking each step of the process.
 	Convey("Checking that a simple version of the write function works, with a basic set of clipwrapped data", t, func() {
@@ -50,10 +50,10 @@ func TestFileWrite(t *testing.T) {
 
 	writerFrame, newMXRerr := NewMRXWriterFR("24/1")
 
-	writerFrame.UpdateWriteMethod(simpleFrame)
+	writerFrame.UpdateEncoder(simpleFrame)
 
 	fileBufTC := bytes.NewBuffer([]byte{})
-	err = writerFrame.Write(fileBufTC, &MrxEncodeOptions{})
+	err = writerFrame.Encode(fileBufTC, &MrxEncodeOptions{})
 	_, decodeErrTC := decode.ExtractStreamData(fileBufTC)
 	// run the test as if it was being run  by encode, checking each step of the process.
 	Convey("Checking that a simple version of the write function works, with a basic set of frame wrapped data", t, func() {
@@ -89,10 +89,10 @@ func TestFileWrite(t *testing.T) {
 
 		writerembedAndClip, newMXRerr := NewMRXWriterFR("24/1")
 
-		writerembedAndClip.UpdateWriteMethod(embedAndClipFrame)
+		writerembedAndClip.UpdateEncoder(embedAndClipFrame)
 
 		fileBufTCTE := bytes.NewBuffer([]byte{})
-		err = writerembedAndClip.Write(fileBufTCTE, &MrxEncodeOptions{})
+		err = writerembedAndClip.Encode(fileBufTCTE, &MrxEncodeOptions{})
 
 		order, decodeErrTCTE := decode.ExtractStreamData(fileBufTCTE)
 		// run the test as if it was being run  by encode, checking each step of the process.
@@ -139,10 +139,10 @@ func TestFileWrite(t *testing.T) {
 
 		writerembedAndClip, newMXRerr := NewMRXWriterFR("24/1")
 
-		writerembedAndClip.UpdateWriteMethod(embedAndClipFrame)
+		writerembedAndClip.UpdateEncoder(embedAndClipFrame)
 
 		fileBufTCTE := bytes.NewBuffer([]byte{})
-		err = writerembedAndClip.Write(fileBufTCTE, &MrxEncodeOptions{})
+		err = writerembedAndClip.Encode(fileBufTCTE, &MrxEncodeOptions{})
 
 		order, decodeErrTCTE := decode.ExtractStreamData(fileBufTCTE)
 		// run the test as if it was being run  by encode, checking each step of the process.
@@ -202,7 +202,7 @@ func (st simpleTest) GetStreamInformation() (StreamInformation, error) {
 	return base, nil
 }
 
-// a simple essemce pipe that just puts the data straight through
+// a simple essence pipe that just puts the data straight through
 func (st simpleTest) EssenceChannels(essChan chan *ChannelPackets) error {
 
 	wg := &sync.WaitGroup{}

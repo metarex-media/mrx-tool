@@ -110,17 +110,13 @@ func (f *FolderScanner) EssenceChannels(essChan chan *encode.ChannelPackets) err
 					// for _, pKey := range pKeys {
 
 					ess, ok := stream.contents[i]
-					// fmt.Println(ess)
-					// @TODO handle the manifest in a new way
-					// fmt.Println(f.previousManifest, "PREVIOUS")
 
+					// @TODO handle the manifest in a new way
 					commonInformation := manifest.GroupProperties{}
 					//	pcKeys := orderKeys(partition.contents)
 
 					//	for _, pcKey := range pcKeys {
 					// ess := partition.contents[pcKey]
-
-					//	fmt.Println(i, pcKey)
 
 					// extract the klvs
 

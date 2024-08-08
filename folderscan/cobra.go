@@ -111,8 +111,8 @@ func Encode(_ *cobra.Command, _ []string) error {
 	}
 
 	writeMethod := &FolderScanner{ParentFolder: encodeIn}
-	mw.UpdateWriteMethod(writeMethod)
-	err = mw.Write(f, &encode.MrxEncodeOptions{ManifestHistoryCount: encodeManifestCount, ConfigOverWrite: update})
+	mw.UpdateEncoder(writeMethod)
+	err = mw.Encode(f, &encode.MrxEncodeOptions{ManifestHistoryCount: encodeManifestCount, ConfigOverWrite: update})
 
 	if err != nil {
 		return err
