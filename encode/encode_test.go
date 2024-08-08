@@ -25,7 +25,7 @@ func TestFileWrite(t *testing.T) {
 
 	testdata := []simpleContents{{key: BinaryClip, contents: [][]byte{[]byte("test metadata")}}}
 
-	simple := simpleTest{contents: testdata, fakeRoundTrip: &manifest.Roundtrip{}}
+	simple := simpleTest{contents: testdata, fakeRoundTrip: &manifest.RoundTrip{}}
 
 	writer, newMXR := NewMRXWriterFR("24/1")
 
@@ -46,7 +46,7 @@ func TestFileWrite(t *testing.T) {
 
 	testdataFrame := []simpleContents{{key: TextFrame, contents: [][]byte{[]byte("test metadata"), []byte("test metadata"), []byte("test metadata")}}}
 
-	simpleFrame := simpleTest{contents: testdataFrame, fakeRoundTrip: &manifest.Roundtrip{}}
+	simpleFrame := simpleTest{contents: testdataFrame, fakeRoundTrip: &manifest.RoundTrip{}}
 
 	writerFrame, newMXRerr := NewMRXWriterFR("24/1")
 
@@ -85,7 +85,7 @@ func TestFileWrite(t *testing.T) {
 	}
 
 	for i, embedAndClip := range embedAndClips {
-		embedAndClipFrame := simpleTest{contents: embedAndClip, fakeRoundTrip: &manifest.Roundtrip{}}
+		embedAndClipFrame := simpleTest{contents: embedAndClip, fakeRoundTrip: &manifest.RoundTrip{}}
 
 		writerembedAndClip, newMXRerr := NewMRXWriterFR("24/1")
 
@@ -132,7 +132,7 @@ func TestFileWrite(t *testing.T) {
 	}
 
 	b, _ := os.ReadFile("./testdata/base.json")
-	var rt manifest.Roundtrip
+	var rt manifest.RoundTrip
 	json.Unmarshal(b, &rt)
 	for i, embedAndClip := range embedAndClipsManifest {
 		embedAndClipFrame := simpleTest{contents: embedAndClip, fakeRoundTrip: &rt}
@@ -148,7 +148,7 @@ func TestFileWrite(t *testing.T) {
 		// run the test as if it was being run  by encode, checking each step of the process.
 
 		keyOrder := make([]string, len(order))
-		var outConf manifest.Roundtrip
+		var outConf manifest.RoundTrip
 		for i, key := range order {
 			keyOrder[i] = key.MRXID
 
@@ -175,10 +175,8 @@ func TestFileWrite(t *testing.T) {
 	}
 }
 
-// TestFileWrite out of order
-
 type simpleTest struct {
-	fakeRoundTrip *manifest.Roundtrip
+	fakeRoundTrip *manifest.RoundTrip
 	contents      []simpleContents
 }
 
@@ -187,13 +185,13 @@ type simpleContents struct {
 	contents [][]byte
 }
 
-func (st simpleTest) GetRoundTrip() (*manifest.Roundtrip, error) {
+func (st simpleTest) GetRoundTrip() (*manifest.RoundTrip, error) {
 	return st.fakeRoundTrip, nil
 }
 
 func (st simpleTest) GetStreamInformation() (StreamInformation, error) {
 
-	base := StreamInformation{ChannelCount: len(st.contents), EssenceKeys: make([]EssenceKey, len(st.contents))}
+	base := StreamInformation{EssenceKeys: make([]EssenceKey, len(st.contents))}
 
 	for i, sc := range st.contents {
 		base.EssenceKeys[i] = sc.key

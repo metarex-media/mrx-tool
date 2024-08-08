@@ -54,7 +54,7 @@ func TestFileExtract(t *testing.T) {
 					So(err, ShouldBeNil)
 					si, folderErr := goodTest.GetStreamInformation()
 					So(folderErr, ShouldBeNil)
-					fakePipes := make(chan *encode.ChannelPackets, si.ChannelCount)
+					fakePipes := make(chan *encode.ChannelPackets, len(si.EssenceKeys))
 					go pipeClear(fakePipes) // clear the pipes to prevent errors
 					StreamErr := goodTest.EssenceChannels(fakePipes)
 					So(StreamErr, ShouldBeNil)
@@ -126,7 +126,7 @@ func TestEncodeErrors(t *testing.T) {
 				si, folderErr := pipeBreak.GetStreamInformation()
 				So(folderErr, ShouldBeNil)
 
-				fakePipes := make(chan *encode.ChannelPackets, si.ChannelCount)
+				fakePipes := make(chan *encode.ChannelPackets, len(si.EssenceKeys))
 				// delete the file to invoke an error
 				os.Remove("./testdata/errors/deleted/0000StreamTC0001d")
 

@@ -1,4 +1,4 @@
-// package encode is for encoding mrx files.
+// Package encode is for encoding mrx files.
 // It contains a generic interface for you to include your own data inputs for mxf files
 package encode
 
@@ -21,24 +21,29 @@ import (
 )
 
 // The Encoder interface is a way to plug in the essence generator into an MRX file to save
-// the essence, in an generic way without having to deal with the MRX file internal data, such as headers.
+// the essence, in an generic way without having to deal with the MRX file internal layout
+// and data, such as headers.
 type Encoder interface {
 
 	// GetEssenceKeys gives the array of the essence Keys
-	// to be used in this mrx file
+	// to be used in this mrx file.
+	// The essence keys are given in the order their
+	// metadata channels are handled in the EssenceChannels
+	// function.
 	GetStreamInformation() (StreamInformation, error)
 
 	// The essence Pipe returns streams of KLV and their associated metadata
-	// Each channel represents a seperate stream. And will be separated by a partition and stream ID
+	// Each channel represents a separate stream. These streams
+	// are written to MRX following the MRX file rules.
 	EssenceChannels(chan *ChannelPackets) error
 
-	// RoundTrip gets the json in the target location
-	// this will be different for streams etc
-	GetRoundTrip() (*manifest.Roundtrip, error)
+	// RoundTrip gets the RoundTrip data associated with the metadata
+	// stream, this is an optional piece of metadata.
+	GetRoundTrip() (*manifest.RoundTrip, error)
 }
 
 // ChannelPackets contains the user metadata for a metadata stream
-// and the channel for that metadata stream.
+// and the channel that is fed the metadata stream.
 type ChannelPackets struct {
 	OverViewData manifest.GroupProperties
 	Packets      chan *DataCarriage
@@ -55,9 +60,11 @@ type DataCarriage struct {
 // about the complete metadata stream.
 type StreamInformation struct {
 	// ChannelCount is the number of channels
-	ChannelCount int
+	// ChannelCount int
+
 	// Essence Keys are the essence keys of each data type
 	// in the order they are to be streamed to the encoder
+	// It also is the total number of channels expected
 	EssenceKeys []EssenceKey
 }
 
@@ -201,7 +208,7 @@ func streamClean(foundStream StreamInformation, userStream manifest.Configuratio
 	var base bool
 	var clip bool
 
-	cleanEssence := make([]channelProperties, foundStream.ChannelCount)
+	cleanEssence := make([]channelProperties, len(foundStream.EssenceKeys))
 
 	keyTypes := make(map[EssenceKey]int)
 	containers := make(map[string]bool)
@@ -374,7 +381,6 @@ func writePartition(w io.Writer, filePosition *partitionPosition, header [16]byt
 }
 
 func encodeEssence(w io.Writer, filePosition *partitionPosition, mrxwriter Encoder, essSetup mrxLayout) ([]manifest.Overview, error) {
-
 	// set up the partition channels, generating as many channels as there are streams
 	essenceContainers := make(chan *ChannelPackets, len(essSetup.dataStreams))
 
@@ -395,7 +401,6 @@ func encodeEssence(w io.Writer, filePosition *partitionPosition, mrxwriter Encod
 	// use errs to handle errors while running concurrently
 	// this is to allow us to use the channels
 	errs, _ := errgroup.WithContext(context.Background())
-
 	// initiate the klv stream
 	errs.Go(func() error {
 		return mrxwriter.EssenceChannels(essenceContainers)
@@ -414,7 +419,9 @@ func encodeEssence(w io.Writer, filePosition *partitionPosition, mrxwriter Encod
 	var clockPos, unClockPos int
 
 	// set up the datastreams from the input
+
 	for _, set := range essSetup.dataStreams {
+
 		essPipe := <-essenceContainers
 
 		if set.clocked {
@@ -822,7 +829,7 @@ const (
 
 // encode manifest generates the json bytes of a mainfest.
 // using any previous manifests if required
-func (mw *MrxWriter) encodeRoundTrip(setup *manifest.Roundtrip, manifesters []manifest.Overview, mrxChans mrxLayout, manifestCount int) ([]byte, error) {
+func (mw *MrxWriter) encodeRoundTrip(setup *manifest.RoundTrip, manifesters []manifest.Overview, mrxChans mrxLayout, manifestCount int) ([]byte, error) {
 	prevManifest := setup.Manifest
 	prevManifestTag := manifest.TaggedManifest{Manifest: prevManifest}
 

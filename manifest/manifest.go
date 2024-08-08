@@ -61,9 +61,9 @@ func ManifestValidator(manifest []byte, verbose bool) error {
 	// anifest validator will just wrap all that schema info
 }
 
-// Roundtrip is the json structure for
+// RoundTrip is the json structure for
 // for the configuration and manifest.
-type Roundtrip struct {
+type RoundTrip struct {
 	Config   Configuration `json:"Configuration,omitempty"`
 	Manifest Manifest      `json:"Manifest,omitempty"`
 }

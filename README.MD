@@ -276,7 +276,7 @@ mw = encode.NewMRXWriter()
 mw.UpdateEncoder(writeMethod)
 
 // 3. run the encoder
-err = mw.Encode(w, &encode.MrxEncodeOptions{ManifestHistoryCount: encodeManifestCount, ConfigOverWrite: update})
+err = mw.Encode(w, &encode.MrxEncodeOptions{ManifestHistoryCount: encodeManifestCount})
 ```
 
 The mrx object uses an encoder object to handle the metadata streams.
@@ -297,20 +297,19 @@ that may be associated with the metadata. This is shown in the example code belo
 
 ```go
 // ExampleFileStream contains the bare minimum
-// to get a data stream saved as an MRX.
-type ExampleFileStream struct {
+// to get multiple data streams saved as an MRX.
+type ExampleMultipleStream struct {
     //  A dummy manifest foe examples
-    FakeRoundTrip *manifest.Roundtrip
-
-    Contents SingleStream
+    RoundTrip  *manifest.RoundTrip
+    StreamInfo *StreamInformation
+    Contents   []SingleStream
 }
 
 
-// GetRoundTrip returns the dummy roundtrip
-func (st ExampleFileStream) GetRoundTrip() (*manifest.Roundtrip, error) {
-    return st.FakeRoundTrip, nil
+// GetRoundTrip returns the roundtrip file
+func (st ExampleMultipleStream) GetRoundTrip() (*manifest.RoundTrip, error) {
+    return st.RoundTrip, nil
 }
-
 ```
 
 **GetStreamInformation** - this tells the writer, how many
@@ -320,12 +319,15 @@ This then lets the MRX encoder multiplex any relevant channels together.
 In the example below only one set type of channel is being returned.
 
 ```go
-// GetStreamInformation tells the mrx writer that their is one channel
-// and that it is of type clocked text.
-func (st ExampleFileStream) GetStreamInformation() (StreamInformation, error) {
+// GetStreamInformation tells the mrx writer the channel keys for the metadata.
+// The number of keys is the number of channels.
+func (st ExampleMultipleStream) GetStreamInformation() (StreamInformation, error) {
 
-    base := StreamInformation{ChannelCount: 1, EssenceKeys: []EssenceKey{TextFrame}}
-    return base, nil
+    if st.StreamInfo == nil {
+        return StreamInformation{}, fmt.Errorf("no stream information found, ensure the stream is initialised")
+    }
+
+    return *st.StreamInfo, nil
 }
 ```
 
@@ -339,31 +341,40 @@ As this signals to the writer that the metadata streams have finished
 and the file can be finished being written.
 
 ```go
-// EssenceChannels is a simple essence pipe that just puts the data straight through
-func (st *ExampleFileStream) EssenceChannels(essChan chan *ChannelPackets) error {
+// EssenceChannels is a pipe that concurrently
+// runs all the metadata streams at once.
+func (st *ExampleMultipleStream) EssenceChannels(essChan chan *ChannelPackets) error {
 
-    dataTrain := make(chan *DataCarriage, 10)
-    defer close(dataTrain)
-    mrxData := ChannelPackets{Packets: dataTrain}
+    // use errs to handle errors while running concurrently
+    errs, _ := errgroup.WithContext(context.Background())
 
-    // send the single channel into the essence channel
-    essChan <- &mrxData
-    data := st.Contents
+    // initiate the klv stream
 
-    max := len(data.MdStream)
-    for i := 0; i < max; i++ {
-        d, ok := <-data.MdStream
+    for i, stream := range st.Contents {
+        // set up the stream outside of the concurrent loop to preserve order
+        pos := i
+        dataTrain := make(chan *DataCarriage, 10)
+        mrxData := ChannelPackets{Packets: dataTrain, OverViewData: manifest.GroupProperties{StreamID: pos}}
+        essChan <- &mrxData
 
-        if !ok {
-            return fmt.Errorf("data channel unexpectedly closed")
-        }
-        deref := d
-        dataTrain <- &DataCarriage{Data: &deref, MetaData: &manifest.EssenceProperties{}}
+        errs.Go(func() error {
+            // close the channel to stop deadlocks
+            defer close(dataTrain)
 
+            d, ok := <-stream.MdStream
+            for ok {
+
+                deref := d
+                dataTrain <- &DataCarriage{Data: &deref, MetaData: &manifest.EssenceProperties{}}
+                d, ok = <-stream.MdStream
+            }
+
+            return nil
+        })
     }
-    // close the channel to stop deadlocks
+    
 
-    return nil
+    return errs.Wait()
 }
 ```
 
@@ -377,7 +388,7 @@ There are two MRX encoder options currently available within the mrx-tool repo.
 These are fully working intergrations that you can use.
 The [folderscan code](./folderscan/folderscan.go), is used for the cli
 and hoovering up locally saved files to be encoded as an MRX file. And the
-[single stream example encoder][encEx], which
+[multiple stream example encoder][encEx], which
 streams a single stream of metadata to
 the MRX encoder.
 
@@ -436,7 +447,7 @@ linear encoding as it knows what is in the channels before
 the encoding has begun. So instead of calculating the values
 when the `GetRoundTrip` and `GetStreamInformation` functions are called,
 it returns precalculated objects
-from the stream initialisation.
+from the stream initialisation. 
 
 In this example the stream always handles data of one type,
 which is reflected in `GetSteamInformation` and the roundtrip

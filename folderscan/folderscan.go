@@ -46,7 +46,7 @@ func (f *FolderScanner) GetStreamInformation() (encode.StreamInformation, error)
 		essenceKeys[i] = folderLayout.streams[k].partitionType
 	}
 
-	return encode.StreamInformation{EssenceKeys: essenceKeys, ChannelCount: len(folderLayout.streams)}, nil
+	return encode.StreamInformation{EssenceKeys: essenceKeys}, nil
 
 }
 
@@ -54,9 +54,9 @@ func (f *FolderScanner) GetStreamInformation() (encode.StreamInformation, error)
 // It searches the parent folder for a config.json file,
 // if the file is not found then it is not used.
 // The config.json must be of type encode.Roundtrip
-func (f *FolderScanner) GetRoundTrip() (*manifest.Roundtrip, error) {
+func (f *FolderScanner) GetRoundTrip() (*manifest.RoundTrip, error) {
 
-	var configBody manifest.Roundtrip
+	var configBody manifest.RoundTrip
 
 	roundBytes, err := os.ReadFile(f.ParentFolder + osSeperator + "config.json")
 
@@ -66,7 +66,7 @@ func (f *FolderScanner) GetRoundTrip() (*manifest.Roundtrip, error) {
 		return &configBody, err
 	}
 
-	return &manifest.Roundtrip{}, nil
+	return &manifest.RoundTrip{}, nil
 }
 
 // EssenceChannels extracts the essence from the files, it then sends one data
