@@ -113,16 +113,19 @@ the mrx file.
 	tfChannel := make(chan []byte, 10)
 
 	// set up the streams
-	streams = []encode.SingleStream{
+	streams := []encode.SingleStream{
 		{Key: encode.BinaryFrame, MdStream: bfChannel},
 		{Key: encode.TextFrame, MdStream: tfChannel}}
 
 	// set up your data
-	data = [][]string{
+	data := [][]string{
 		{`{"test":"binary"}`, `{"test":"binary"}`, `{"test":"binary"}`, `{"test":"binary"}`, `{"test":"binary"}`, `{"test":"binary"}`},
 		{`{"test":"text"}`, `{"test":"text"}`, `{"test":"text"}`, `{"test":"text"}`, `{"test":"text"}`, `{"test":"text"}`}}
 
-	f, _ := os.Create("./testdata/demo.mrx")
+	f, err := os.Create("./testdata/demo.mrx")
+	if err != nil {
+		return err
+	}
 
 	go func() {
 		for i, stream := range streams {
@@ -140,12 +143,12 @@ the mrx file.
 
 	// set up some default properties
 	demoConfig := manifest.Configuration{Version: "pre alpha",
-		Default:          StreamProperties{StreamType: "some data to track", FrameRate: "24/1", NameSpace: "https://metarex.media/reg/MRX.123.456.789.gps"},
-		StreamProperties: map[int]StreamProperties{0: {NameSpace: "MRX.123.456.789.gps"}},
+		Default:          manifest.StreamProperties{StreamType: "some data to track", FrameRate: "24/1", NameSpace: "https://metarex.media/reg/MRX.123.456.789.gps"},
+		StreamProperties: map[int]manifest.StreamProperties{0: {NameSpace: "MRX.123.456.789.gps"}},
 	}
 
 	// run the encoder
-	err := encode.EncodeMultipleDataStreams(f, in, demoConfig)
+	err = encode.EncodeMultipleDataStreams(f, streams, demoConfig, nil)
 
 
 */

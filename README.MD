@@ -7,6 +7,8 @@ with a focus on improving the transparency of what makes an mrx file.
 If you need help understanding mrx files, or want to make your own mrx files
 and don't know where to start, then this is the tool for you.
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/metarex-media/mrx-tool.svg)](https://pkg.go.dev/github.com/metarex-media/mrx-tool)
+
 ## Contents
 
 - [Overview](#overview)
@@ -69,11 +71,13 @@ go get github.com/metarex-media/mrx-tool
 
 ## Demos
 
-There is a separate [demo repo](https://github.com/metarex-media/mrx-demo),
+There is a separate [demo repo][mrx-demo],
 which gives an introduction and comprehensive walkthrough of the features of mxt-tool.
 
 Alternatively the [tool functions](#mrx-tool-functions) section also includes
 demos of each command available.
+
+There is also an [examples folder][ef] for the library functions of this repo.
 
 ## MRX Tool functions
 
@@ -219,6 +223,8 @@ content packages, these represent an array of content packages as a single item.
 This section gives examples and design information,
 about including the library code in your own MRX encoders
 and decoders.
+
+Checkout the [examples folder][ef] to see the working examples in action.
 
 ### Developing MRX Encoders
 
@@ -407,5 +413,7 @@ please create an issue.
 
 [g1]:   https://go.dev/doc/install                "Golang Installation"
 [smpte-reg]: https://registry.smpte-ra.org/apps/pages/published/ "SMPTE registers"
-[encEx]: ./encode/examples.go
-[hlp]: ./HELP.md
+[encEx]: ./encode/examples.go "example encoder file"
+[hlp]: ./HELP.md "help.md"
+[ef]: ./examples/ "examples folder"
+[mrx-demo]: https://github.com/metarex-media/mrx-demo "MRX-demo"
