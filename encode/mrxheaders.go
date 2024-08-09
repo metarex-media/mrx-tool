@@ -175,7 +175,6 @@ func (fi *frameInformation) sourcePackageTimeline(primer *mxf2go.Primer, umid mx
 			metaDataSetBytes, _ := metaDataSet.Encode(primer)
 
 			frameID := mxf2go.TUUID(uuid.New())
-
 			frame := mxf2go.GTextBasedFrameworkStruct{InstanceID: frameID, TextBasedObject: metaDataID[:]}
 			frameBytes, _ := frame.Encode(primer)
 

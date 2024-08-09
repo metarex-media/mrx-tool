@@ -150,7 +150,6 @@ the mrx file.
 	// run the encoder
 	err = encode.EncodeMultipleDataStreams(f, streams, demoConfig, nil)
 
-
 */
 func EncodeMultipleDataStreams(destination io.Writer, streams []SingleStream, streamConfig manifest.Configuration, encodeOptions *MrxEncodeOptions) error { // split this into seperate bits for new calls
 

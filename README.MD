@@ -71,7 +71,9 @@ go get github.com/metarex-media/mrx-tool
 
 ## Demos
 
+
 There is a separate [demo repo][mrx-demo],
+
 which gives an introduction and comprehensive walkthrough of the features of mxt-tool.
 
 Alternatively the [tool functions](#mrx-tool-functions) section also includes
