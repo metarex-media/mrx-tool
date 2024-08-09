@@ -255,7 +255,6 @@ func (fi *frameInformation) isxdHeader(primer *mxf2go.Primer, streamLayout mrxLa
 
 	TextBasedDmFramework := mxf2go.GTextBasedFrameworkStruct{InstanceID: mxf2go.TUUID(uuid.New())}
 	TextBasedDmFrameworkb, _ := TextBasedDmFramework.Encode(primer)
-
 	isxdBuffer.Write(TextBasedDmFrameworkb)
 
 	return isxdBuffer.Bytes(), isxdID

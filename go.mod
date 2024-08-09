@@ -5,7 +5,7 @@ go 1.22.0
 require (
 	github.com/cbroglie/mustache v1.4.0
 	github.com/google/uuid v1.6.0
-	github.com/metarex-media/mxf-to-go v0.0.0-20240805083338-2bb47b4015d7
+	github.com/metarex-media/mxf-to-go v0.0.0-20240809144753-663ca5222ba1
 	github.com/onsi/gomega v1.34.1
 	github.com/peterbourgon/mergemap v0.0.1
 	github.com/smartystreets/goconvey v1.8.1
@@ -27,7 +27,7 @@ require (
 	github.com/stretchr/testify v1.8.0 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
-	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56 // indirect
+	golang.org/x/exp v0.0.0-20240808152545-0cdaa3abc0fa // indirect
 	golang.org/x/net v0.28.0 // indirect
 	golang.org/x/text v0.17.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
