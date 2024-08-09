@@ -43,7 +43,7 @@ func init() {
 	// disable the unneeded completion opitions
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 
-	//add the root commands
+	// add the root commands
 	rootCmd.AddCommand(decode.DecodeCmd)
 	rootCmd.AddCommand(decode.DecodeSaveCmd)
 	rootCmd.AddCommand(versionstr.VersionCmd)

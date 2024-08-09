@@ -1,0 +1,64 @@
+Partitions:
+    - PartitionType: header
+      HeaderLength: 2243
+      EssenceByteCount: 0
+      ContentPackageCount: 0
+    - PartitionType: body
+      HeaderLength: 140
+      EssenceByteCount: 18720
+      ContentPackageCount: 72
+      ContentPackages:
+        - ContentPackage:
+            - Key: 00000000.00000000.00000000.00000000
+              Description: A collection of skipped content packages
+              FileOffset: 0
+              Length: 0
+              TotalByteCount: 9360
+              TotalContainerCount: 36
+          ContentPackageLength: 9360
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 11743
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 12003
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 060e2b34.01020105.0e090502.01010101
+              Symbol: FrameWrappedISXDData
+              Description: Identifies Frame Wrapped ISXD Data Essence
+              FileOffset: 12263
+              Length: 242
+              TotalByteCount: 260
+          ContentPackageLength: 260
+        - ContentPackage:
+            - Key: 00000000.00000000.00000000.00000000
+              Description: A collection of skipped content packages
+              FileOffset: 0
+              Length: 0
+              TotalByteCount: 8580
+              TotalContainerCount: 33
+          ContentPackageLength: 8580
+      ContentPackageStatistics:
+        Mean: 260
+        Variance: 0
+        StandardDeviation: 0
+        Minimum: 260
+        Maximum: 260
+    - PartitionType: body
+      HeaderLength: 140
+      EssenceByteCount: 292
+      ContentPackageCount: 1
+    - PartitionType: body
+      HeaderLength: 140
+      EssenceByteCount: 5866
+      ContentPackageCount: 1

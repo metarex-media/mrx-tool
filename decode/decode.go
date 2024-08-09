@@ -1,3 +1,4 @@
+// Package decode handles the MRX decoding
 package decode
 
 import (
@@ -8,18 +9,18 @@ import (
 	"io"
 	"math"
 
-	"github.com/metarex-media/mrx-tool/essence"
 	"github.com/metarex-media/mrx-tool/klv"
-	"gitlab.com/mm-eng/generatedmrx"
+
+	mxf2go "github.com/metarex-media/mxf-to-go"
 	"golang.org/x/sync/errgroup"
 	"gopkg.in/yaml.v3"
 )
 
-// StreamDecode takes an MRX stream and decodes the layout
-func StreamDecode(mrxStream io.Reader, w io.Writer, contentPackageLimit []int, jsonFile bool) error {
+// MRXStructureExtractor takes an MRX stream and decodes the layout to the writer.
+func MRXStructureExtractor(mrxStream io.Reader, w io.Writer, contentPackageLimit []int, jsonFile bool) error {
 
 	internalLayout, err := klvStream(mrxStream, contentPackageLimit, 10)
-	//fmt.Println(internalLayout, err)
+	// fmt.Println(internalLayout, err)
 	if err != nil {
 		return err
 	}
@@ -30,7 +31,6 @@ func StreamDecode(mrxStream io.Reader, w io.Writer, contentPackageLimit []int, j
 		layoutBytes, err = json.MarshalIndent(internalLayout, "", "    ")
 
 	} else {
-
 		layoutBytes, err = yaml.Marshal(internalLayout)
 	}
 
@@ -57,27 +57,18 @@ type DataFormat struct {
 func ExtractStreamData(mrxStream io.Reader) ([]*DataFormat, error) {
 
 	// get the decoder here
-	// utilise  DecodeKLVToFile copy and pasting code to do something with it.
+	// utilise essenceExtract copy and pasting code to do something with it.
 	// then work on making something more generic
 	klvChan := make(chan *klv.KLV, 1000)
-	internalLayout, err := DecodeKLVToWriter(mrxStream, klvChan)
 
-	return internalLayout, err
-	//fmt.Println(internalLayout, err)
-	/*if err != nil {
-		return err
-	}
-
-	//output format
-
-	return nil*/
+	return essenceExtract(mrxStream, klvChan)
 }
 
 func klvStream(stream io.Reader, contentPackageLimit []int, size int) (essenceLayout, error) {
 
 	klvChan := make(chan *klv.KLV, 100)
 
-	decoder, err := Decodeklv(stream, klvChan, size)
+	decoder, err := MRXReader(stream, klvChan, size)
 
 	if err != nil {
 		return essenceLayout{}, err
@@ -106,21 +97,23 @@ type essenceLayout struct {
 	Partitions []container `yaml:"Partitions" json:"Partitions"`
 }
 
-func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*mrxDecoder, error) { //wg *sync.WaitGroup, buffer chan packet, errChan chan error) {
+// MRXReader reads an MRX stream, then buffers through the klv channel breaking down the contents
+// into a go struct.
+func MRXReader(stream io.Reader, buffer chan *klv.KLV, size int) (*mrxDecoder, error) { // wg *sync.WaitGroup, buffer chan packet, errChan chan error) {
 
-	// use errs to handle errors while runnig concurrently
+	// use errs to handle errors while running concurrently
 	errs, _ := errgroup.WithContext(context.Background())
 
-	//initiate the klv stream
+	// initiate the klv stream
 	errs.Go(func() error {
-		return klv.BufferWrap(stream, buffer, size)
+		return klv.StartKLVStream(stream, buffer, size)
 
 	})
 
 	countStart := 0
-	md := &mrxDecoder{Primer: make(map[string]string), Unknown: make(map[string]essence.EssenceInformation), unknownCount: &countStart}
+	md := &mrxDecoder{Primer: make(map[string]string), Unknown: make(map[string]mxf2go.EssenceInformation), unknownCount: &countStart}
 
-	//initiate the klv handling stream
+	// initiate the klv handling stream
 	errs.Go(func() error {
 
 		// @TODO: stop the klv channel blocking if this go function returns early before
@@ -136,7 +129,7 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*mrxDecoder, e
 		// get the first bit of stream
 		klvItem, klvOpen := <-buffer
 
-		//handle each klv packet
+		// handle each klv packet
 		for klvOpen {
 
 			// check if it is a partition key
@@ -179,7 +172,7 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*mrxDecoder, e
 	if err != nil {
 		return nil, err
 	}
-	//if everything has been read end the extraction
+	// if everything has been read end the extraction
 	return md, nil
 }
 
@@ -207,7 +200,7 @@ func partitionName(namebytes []byte) string {
 		namebytes[8], namebytes[9], namebytes[10], namebytes[11], namebytes[12], namebytes[15])
 }
 
-func contentKey(packages []contentPackage) string { //return the key of the first pacakge to check for patterns
+func contentKey(packages []contentPackage) string { // return the key of the first pacakge to check for patterns
 
 	contents := packages[len(packages)-1]
 
@@ -260,7 +253,7 @@ func (md *mrxDecoder) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) 
 
 	}
 
-	//generate a new partition
+	// generate a new partition
 	md.currentContainer = container{}
 	//	shift, lengthlength := klvItem
 	partitionLayout := partitionExtract(klvItem)
@@ -276,9 +269,9 @@ func (md *mrxDecoder) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) 
 		flush, open := <-metadata
 
 		if !open {
-			return fmt.Errorf("Error when using klv data klv stream interrupted")
+			return fmt.Errorf("error when using klv data klv stream interrupted")
 		}
-		//fmt.Println(ok, partitionLayout.HeaderByteCount, flushedMeta, partitionLayout.PartitionType)
+		// fmt.Println(ok, partitionLayout.HeaderByteCount, flushedMeta, partitionLayout.PartitionType)
 		// fmt.Println(flush.Key, ok, partitionLayout.HeaderByteCount, flushedMeta)
 		flushedMeta += flush.TotalLength()
 
@@ -301,11 +294,11 @@ func (md *mrxDecoder) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) 
 		//	fmt.Println(md.currentContainer.IndexTable)
 	}
 
-	//move the partition along and increment the partition counts
+	// move the partition along and increment the partition counts
 	md.partitionCount++
 	md.byteCount = 0
 
-	//increase the length by the name etc
+	// increase the length by the name etc
 	md.globalPosition += md.currentContainer.HeaderLength
 
 	// position += md.currentContainer.HeaderLength
@@ -326,7 +319,7 @@ func (md *mrxDecoder) essenceDecode(klvItem *klv.KLV) error {
 
 	// skip klv fill items
 	if name == "060e2b34.01010102.03010210.01000000" || name == "060e2b34.01010101.03010210.01000000" || name == "060e2b34.01020101.03010210.01000000" {
-		//fmt.Println(BERlength + partLength + 16)
+		// fmt.Println(BERlength + partLength + 16)
 		md.byteCount += klvTotal
 		md.globalPosition += klvTotal
 
@@ -334,7 +327,7 @@ func (md *mrxDecoder) essenceDecode(klvItem *klv.KLV) error {
 	}
 
 	// see if the essence has a key that correlates to the registers
-	gotType := essence.ExtractEssenceType(klvItem.Key, md.Unknown, md.unknownCount)
+	gotType := ExtractEssenceType(klvItem.Key, md.Unknown, md.unknownCount)
 	contentSymbol := gotType.Symbol
 	desc := gotType.Definition
 
@@ -363,7 +356,7 @@ func (md *mrxDecoder) essenceDecode(klvItem *klv.KLV) error {
 
 func indexUnpack(indexTable *klv.KLV, primer map[string]string) (map[string]any, error) {
 
-	//fmt.Println(fullName(indexTable[0:16]))
+	// fmt.Println(fullName(indexTable[0:16]))
 	decodeStructure, _ := decodeBuilder(indexTable.Key[5])
 	/*
 
@@ -374,7 +367,7 @@ func indexUnpack(indexTable *klv.KLV, primer map[string]string) (map[string]any,
 	*/
 	index := make(map[string]any)
 	key := 0
-	decoders := generatedmrx.GIndexTableSegment
+	decoders := mxf2go.GIndexTableSegment
 	for key < len(indexTable.Value) {
 		newKey, keyLength := decodeStructure.keyFunc(indexTable.Value[key : key+decodeStructure.keyLen : key+decodeStructure.keyLen])
 		length, sizeLength := decodeStructure.lengthFunc(indexTable.Value[key+keyLength : key+keyLength+decodeStructure.keyLen : key+keyLength+decodeStructure.keyLen])
@@ -382,15 +375,13 @@ func indexUnpack(indexTable *klv.KLV, primer map[string]string) (map[string]any,
 		fullUL, okUL := primer[newKey]
 		target := "urn:smpte:ul:" + fullUL
 		if !okUL { // search in the default areas if the primer is lacking
-			target = generatedmrx.ShortHandLookUp[newKey]
+			target = mxf2go.ShortHandLookUp[newKey]
 		}
 
 		decodeMethod, ok := decoders[target]
 		if ok {
 			res, _ := decodeMethod.Decode(indexTable.Value[key+keyLength+sizeLength : key+keyLength+sizeLength+int(length)])
 			index[decodeMethod.UL] = res
-		} else {
-			//fmt.Println(target, "t", newKey) //, primer)
 		}
 
 		key += sizeLength + keyLength + int(length)
@@ -435,16 +426,16 @@ func partitionExtract(partionKLV *klv.KLV) mxfPartition {
 	var partPack mxfPartition
 	switch partionKLV.Key[13] {
 	case 02:
-		//header
+		// header
 		partPack.PartitionType = "header"
 	case 03:
-		//body
+		// body
 		partPack.PartitionType = "body"
 	case 04:
-		//footer
+		// footer
 		partPack.PartitionType = "footer"
 	default:
-		//is nothing
+		// is nothing
 		partPack.PartitionType = "invalid"
 		return partPack
 	}
@@ -481,7 +472,7 @@ func partitionExtract(partionKLV *klv.KLV) mxfPartition {
 
 	if indexLength > 0 {
 
-		//develop and index table body to use
+		// develop and index table body to use
 		partPack.IndexTable = true
 	}
 
@@ -495,17 +486,17 @@ func partitionExtract(partionKLV *klv.KLV) mxfPartition {
 
 type mrxDecoder struct {
 	Primer       map[string]string
-	Unknown      map[string]essence.EssenceInformation
+	Unknown      map[string]mxf2go.EssenceInformation
 	unknownCount *int
 
 	// internal layout of the mrx file
 	containers []container
 	allKeys    []contentPackage
 
-	//internal positions measurements
+	// internal positions measurements
 	partitionCount, byteCount, globalPosition int
 
-	//container holder for each partition
+	// container holder for each partition
 	currentContainer container
 	average          stats
 }
@@ -542,7 +533,7 @@ func (s *stats) Update(update float64) {
 
 	delta := update - s.Mean
 	s.Mean += (delta / s.count)
-	//fmt.Println(s.Mean)
+	// fmt.Println(s.Mean)
 	delta2 := update - s.Mean
 	s.m2 += delta * delta2
 
@@ -554,7 +545,7 @@ func (s *stats) Update(update float64) {
 		s.Minimum = int(update)
 	}
 
-	//fmt.Println(s.m2, delta, delta2, s.Mean)
+	// fmt.Println(s.m2, delta, delta2, s.Mean)
 
 }
 
@@ -596,4 +587,78 @@ type keyLength struct {
 
 	// blue cheese or not model - this will give labels like sound etc
 	//
+}
+
+const (
+	prefix = "urn:smpte:ul:"
+)
+
+// ExtractEssenceType returns the essence information associated with a essence Key,
+// if it a matching key found.
+func ExtractEssenceType(ul []byte, matches map[string]mxf2go.EssenceInformation, pos *int) mxf2go.EssenceInformation {
+	// prefix := "urn:smpte:ul:"
+
+	if ess, ok := mxf2go.EssenceLookUp[prefix+fullNameTwo(ul)]; ok {
+		return ess
+	}
+
+	if ess, ok := mxf2go.EssenceLookUp[prefix+fullNameOne(ul)]; ok {
+		return ess
+	}
+
+	if ess, ok := mxf2go.EssenceLookUp[prefix+FullName(ul)]; ok {
+		return ess
+	}
+
+	return unknownEssence(ul, matches, pos)
+}
+
+func unknownEssence(ul []byte, matches map[string]mxf2go.EssenceInformation, pos *int) mxf2go.EssenceInformation {
+
+	if ess, ok := matches[string(ul)]; ok {
+		return ess
+
+	} else {
+		sym := fmt.Sprintf("SystemItemTBD%v", *pos)
+
+		newEss := mxf2go.EssenceInformation{Symbol: sym, UL: prefix + fullNameOne(ul)}
+		matches[string(ul)] = newEss
+		*pos++
+
+		return newEss
+	}
+
+}
+
+func fullNameTwo(namebytes []byte) string {
+
+	if len(namebytes) != 16 {
+		return ""
+	}
+
+	return fmt.Sprintf("%02x%02x%02x%02x.%02x%02x%02x%02x.%02x%02x%02x%02x.%02x7f%02x7f",
+		namebytes[0], namebytes[1], namebytes[2], namebytes[3], namebytes[4], namebytes[5], namebytes[6], namebytes[7],
+		namebytes[8], namebytes[9], namebytes[10], namebytes[11], namebytes[12], namebytes[14])
+}
+
+func fullNameOne(namebytes []byte) string {
+
+	if len(namebytes) != 16 {
+		return ""
+	}
+
+	return fmt.Sprintf("%02x%02x%02x%02x.%02x%02x%02x%02x.%02x%02x%02x%02x.%02x%02x%02x7f",
+		namebytes[0], namebytes[1], namebytes[2], namebytes[3], namebytes[4], namebytes[5], namebytes[6], namebytes[7],
+		namebytes[8], namebytes[9], namebytes[10], namebytes[11], namebytes[12], namebytes[13], namebytes[14])
+}
+
+func FullName(namebytes []byte) string {
+
+	if len(namebytes) != 16 {
+		return ""
+	}
+
+	return fmt.Sprintf("%02x%02x%02x%02x.%02x%02x%02x%02x.%02x%02x%02x%02x.%02x%02x%02x%02x",
+		namebytes[0], namebytes[1], namebytes[2], namebytes[3], namebytes[4], namebytes[5], namebytes[6], namebytes[7],
+		namebytes[8], namebytes[9], namebytes[10], namebytes[11], namebytes[12], namebytes[13], namebytes[14], namebytes[15])
 }

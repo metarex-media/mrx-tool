@@ -2,31 +2,40 @@ package decode
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
 
-	"github.com/metarex-media/mrx-tool/encode"
 	"github.com/metarex-media/mrx-tool/klv"
 	"golang.org/x/sync/errgroup"
 )
 
-func EssenceDecode(stream io.Reader, parentFolder string, flat bool, leadingZeros int) error {
+// EssenceExtractToFile extracts the contents from an MRX and dumps it to a folder as individual
+// files, where each file is an individual metadata entry from the file.
+func EssenceExtractToFile(stream io.Reader, parentFolder string, flat bool, leadingZeros int) error {
 
 	klvChan := make(chan *klv.KLV, 1000)
 	parentFolder, _ = filepath.Abs(parentFolder)
-	err := DecodeKLVToFile(stream, klvChan, parentFolder, flat, leadingZeros)
 
-	return err
+	// check if the folder exits
+	_, err := os.Stat(parentFolder)
+	if os.IsNotExist(err) {
+		err = os.MkdirAll(parentFolder, os.ModePerm)
+
+		if err != nil {
+			return fmt.Errorf("error generating destination folder %v", err)
+		}
+	}
+
+	return essenceExtractToFile(stream, klvChan, parentFolder, flat, leadingZeros)
 }
 
 type essenceSaveTarget struct {
-	parentStream   int
-	parentFolder   string
-	partition      string
-	partitionCount int
+	parentStream int
+	parentFolder string
+	partition    string
+	// partitionCount int
 	// move along with the folder
 	// rolling partition count
 	essenceCount int
@@ -46,23 +55,24 @@ type essID struct {
 	sid int
 }
 
+/*
 type pos struct {
 	part     int
 	par      string
 	essCount int
-}
+}*/
 
-// DecodeKLVToFile takes and mrx file stream and decodes the data streams into seperate folders/files.
-func DecodeKLVToWriter(stream io.Reader, buffer chan *klv.KLV) ([]*DataFormat, error) {
+// essencExtract extracts just the essence and its keys from themMRX
+func essenceExtract(stream io.Reader, buffer chan *klv.KLV) ([]*DataFormat, error) {
 
 	outData := make([]*DataFormat, 0)
 
 	// use errs to handle errors while runnig concurrently
 	errs, _ := errgroup.WithContext(context.Background())
 
-	//initiate the klv stream
+	// initiate the klv stream
 	errs.Go(func() error {
-		return klv.BufferWrap(stream, buffer, 10)
+		return klv.StartKLVStream(stream, buffer, 10)
 
 	})
 
@@ -101,8 +111,9 @@ func DecodeKLVToWriter(stream io.Reader, buffer chan *klv.KLV) ([]*DataFormat, e
 			} else {
 
 				// decode as essence
-				var err error
-				location.essenceWrite(&outData, klvItem)
+				//
+
+				err := location.essenceWrite(&outData, klvItem)
 				if err != nil {
 
 					return err
@@ -122,19 +133,20 @@ func DecodeKLVToWriter(stream io.Reader, buffer chan *klv.KLV) ([]*DataFormat, e
 	if err != nil {
 		return nil, err
 	}
+
 	// if everything has been read end the extraction
 	return outData, nil
 }
 
-// DecodeKLVToFile takes and mrx file stream and decodes the data streams into seperate folders/files.
-func DecodeKLVToFile(stream io.Reader, buffer chan *klv.KLV, parentFolder string, flat bool, leadingZeros int) error {
+// essenceExtractToFile takes and mrx file stream and decodes the data streams into seperate folders/files.
+func essenceExtractToFile(stream io.Reader, buffer chan *klv.KLV, parentFolder string, flat bool, leadingZeros int) error {
 
 	// use errs to handle errors while runnig concurrently
 	errs, _ := errgroup.WithContext(context.Background())
 
-	//initiate the klv stream
+	// initiate the klv stream
 	errs.Go(func() error {
-		return klv.BufferWrap(stream, buffer, 10)
+		return klv.StartKLVStream(stream, buffer, 10)
 
 	})
 
@@ -210,7 +222,7 @@ func (e *mrxPartitionPosition) partitionDecode(klvItem *klv.KLV, metadata chan *
 
 	e.currentPartitionCount = int(partitionLayout.BodySID)
 
-	//update the current partition layout location
+	// update the current partition layout location
 	e.currentPartitionName = partitionLayout.PartitionType
 	if e.currentPartitionName == "body" {
 		e.currentPartitionName = "mrxip"
@@ -223,17 +235,17 @@ func (e *mrxPartitionPosition) partitionDecode(klvItem *klv.KLV, metadata chan *
 		flush, open := <-metadata
 
 		if !open {
-			return fmt.Errorf("Error when using klv data klv stream interrupted")
+			return fmt.Errorf("error when using klv data klv stream interrupted")
 		}
 		flushedMeta += flush.TotalLength()
 
 	}
 
-	//hoover up the indextable and remove it to rpevent it being mistaken as essence
+	// hoover up the indextable and remove it to rpevent it being mistaken as essence
 	if partitionLayout.IndexTable {
 		_, open := <-metadata
 		if !open {
-			return fmt.Errorf("Error when using klv data klv stream interrupted")
+			return fmt.Errorf("error when using klv data klv stream interrupted")
 		}
 	}
 	// position += md.currentContainer.HeaderLength
@@ -245,7 +257,7 @@ var pathSeparator = string(os.PathSeparator)
 
 func (e *mrxPartitionPosition) essenceWrite(layouter *[]*DataFormat, data *klv.KLV) error {
 
-	//derefernce for donig sums
+	// derefernce for donig sums
 	layout := *layouter
 	// get the positional information
 
@@ -253,34 +265,37 @@ func (e *mrxPartitionPosition) essenceWrite(layouter *[]*DataFormat, data *klv.K
 	// generate the file name as a flat path
 	pos := writeTarget.parentStream
 
-	essLabel := essLabeller(data.Key)
+	/*
+		essLabel := essLabeller(data.Key)
 
-	if essLabel == "manifest" {
-		outData := make([][]byte, 1)
-		outData[0] = data.Value
-		layout = append(layout, &DataFormat{Data: outData})
+		if essLabel == "manifest" {
+			outData := make([][]byte, 1)
+			outData[0] = data.Value
+			layout = append(layout, &DataFormat{Data: outData})
 
-		var mid encode.Roundtrip
-		json.Unmarshal(data.Value, &mid)
+			var mid manifest.Roundtrip
+			json.Unmarshal(data.Value, &mid)
 
-		for stream, properties := range mid.Config.StreamProperties {
+			for stream, properties := range mid.Config.StreamProperties {
 
-			layout[stream].MRXID = properties.NameSpace
-		}
+				layout[stream].MRXID = properties.NameSpace
+			}
 
-		*layouter = layout
-		return nil
-	}
+			*layouter = layout
+			return nil
+		}*/
 
-	if len(layout) != pos+1 {
+	// stop it adding up etc
+	if len(layout) < pos+1 {
 		outData := make([][]byte, 0)
-		layout = append(layout, &DataFormat{Data: outData})
+		layout = append(layout, &DataFormat{Data: outData, MRXID: fullName(data.Key)})
+
 	}
 
 	midData := layout[pos].Data
 	midData = append(midData, data.Value)
 
-	layout[pos] = &DataFormat{MRXID: layout[0].MRXID, FrameRate: layout[0].FrameRate, Data: midData}
+	layout[pos].Data = midData
 
 	*layouter = layout
 
@@ -343,7 +358,7 @@ func (e *mrxPartitionPosition) essenceSave(parentFolder string, data *klv.KLV, l
 		return manifestSave(parentFolder+pathSeparator, data)
 	}
 
-	//check for mnaifest before saving
+	// check for mnaifest before saving
 
 	basePath := fmt.Sprintf(parentFolder+pathSeparator+"%04dStream%s", writeTarget.parentStream, essLabel)
 
@@ -356,7 +371,7 @@ func (e *mrxPartitionPosition) essenceSave(parentFolder string, data *klv.KLV, l
 		}
 	}
 
-	//e.partitionCount = e.streamCount[e.parentStream]
+	// e.partitionCount = e.streamCount[e.parentStream]
 
 	/*	basePath += fmt.Sprintf(pathSeparator+"%04d"+writeTarget.partition, writeTarget.partitionCount)
 
@@ -403,7 +418,7 @@ func leadingZero(num int, zeroLength int) string {
 	return numberString
 }
 
-// get counter returns the folder information for a unique data stream
+// getCounter returns the folder information for a unique data stream
 // if the stream is new then the information is generated from the current partition information
 func (e *mrxPartitionPosition) getCounter(key string) *essenceSaveTarget {
 	writeTarget, ok := e.dataStreams[essID{key: key, sid: e.currentPartitionCount}]
@@ -437,7 +452,7 @@ var manifestKey = string([]byte{0x06, 0x0E, 0x2B, 0x34, 0x01, 0x02, 0x01, 0x01, 
 
 func essLabeller(key []byte) string {
 
-	//mask the key
+	// mask the key
 	key[13], key[15] = 0x7f, 0x7f
 
 	switch string(key) {

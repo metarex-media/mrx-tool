@@ -1,0 +1,2 @@
+[rule.dot-imports]
+  arguments = [{ allowedPackages = ["github.com/smartystreets/goconvey/convey", "github.com/onsi/gomega"] }]

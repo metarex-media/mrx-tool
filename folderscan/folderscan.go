@@ -1,3 +1,4 @@
+// Package folderscan handles the folder scanning and encoding methods
 package folderscan
 
 import (
@@ -13,42 +14,51 @@ import (
 	"strings"
 
 	"github.com/metarex-media/mrx-tool/encode"
+	"github.com/metarex-media/mrx-tool/manifest"
 	"golang.org/x/sync/errgroup"
 )
 
-type folderScanner struct {
-	folder string
-	flay   *fullFolderMRX
+// FolderScanner checks the folder for an MRX layout.
+// It enables the encode.Writer interface to save
+// the folder contents as an MRX.
+type FolderScanner struct {
+	ParentFolder string
+	FolLayout    *fullFolderMRX
 }
 
-func (f *folderScanner) GetStreamInformation() (encode.StreamInformation, error) {
-	folderLayout, err := folderScan(f.folder)
+// GetStreamInformation finds the number of channels and their MRX keys to be saved
+func (f *FolderScanner) GetStreamInformation() (encode.StreamInformation, error) {
+	folderLayout, err := folderScan(f.ParentFolder)
 
 	if err != nil {
 		return encode.StreamInformation{}, err
 	}
 
-	//essenceKeys := folderLayout.foundEssence
+	// essenceKeys := folderLayout.foundEssence
 
-	f.flay = &folderLayout
+	f.FolLayout = &folderLayout
 	// fmt.Println(f)
 
-	//essenceKeys
+	// essenceKeys
 	keys := orderKeys(folderLayout.streams)
 	essenceKeys := make([]encode.EssenceKey, len(folderLayout.streams))
 	for i, k := range keys {
 		essenceKeys[i] = folderLayout.streams[k].partitionType
 	}
 
-	return encode.StreamInformation{EssenceKeys: essenceKeys, ChannelCount: len(folderLayout.streams)}, nil
+	return encode.StreamInformation{EssenceKeys: essenceKeys}, nil
 
 }
 
-func (f *folderScanner) GetRoundTrip() (*encode.Roundtrip, error) {
+// GetRoundTrip gets the configuration and a manifest.
+// It searches the parent folder for a config.json file,
+// if the file is not found then it is not used.
+// The config.json must be of type encode.Roundtrip
+func (f *FolderScanner) GetRoundTrip() (*manifest.RoundTrip, error) {
 
-	var configBody encode.Roundtrip
+	var configBody manifest.RoundTrip
 
-	roundBytes, err := os.ReadFile(f.folder + osSeperator + "config.json")
+	roundBytes, err := os.ReadFile(f.ParentFolder + osSeperator + "config.json")
 
 	if err == nil {
 
@@ -56,33 +66,21 @@ func (f *folderScanner) GetRoundTrip() (*encode.Roundtrip, error) {
 		return &configBody, err
 	}
 
-	/*
-
-		check the location for the encode
-		this handles the manifest
-
-		check the default - ignore any manifest from this point onwards
-
-		if nothing generate an empty repsonse
-
-		work out overide later
-
-	*/
-
-	return &encode.Roundtrip{}, nil
+	return &manifest.RoundTrip{}, nil
 }
 
-// update the channel to not be bytes but be more of a vessel for manifest handling
-// update to be KLV packet and Metadata object
-func (f *folderScanner) EssenceChannels(essChan chan *encode.ChannelPackets) error {
+// EssenceChannels extracts the essence from the files, it then sends one data
+// stream (in numerical order) to the writer channel.
+func (f *FolderScanner) EssenceChannels(essChan chan *encode.ChannelPackets) error {
 
 	// close the channels once they've been written to
 	defer close(essChan)
 
-	keys := orderKeys(f.flay.streams)
+	keys := orderKeys(f.FolLayout.streams)
 	errs, _ := errgroup.WithContext(context.Background())
 	//	for _, partition := range f.flay.folders {
 
+	// loop through the folders
 	for keyPos := range keys {
 
 		streamKey := keys[keyPos]
@@ -94,44 +92,33 @@ func (f *folderScanner) EssenceChannels(essChan chan *encode.ChannelPackets) err
 
 		errs.Go(func() error {
 
-			stream := f.flay.streams[streamKey]
+			stream := f.FolLayout.streams[streamKey]
 			// pKeys := orderKeys(stream.contents)
 
 			err := func() error {
 
-				//sent := false
+				// sent := false
 				// set up partiton packet
 				// only use the partition packe tif manifest data is not found
 
 				defer func() {
-
+					// cose the data once the writing has finished
 					close(dataTrain)
 				}()
 
 				for i := 0; i <= stream.max; i++ {
-					//for _, pKey := range pKeys {
+					// for _, pKey := range pKeys {
 
 					ess, ok := stream.contents[i]
-					// fmt.Println(ess)
+
 					// @TODO handle the manifest in a new way
-
-					/*	oldManifest, err := manifestExtract(partition.contents[0].fullLocation)
-
-						if err != nil {
-							return err
-						}
-						f.previousManifest = oldManifest*/
-					//fmt.Println(f.previousManifest, "PREVIOUS")
-
-					commonInformation := encode.GroupProperties{}
+					commonInformation := manifest.GroupProperties{}
 					//	pcKeys := orderKeys(partition.contents)
 
 					//	for _, pcKey := range pcKeys {
-					//ess := partition.contents[pcKey]
+					// ess := partition.contents[pcKey]
 
-					//	fmt.Println(i, pcKey)
-
-					//extract the klvs
+					// extract the klvs
 
 					var carriage *encode.DataCarriage
 					var err error
@@ -150,7 +137,6 @@ func (f *folderScanner) EssenceChannels(essChan chan *encode.ChannelPackets) err
 					commonInformation.StreamType = stream.partitionTypeHuman
 
 					dataTrain <- carriage
-
 					mrxData.OverViewData = commonInformation
 
 				}
@@ -183,29 +169,30 @@ func orderKeys[T any](long map[int]T) []int {
 	return keys
 }
 
+// essExtract extracts the data, along with any accompanying metadata.
 func essExtract(essenceFile string) (*encode.DataCarriage, error) {
 
 	essFile, err := os.Open(essenceFile)
 	if err != nil {
-		return nil, fmt.Errorf("Error extracting data to encode from %v:%v", essenceFile, err)
+		return nil, fmt.Errorf("error extracting data to encode from %v:%v", essenceFile, err)
 	}
 
 	fInfo, err := essFile.Stat()
 	if err != nil {
-		return nil, fmt.Errorf("Error extracting file information from %v:%v", essenceFile, err)
+		return nil, fmt.Errorf("error extracting file information from %v:%v", essenceFile, err)
 	}
 
 	essData := make([]byte, fInfo.Size())
 	_, err = essFile.Read(essData)
 	if err != nil {
-		return nil, fmt.Errorf("Error extracting data to encode from %v:%v", essenceFile, err)
+		return nil, fmt.Errorf("error extracting data to encode from %v:%v", essenceFile, err)
 	}
 
 	has := sha256.New()
 	has.Write(essData)
 
-	//dataKLV := klv.KLV{Key: []byte(folderType), Length: length, Value: }
-	metadata := encode.EssenceProperties{EditDate: fInfo.ModTime().String(), Hash: fmt.Sprintf("%64x", has.Sum(nil)), DataOrigin: essenceFile}
+	// dataKLV := klv.KLV{Key: []byte(folderType), Length: length, Value: }
+	metadata := manifest.EssenceProperties{EditDate: fInfo.ModTime().String(), Hash: fmt.Sprintf("%64x", has.Sum(nil)), DataOrigin: essenceFile}
 
 	return &encode.DataCarriage{Data: &essData, MetaData: &metadata}, nil
 }
@@ -229,10 +216,10 @@ type partition struct {
 	max int
 }
 
-type folderMRX struct {
+/*type folderMRX struct {
 	// contents map[int]essenceMRX
 	contents map[int]essenceMRX
-}
+}*/
 
 type essenceMRX struct {
 	key          encode.EssenceKey
@@ -240,12 +227,8 @@ type essenceMRX struct {
 }
 
 // folder order rege
-var headerFol = regexp.MustCompile(`^\d{4}header$`)
 var allBody = regexp.MustCompile(`^\d{1,}d$`)
 var streamFol = regexp.MustCompile(`^\d{4}stream((tc)|(te)|(bc)|(be))$`)
-
-// flat file order regex
-var streamFile = regexp.MustCompile(`^\d{4}stream\d{4}header`)
 
 // var flatBodyStructure = regexp.MustCompile(`^\d{4}stream\d{4}((mrxip)|(header))`)
 var flatBodyStructure = regexp.MustCompile(`^\d{4}stream((tc)|(te)|(bc)|(be))\d{1,}d`)
@@ -253,14 +236,14 @@ var flatBodyStructure = regexp.MustCompile(`^\d{4}stream((tc)|(te)|(bc)|(be))\d{
 // osSeperator stringfys the os.Separator to prevent repetetive code
 var osSeperator = string(os.PathSeparator)
 
-// folderScan returns the folers and contetns that contain essence to be
+// folderScan returns the folders and contents that contain essence to be
 // wrapped when an mrx file is generated
 func folderScan(folder string) (fullFolderMRX, error) {
 	folder, _ = filepath.Abs(folder)
 	folders, err := os.ReadDir(folder)
 
 	if err != nil {
-		return fullFolderMRX{}, fmt.Errorf("Error reading folder %v : %v", folder, err)
+		return fullFolderMRX{}, fmt.Errorf("error reading folder %v : %v", folder, err)
 	}
 
 	folderLayout := fullFolderMRX{streams: make(map[int]*partition)}
@@ -296,7 +279,11 @@ func fileExtract(fold fs.DirEntry, essenceFile *fullFolderMRX, parentFolder stri
 	if flatBodyStructure.MatchString(folname) {
 		streamPos := 0
 
-		fmt.Sscanf(folname, "%dstream", &streamPos)
+		_, err := fmt.Sscanf(folname, "%dstream", &streamPos)
+
+		if err != nil {
+			return fmt.Errorf("error extracting stream position from folder %s: %v", folname, err)
+		}
 
 		essKey, essString := essKeyTypeExtract(fold.Name()[10:12])
 
@@ -309,7 +296,7 @@ func fileExtract(fold fs.DirEntry, essenceFile *fullFolderMRX, parentFolder stri
 
 		//	essKey, essString := essKeyTypeExtract(fold.Name()[essSplit:])
 
-		//just skip for the moment if the keys are not found
+		// just skip for the moment if the keys are not found
 		if essKey == 0 {
 			return nil
 		}
@@ -318,13 +305,16 @@ func fileExtract(fold fs.DirEntry, essenceFile *fullFolderMRX, parentFolder stri
 		if essenceFile.streams[streamPos].partitionType == 0 {
 			essenceFile.streams[streamPos].partitionType = essKey
 		} else if essenceFile.streams[streamPos].partitionType != essKey {
-			return fmt.Errorf("Mixed essence file types found in %v, please ensure they are all the same type", parentFolder)
+			return fmt.Errorf("mixed essence file types found in %v, please ensure they are all the same type", parentFolder)
 		}
 
 		ess := essenceMRX{fullLocation: parentFolder + osSeperator + fold.Name(), key: essKey}
-		//get the essence position
+		// get the essence position
 		essencePos := 0
-		fmt.Sscanf(folname[12:], "%dd", &essencePos)
+		_, err = fmt.Sscanf(folname[12:], "%dd", &essencePos)
+		if err != nil {
+			return fmt.Errorf("error extracting essence position from file %s: %v", folname, err)
+		}
 		// @TODO check for duplicate essence as a safety barrier
 
 		if essencePos > essenceFile.streams[streamPos].max {
@@ -342,24 +332,12 @@ func folderExtract(fold fs.DirEntry, essenceFolder *fullFolderMRX, parentFolder 
 
 	folname := strings.ToLower(fold.Name())
 
-	/*
-		alternative
-		if streamFol2
-
-		goes straigh to stream mrx
-
-
-		then just read the folders cut out the useless partition type
-
-		go straigth to getting the names - assign the essence type information at this bit as well
-
-		save the highest name number so the sequence is known
-
-	*/
-
 	if streamFol.MatchString(folname) {
 		streamPos := 0
-		fmt.Sscanf(folname, "%04dstream", &streamPos)
+		_, err := fmt.Sscanf(folname, "%04dstream", &streamPos)
+		if err != nil {
+			return fmt.Errorf("error extracting stream position from folder %s: %v", folname, err)
+		}
 
 		key, humanKey := essKeyTypeExtract(folname[10:])
 
@@ -369,7 +347,7 @@ func folderExtract(fold fs.DirEntry, essenceFolder *fullFolderMRX, parentFolder 
 		strFol := parentFolder + osSeperator + fold.Name()
 		streamFolders, err := os.ReadDir(strFol)
 		if err != nil {
-			return fmt.Errorf("Error reading folder %v : %v", parentFolder, err)
+			return fmt.Errorf("error reading folder %v : %v", parentFolder, err)
 		}
 
 		// ASSIGN the information here
@@ -377,11 +355,14 @@ func folderExtract(fold fs.DirEntry, essenceFolder *fullFolderMRX, parentFolder 
 		for _, strFile := range streamFolders {
 
 			strName := strFile.Name()
-			if allBody.MatchString(strName) { //bodyFol.MatchString(folname) || headerFol.MatchString(folname) {
+			if allBody.MatchString(strName) { // bodyFol.MatchString(folname) || headerFol.MatchString(folname) {
 				filFol := strFol + osSeperator + strFile.Name()
 
 				contentPosition := 0
-				fmt.Sscanf(strFile.Name(), "%dd", &contentPosition)
+				_, err := fmt.Sscanf(strFile.Name(), "%dd", &contentPosition)
+				if err != nil {
+					return fmt.Errorf("error extracting essence position from file %s: %v", folname, err)
+				}
 
 				if contentPosition > essenceFolder.streams[streamPos].max {
 					essenceFolder.streams[streamPos].max = contentPosition
@@ -402,38 +383,33 @@ func folderExtract(fold fs.DirEntry, essenceFolder *fullFolderMRX, parentFolder 
 	return nil
 }
 
-var frameText = regexp.MustCompile(`^\d{4}frameText$`)
-var clipBin = regexp.MustCompile(`^\d{4}clipBin$`)
-var clipText = regexp.MustCompile(`^\d{4}clipText$`)
-var frameBin = regexp.MustCompile(`^\d{4}frameBin$`)
-var manifes = regexp.MustCompile(`^\d{4}manifest$`)
-
 func essKeyTypeExtract(folName string) (encode.EssenceKey, string) {
 	switch folName {
-	case "TC", "tc":
+	case "TC", "tc", "Tc", "tC":
 
 		return encode.TextFrame, "Text based frame data"
-	case "BE", "be":
+	case "BE", "be", "Be", "bE":
 
 		return encode.BinaryClip, "Binary based clip data"
-	case "TE", "te":
+	case "TE", "te", "Te", "tE":
 
 		return encode.TextClip, "Text based clip data"
-	case "BC", "bc":
+	case "BC", "bc", "Bc", "bC":
 
 		return encode.BinaryFrame, "Binary based frame data"
 	default:
-		//move to the next >
+		// move to the next >
 		return 0, ""
 	}
 }
 
+/*
 func foldEssScan(folder string, foundFiles *folderMRX) (encode.EssenceKey, string, error) {
 	folder, _ = filepath.Abs(folder)
 	folders, err := os.ReadDir(folder)
 
 	if err != nil {
-		return 0, "", fmt.Errorf("Error reading folder %v : %v", folder, err)
+		return 0, "", fmt.Errorf("error reading folder %v : %v", folder, err)
 	}
 
 	var folderHuman string
@@ -453,27 +429,6 @@ func foldEssScan(folder string, foundFiles *folderMRX) (encode.EssenceKey, strin
 			}
 
 			ess := essenceMRX{key: key, fullLocation: location}
-			/*switch {
-			case frameText.MatchString(folName):
-				ess.key = &textFrameKey
-				foundFiles.folderTypeHuman = "Text based frame data"
-			case clipBin.MatchString(folName):
-				ess.key = &binaryClipKey
-				foundFiles.folderTypeHuman = "Binary based clip data"
-			case clipText.MatchString(folName):
-				ess.key = &textClipKey
-				foundFiles.folderTypeHuman = "Text based clip data"
-			case frameBin.MatchString(folName):
-				ess.key = &binaryFrameKey
-				foundFiles.folderTypeHuman = "Binary based frame data"
-			case manifes.MatchString(folName):
-				ess.key = &manifestKey
-				foundFiles.folderTypeHuman = "Manifest"
-			default:
-				//move to the next folder
-				continue
-			}
-			*/
 
 			//ess.fullLocation = location
 
@@ -501,34 +456,4 @@ func foldEssScan(folder string, foundFiles *folderMRX) (encode.EssenceKey, strin
 	}
 
 	return folderType, folderHuman, nil
-}
-
-/*
-	func manifestExtract(manifestFile string) (*encode.TaggedManifest, error) {
-		manifest, err := os.Open(manifestFile)
-
-		if err != nil {
-			return nil, fmt.Errorf("Error extracting data to encode from %v:%v", manifestFile, err)
-		}
-		stats, err := manifest.Stat()
-		if err != nil {
-			return nil, fmt.Errorf("Error extracting file information from %v:%v", manifestFile, err)
-		}
-
-		manBytes := make([]byte, stats.Size())
-		_, err = manifest.Read(manBytes)
-
-		if err != nil {
-			return nil, fmt.Errorf("Error extracting data to encode from %v:%v", manifestFile, err)
-		}
-
-		var oldManifest encode.TaggedManifest
-		err = json.Unmarshal(manBytes, &oldManifest)
-		if err != nil {
-			return nil, fmt.Errorf("Error extracting manifest from data for %v:%v", manifestFile, err)
-		}
-
-		oldManifest.Date = stats.ModTime().String()
-		return &oldManifest, nil
-	}
-*/
+}*/

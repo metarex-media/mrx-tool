@@ -1,0 +1,12 @@
+---
+# Local Configuration file for MegaLinter
+#
+# See all available variables at https://megalinter.io/latest/config-file/ and in
+# linters documentation
+
+# use the github workflow configuration with possible extensions.
+EXTENDS: .github/mega-linter.yml
+
+SHOW_ELAPSED_TIME: true
+
+FILEIO_REPORTER: false

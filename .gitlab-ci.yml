@@ -1,0 +1,42 @@
+---
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH =="main"
+    - if: $CI_COMMIT_BRANCH =="rc"
+stages:
+  - build
+  - test
+  - lint
+default:
+  image: golang:latest
+bark:
+  stage: build
+  script:
+    - g1="GITLAB_USER_ID                       CI_COMMIT_BRANCH             GITLAB_USER_LOGIN        MRX_DOCKER_USR   REGISTRY           CI_REGISTRY         GITLAB_USER_EMAIL   GITLAB_USER_NAME"
+    - g2="CI_COMMIT_TAG                        CI_COMMIT_DESCRIPTION        CI_BUILDS_DIR            CI_PROJECT_DIR   CI_PROJECT_PATH    CI_PIPELINE_SOURCE  CI_MERGE_REQUEST_ID
+      CI_PROJECT_PATH"
+    - g3="CI_MERGE_REQUEST_SOURCE_BRANCH_NAME  CI_MERGE_REQUEST_REF_PATH    CI_MERGE_REQUEST_LABELS  CI_MERGE_REQUEST_APPROVED"
+    - g4="CI_RUNNER_VERSION                    CI_SERVER  CI_PIPELINE_NAME  CI_JOB_STAGE             CI_JOB_TOKEN     CI_MERGE_REQUEST_APPROVED  KUBECONFIG"
+    - gg=(g1 g2 g3 g4)
+    - for g in "${gg[@]}"; do echo " "; for n in ${!g}; do printf "%s %36s =
+      %s\n" $barkId "\$$n" "${!n}"; done; done
+
+tester:
+  stage: test
+  script:
+    - go test ./... -v
+
+mega-linter:
+  stage: lint
+  needs:
+    - tester
+  image: oxsecurity/megalinter-go:v7.13.0
+  script:
+    - "true"
+  variables:
+    DEFAULT_WORKSPACE: $CI_PROJECT_DIR
+  artifacts:
+    when: always
+    paths:
+      - megalinter-reports
+    expire_in: 1 week

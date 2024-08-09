@@ -1,4 +1,4 @@
-// package encode is for encoding mrx files.
+// Package encode is for encoding mrx files.
 // It contains a generic interface for you to include your own data inputs for mxf files
 package encode
 
@@ -13,66 +13,79 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/metarex-media/mrx-tool/manifest"
+
+	mxf2go "github.com/metarex-media/mxf-to-go"
 	"github.com/peterbourgon/mergemap"
-	"github.com/xeipuuv/gojsonschema"
-	"gitlab.com/mm-eng/generatedmrx"
 	"golang.org/x/sync/errgroup"
 )
 
-// The Writer interface is a way to plug in the essence generator into an MRX file to save
-// the essence, in an generic way without having to deal with the MRX file internal data, such as headers.
-type Writer interface {
+// The Encoder interface is a way to plug in the essence generator into an MRX file to save
+// the essence, in an generic way without having to deal with the MRX file internal layout
+// and data, such as headers.
+type Encoder interface {
 
 	// GetEssenceKeys gives the array of the essence Keys
-	// to be used in this mrx file
+	// to be used in this mrx file.
+	// The essence keys are given in the order their
+	// metadata channels are handled in the EssenceChannels
+	// function.
 	GetStreamInformation() (StreamInformation, error)
 
 	// The essence Pipe returns streams of KLV and their associated metadata
-	// Each channel represents a seperate stream. And will be seperated by a partition and stream ID
+	// Each channel represents a separate stream. These streams
+	// are written to MRX following the MRX file rules.
 	EssenceChannels(chan *ChannelPackets) error
 
-	// RoundTrip gets the json in the target location
-	// this will be different for streams etc
-	GetRoundTrip() (*Roundtrip, error)
+	// RoundTrip gets the RoundTrip data associated with the metadata
+	// stream, this is an optional piece of metadata.
+	GetRoundTrip() (*manifest.RoundTrip, error)
 }
 
-// ChannelPackets contains the user metadata for a partition
-// and the channel for streaming data.
+// ChannelPackets contains the user metadata for a metadata stream
+// and the channel that is fed the metadata stream.
 type ChannelPackets struct {
-	OverViewData GroupProperties
+	OverViewData manifest.GroupProperties
 	Packets      chan *DataCarriage
 }
 
-// DataCarriage contains the essence
-// and any metadata generated during it's construction.
+// DataCarriage contains the metadata bytes
+// and any metametadata associated with it.
 type DataCarriage struct {
 	Data     *[]byte
-	MetaData *EssenceProperties
+	MetaData *manifest.EssenceProperties
 }
 
+// StreamInformation contains the information
+// about the complete metadata stream.
 type StreamInformation struct {
 	// ChannelCount is the number of channels
-	ChannelCount int
+	// ChannelCount int
+
 	// Essence Keys are the essence keys of each data type
 	// in the order they are to be streamed to the encoder
+	// It also is the total number of channels expected
 	EssenceKeys []EssenceKey
 }
 
-// MrxEncodeOptions are the enocding parameters. ManifestHistoryCount is
-// the number of previous manifest files to be inlcuded (if possible)
+// MrxEncodeOptions are the encoding parameters.
 type MrxEncodeOptions struct {
+	// ManifestHistoryCount is
+	// the number of previous manifest files to be inlcuded (if possible)
 	ManifestHistoryCount int
-	ConfigOverWrite      []byte
+	// ConfigOverwrite overwrites any fields in the base configuration
+	// of the mrx file. e.g from previous manifests
+	ConfigOverWrite manifest.Configuration
 }
 
-// Write writes the data to an mrx file, default options are used if MrxEncodeOptions is nil
-func (mw *MxfWriter) Write(w io.Writer, encodeOptions *MrxEncodeOptions) error {
+// Encode writes the data to an mrx file, default options are used if MrxEncodeOptions is nil
+func (mw *MrxWriter) Encode(w io.Writer, encodeOptions *MrxEncodeOptions) error {
 
 	// get the mrxWriter methods
 	mrxwriter := mw.saver
 
 	if mrxwriter == nil {
-		return fmt.Errorf("Error saving, no essence extraction methods available")
+		return fmt.Errorf("error saving, no essence extraction methods available")
 	}
 
 	if encodeOptions == nil {
@@ -90,11 +103,18 @@ func (mw *MxfWriter) Write(w io.Writer, encodeOptions *MrxEncodeOptions) error {
 		return err
 	}
 
-	//this is where the config update would come in
-	configUpdate(&round.Config, encodeOptions.ConfigOverWrite)
+	// this is where the config update would come in
+	err = configUpdate(&round.Config, encodeOptions.ConfigOverWrite)
+
+	if err != nil {
+		return err
+	}
 
 	// merge the user options and the parsed information
-	cleanStream := streamClean(essenceStream, round.Config)
+	cleanStream, err := streamClean(essenceStream, round.Config)
+	if err != nil {
+		return fmt.Errorf("error configuring essence %v", err)
+	}
 
 	// get the essence keys
 	containerKeys := cleanStream.containerKeys
@@ -112,7 +132,10 @@ func (mw *MxfWriter) Write(w io.Writer, encodeOptions *MrxEncodeOptions) error {
 	filePosition := &partitionPosition{partitions: []RIPLayout{}, totalByteCount: 0, prevPartition: 0}
 
 	// write the header partition
-	writePartition(w, filePosition, headerName(header, false, false), 0, headerMeta, containerKeys)
+	err = writePartition(w, filePosition, headerName(header, false, false), 0, headerMeta, containerKeys)
+	if err != nil {
+		return err
+	}
 
 	// encode the essence and get the manifest information
 	manifesters, err := encodeEssence(w, filePosition, mrxwriter, cleanStream)
@@ -125,18 +148,33 @@ func (mw *MxfWriter) Write(w io.Writer, encodeOptions *MrxEncodeOptions) error {
 	if err != nil {
 		return err
 	}
-	//write the manifest and update the position
-	writePartition(w, filePosition, headerName(body, false, false), 0, []byte{}, containerKeys)
-	w.Write(manifestBytes)
+	// write the manifest and update the position
+	err = writePartition(w, filePosition, headerName(body, false, false), 0, []byte{}, containerKeys)
+	if err != nil {
+		return err
+	}
+
+	_, err = w.Write(manifestBytes)
+	if err != nil {
+		return fmt.Errorf("error writing manifest %v", err)
+	}
+
 	filePosition.totalByteCount += len(manifestBytes)
 
-	//check or essence extraction error handling
-	//set the SID back to  0 at the end, then write the footer
+	// check or essence extraction error handling
+	// set the SID back to  0 at the end, then write the footer
 	filePosition.sID = 0
-	writePartition(w, filePosition, headerName(footer, true, true), uint64(filePosition.totalByteCount), headerMeta, containerKeys)
+	err = writePartition(w, filePosition, headerName(footer, true, true), uint64(filePosition.totalByteCount), headerMeta, containerKeys)
+	if err != nil {
+		return err
+	}
 
 	// Finally the RIP
-	w.Write(rIPPack(filePosition.partitions))
+	_, err = w.Write(rIPPack(filePosition.partitions))
+
+	if err != nil {
+		return fmt.Errorf("error writing Random Index Pack %v", err)
+	}
 
 	return nil
 }
@@ -145,7 +183,7 @@ func (mw *MxfWriter) Write(w io.Writer, encodeOptions *MrxEncodeOptions) error {
 type channelProperties struct {
 	clocked         bool
 	key             []byte
-	frameRate       generatedmrx.TRational
+	frameRate       mxf2go.TRational
 	frameMultiplier int
 	nameSpace       string
 }
@@ -153,7 +191,7 @@ type channelProperties struct {
 type mrxLayout struct {
 	dataStreams   []channelProperties
 	containerKeys [][]byte
-	baseFrameRate generatedmrx.TRational
+	baseFrameRate mxf2go.TRational
 	//
 	isxdflag bool
 	// reorder flags is framewrapped data is declared after clip wrapped
@@ -164,13 +202,13 @@ type mrxLayout struct {
 
 // stream clean goes through the esesnce
 // updating to match the infomration the user provided and sotring out the container
-func streamClean(foundStream StreamInformation, userStream Configuration) mrxLayout {
+func streamClean(foundStream StreamInformation, userStream manifest.Configuration) (mrxLayout, error) {
 
 	var fullStream mrxLayout
 	var base bool
 	var clip bool
 
-	cleanEssence := make([]channelProperties, foundStream.ChannelCount)
+	cleanEssence := make([]channelProperties, len(foundStream.EssenceKeys))
 
 	keyTypes := make(map[EssenceKey]int)
 	containers := make(map[string]bool)
@@ -207,17 +245,23 @@ func streamClean(foundStream StreamInformation, userStream Configuration) mrxLay
 			}
 
 			var num, dom int32
-			fmt.Sscanf(getFrame, "%v/%v", &num, &dom)
+			if getFrame != "" {
+				_, err := fmt.Sscanf(getFrame, "%v/%v", &num, &dom)
+
+				if err != nil {
+					return mrxLayout{}, fmt.Errorf("error finding framerate %v", err)
+				}
+			}
 
 			if num == 0 || dom == 0 {
 				// @TODO implement a better way to handle thos
 				num, dom = 24, 1
-				fullStream.baseFrameRate = generatedmrx.TRational{Numerator: 24, Denominator: 1}
+				fullStream.baseFrameRate = mxf2go.TRational{Numerator: 24, Denominator: 1}
 			}
 
 			if !base {
 
-				fullStream.baseFrameRate = generatedmrx.TRational{Numerator: num, Denominator: dom}
+				fullStream.baseFrameRate = mxf2go.TRational{Numerator: num, Denominator: dom}
 				base = true
 				// only one item in this content package as it is the frame rate essence
 				cleanEssence[i].frameMultiplier = 1
@@ -227,10 +271,10 @@ func streamClean(foundStream StreamInformation, userStream Configuration) mrxLay
 				// @TODO include some error handling for when its greater than 127
 				// or less than 1
 				cleanEssence[i].frameMultiplier = int(num) / int(fullStream.baseFrameRate.Numerator)
-				//essenceKey[13] = byte(int(num) / int(fullStream.baseFrameRate.Numerator))
+				// essenceKey[13] = byte(int(num) / int(fullStream.baseFrameRate.Numerator))
 			}
 			essenceKey[13] = byte(cleanEssence[i].frameMultiplier)
-			cleanEssence[i].frameRate = generatedmrx.TRational{Numerator: num, Denominator: dom}
+			cleanEssence[i].frameRate = mxf2go.TRational{Numerator: num, Denominator: dom}
 
 		} else {
 			// else thr static files are default properies
@@ -254,46 +298,26 @@ func streamClean(foundStream StreamInformation, userStream Configuration) mrxLay
 	*/
 	fullStream.dataStreams = cleanEssence
 
-	return fullStream
+	return fullStream, nil
 }
 
-//go:embed jsonschema/configuration_Schema.json
-var configSchema []byte
+func configUpdate(base *manifest.Configuration, overWrite manifest.Configuration) error {
 
-func configUpdate(base *Configuration, overWrite []byte) error {
-
-	if len(overWrite) == 0 {
-		return nil
-	}
-
-	// run the schema on it here
-	// also make the schema https://github.com/gojsonschema/gojsonschema
-	schema := gojsonschema.NewBytesLoader(configSchema)
-	document := gojsonschema.NewBytesLoader(overWrite)
-
-	result, err := gojsonschema.Validate(schema, document)
+	updateBytes, err := json.Marshal(overWrite)
 	if err != nil {
-		return err
+		return fmt.Errorf("error handling the configuration overwrite struct: %v", err)
 	}
 
-	if !result.Valid() {
-		errs := "The overwriting bytes are not valid. see errors :\n"
-		for _, desc := range result.Errors() {
-			errs += fmt.Sprintf("- %s\n", desc)
-		}
-
-		return fmt.Errorf("%v", errs)
-	}
-
-	update := make(map[string]any)
-
-	err = json.Unmarshal(overWrite, &update)
-
+	var update map[string]any
+	err = json.Unmarshal(updateBytes, &update)
 	if err != nil {
-		return fmt.Errorf("error handling the configuration overwrite bytes: %v", err)
+		return fmt.Errorf("error handling the configuration overwrite struct: %v", err)
 	}
 
-	baseToMap, _ := json.Marshal(base)
+	baseToMap, err := json.Marshal(base)
+	if err != nil {
+		return fmt.Errorf("error handling the configuration base struct: %v", err)
+	}
 	baseMap := make(map[string]any)
 	err = json.Unmarshal(baseToMap, &baseMap)
 
@@ -303,9 +327,13 @@ func configUpdate(base *Configuration, overWrite []byte) error {
 
 	merged := mergemap.Merge(baseMap, update)
 
-	combinedBytes, _ := json.Marshal(merged)
+	combinedBytes, err := json.Marshal(merged)
 
-	//json.Unmarshal(combinedBytes, base)
+	if err != nil {
+		return fmt.Errorf("error getting complete configuration struct: %v", err)
+	}
+
+	// json.Unmarshal(combinedBytes, base)
 
 	err = json.Unmarshal(combinedBytes, base)
 
@@ -323,7 +351,7 @@ type partitionPosition struct {
 	sID            int
 }
 
-func writePartition(w io.Writer, filePosition *partitionPosition, header [16]byte, footerPos uint64, headerMeta []byte, essenceKeys [][]byte) {
+func writePartition(w io.Writer, filePosition *partitionPosition, header [16]byte, footerPos uint64, headerMeta []byte, essenceKeys [][]byte) error {
 	// get the length of the partition
 	partitionLength := 108 - 20 + len(essenceKeys)*16
 	// generate the partition bytes
@@ -339,12 +367,20 @@ func writePartition(w io.Writer, filePosition *partitionPosition, header [16]byt
 	filePosition.totalByteCount += len(headerMeta)
 
 	// write the partition information
-	w.Write(partitionBytes)
-	w.Write(headerMeta)
+	_, err := w.Write(partitionBytes)
+	if err != nil {
+		return fmt.Errorf("error writing partition %v", err)
+	}
+	_, err = w.Write(headerMeta)
+
+	if err != nil {
+		return fmt.Errorf("error writing header %v", err)
+	}
+
+	return nil
 }
 
-func encodeEssence(w io.Writer, filePosition *partitionPosition, mrxwriter Writer, essSetup mrxLayout) ([]Overview, error) {
-
+func encodeEssence(w io.Writer, filePosition *partitionPosition, mrxwriter Encoder, essSetup mrxLayout) ([]manifest.Overview, error) {
 	// set up the partition channels, generating as many channels as there are streams
 	essenceContainers := make(chan *ChannelPackets, len(essSetup.dataStreams))
 
@@ -361,12 +397,11 @@ func encodeEssence(w io.Writer, filePosition *partitionPosition, mrxwriter Write
 
 	}
 
-	//essenceKeys := essSetup.EssenceKeys
+	// essenceKeys := essSetup.EssenceKeys
 	// use errs to handle errors while running concurrently
 	// this is to allow us to use the channels
 	errs, _ := errgroup.WithContext(context.Background())
-
-	//initiate the klv stream
+	// initiate the klv stream
 	errs.Go(func() error {
 		return mrxwriter.EssenceChannels(essenceContainers)
 	})
@@ -383,8 +418,10 @@ func encodeEssence(w io.Writer, filePosition *partitionPosition, mrxwriter Write
 
 	var clockPos, unClockPos int
 
-	//set up the datastreams from the input
+	// set up the datastreams from the input
+
 	for _, set := range essSetup.dataStreams {
+
 		essPipe := <-essenceContainers
 
 		if set.clocked {
@@ -400,11 +437,11 @@ func encodeEssence(w io.Writer, filePosition *partitionPosition, mrxwriter Write
 
 	// fmt.Println(unClockDataStreams, clockDataStreams)
 	// set up the mainfest information holders
-	manifesters := make([]Overview, len(essSetup.dataStreams))
+	manifesters := make([]manifest.Overview, len(essSetup.dataStreams))
 	filePosition.sID = 1
-	partitionManifest := []Overview{}
+	partitionManifest := []manifest.Overview{}
 
-	//set up a stream flag
+	// set up a stream flag
 	availableEssence := true
 
 	if len(clockDataStreams) == 0 {
@@ -413,7 +450,10 @@ func encodeEssence(w io.Writer, filePosition *partitionPosition, mrxwriter Write
 
 	// multiplex the framewrapped data together
 	if availableEssence {
-		writePartition(w, filePosition, headerName(body, false, false), 0, []byte{}, essSetup.containerKeys)
+		err := writePartition(w, filePosition, headerName(body, false, false), 0, []byte{}, essSetup.containerKeys)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	for availableEssence {
@@ -427,7 +467,7 @@ func encodeEssence(w io.Writer, filePosition *partitionPosition, mrxwriter Write
 
 				if !essChanOpen && i == 0 {
 
-					//only stop the stream when the key data has finished being sent
+					// only stop the stream when the key data has finished being sent
 					availableEssence = false
 					continue
 				}
@@ -449,11 +489,18 @@ func encodeEssence(w io.Writer, filePosition *partitionPosition, mrxwriter Write
 					manifesters[i].Common = pipe.pack.OverViewData
 				}
 				essKLV := essPacket.Data
-				berLength := generatedmrx.BEREncode(len(*essKLV))
+				berLength := mxf2go.BEREncode(len(*essKLV))
 				// write the data and update the file position
-				w.Write(pipe.info.key)
-				w.Write(berLength) // calculate the length of the data
-				w.Write(*essKLV)
+
+				essBytes := make([]byte, len(pipe.info.key))
+				copy(essBytes, pipe.info.key)
+				essBytes = append(essBytes, berLength...)
+				essBytes = append(essBytes, *essKLV...)
+
+				_, err := w.Write(essBytes)
+				if err != nil {
+					return nil, fmt.Errorf("error encoding essence %v", err)
+				}
 
 				filePosition.totalByteCount += len(berLength) + len(*essKLV) + len(pipe.info.key)
 			}
@@ -471,16 +518,26 @@ func encodeEssence(w io.Writer, filePosition *partitionPosition, mrxwriter Write
 			continue // @TODO check on the intended behaviour here
 			// we may want to return an error instead
 		}
-		//upate the stream id for each generic parition
+		// upate the stream id for each generic parition
 		filePosition.sID++
 
-		writePartition(w, filePosition, headerName(genericStream, false, false), 0, []byte{}, essSetup.containerKeys)
+		err := writePartition(w, filePosition, headerName(genericStream, false, false), 0, []byte{}, essSetup.containerKeys)
+		if err != nil {
+			return nil, err
+		}
 
 		essKLV := essPacket.Data
-		berLength := generatedmrx.BEREncode(len(*essKLV))
-		w.Write(dataStream.info.key)
-		w.Write(berLength)
-		w.Write(*essKLV)
+		berLength := mxf2go.BEREncode(len(*essKLV))
+
+		essBytes := make([]byte, len(dataStream.info.key))
+		copy(essBytes, dataStream.info.key)
+		essBytes = append(essBytes, berLength...)
+		essBytes = append(essBytes, *essKLV...)
+
+		_, err = w.Write(essBytes)
+		if err != nil {
+			return nil, fmt.Errorf("error encoding essence %v", err)
+		}
 
 		filePosition.totalByteCount += len(berLength) + len(*essKLV) + len(dataStream.info.key)
 		// update the manifest options
@@ -496,10 +553,9 @@ func encodeEssence(w io.Writer, filePosition *partitionPosition, mrxwriter Write
 		return nil, err
 	}
 
-	for _, mani := range manifesters {
-		partitionManifest = append(partitionManifest, mani)
-	}
-	filePosition.sID++ //update the SID for the manifest
+	partitionManifest = append(partitionManifest, manifesters...)
+
+	filePosition.sID++ // update the SID for the manifest
 
 	return partitionManifest, nil
 }
@@ -511,7 +567,7 @@ var genericStreamin = [16]byte{6, 14, 43, 52, 2, 5, 1, 1, 13, 1, 2, 1, 1, 3, 0x1
 
 // update the 13th byte as a flag to show it binary or text
 
-//60e2b34.02050101.0d010201.01031100
+// 60e2b34.02050101.0d010201.01031100
 
 const (
 	header = iota
@@ -524,8 +580,8 @@ const (
 func headerName(partition int, closed, complete bool) [16]byte {
 
 	var name [16]byte
-	//[16]byte{6, 14, 43, 52, 2, 5, 1, 1, 13, 1, 2, 1, 1, 3, 4,  0}
-	//get the type
+	// [16]byte{6, 14, 43, 52, 2, 5, 1, 1, 13, 1, 2, 1, 1, 3, 4,  0}
+	// get the type
 	switch partition {
 	case header:
 		name = runin
@@ -541,13 +597,14 @@ func headerName(partition int, closed, complete bool) [16]byte {
 
 	// ammend to be refelct the pen and complete status
 
-	if closed && complete {
+	switch {
+	case closed && complete:
 		name[14] = 04
-	} else if !closed && complete {
+	case !closed && complete:
 		name[14] = 03
-	} else if closed && !complete {
+	case closed && !complete:
 		name[14] = 02
-	} else /*closed && !complete*/ {
+	default /*closed && !complete*/ :
 		name[14] = 01
 	}
 
@@ -558,6 +615,7 @@ func headerName(partition int, closed, complete bool) [16]byte {
 	return name
 }
 
+/*
 var binaryFrameKey = [16]byte{0x06, 0x0E, 0x2B, 0x34, 0x01, 0x02, 0x01, 0x01, 0x0f, 0x02, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00}
 
 // var textFrameKey = [16]byte{0x06, 0x0E, 0x2B, 0x34, 0x01, 0x02, 0x01, 0x01, 0x0f, 0x02, 0x01, 0x01, 0x01, 0x02, 0x00, 0x00}
@@ -565,28 +623,30 @@ var textFrameDesc = [16]byte{0x06, 0x0E, 0x2B, 0x34, 0x04, 0x01, 0x01, 0x05, 0x0
 var textFrameKey = [16]byte{0x06, 0x0E, 0x2B, 0x34, 0x01, 0x02, 0x01, 0x05, 0x0e, 0x09, 0x05, 0x02, 0x01, 0x01, 0x01, 0x01}
 var binaryClipKey = [16]byte{0x06, 0x0E, 0x2B, 0x34, 0x01, 0x02, 0x01, 0x01, 0x0f, 0x02, 0x01, 0x01, 0x01, 0x03, 0x00, 0x00}
 var textClipKey = [16]byte{0x06, 0x0E, 0x2B, 0x34, 0x01, 0x02, 0x01, 0x01, 0x0f, 0x02, 0x01, 0x01, 0x01, 0x04, 0x00, 0x00}
+*/
 
 var manifestKey = [16]byte{0x06, 0x0E, 0x2B, 0x34, 0x01, 0x02, 0x01, 0x01, 0x0f, 0x02, 0x01, 0x01, 0x05, 0x00, 0x00, 0x00}
 
-func (mw *MxfWriter) uMIDFinish(esssenceCount int) {
+func (mw *MrxWriter) uMIDFinish(esssenceCount int) {
 
-	if esssenceCount == 1 { //len(mw.essenceList) == 1 {
+	switch {
+	case esssenceCount == 1: // len(mw.essenceList) == 1 {
 		mw.writeInformation.mrxUMID.SMPTELabel[10] = 0xb
-	} else if esssenceCount == 0 { //len(mw.essenceList) ==  0 {
+	case esssenceCount == 0: // len(mw.essenceList) ==  0 {
 		mw.writeInformation.mrxUMID.SMPTELabel[10] = 0xf
-	} else {
+	default:
 		mw.writeInformation.mrxUMID.SMPTELabel[10] = 0xc
 	}
 	// mix is 0d
 	// empty is of
 
-	//update the time in two formats as well
+	// update the time in two formats as well
 	gTime := time.Now()
-	Date := generatedmrx.TDateStruct{Year: int16(gTime.Year()), Month: uint8(gTime.Month()), Day: uint8(gTime.Day())}
-	Time := generatedmrx.TTimeStruct{Hour: uint8(gTime.Hour()), Minute: uint8(gTime.Minute()), Second: uint8(gTime.Second())}
+	Date := mxf2go.TDateStruct{Year: int16(gTime.Year()), Month: uint8(gTime.Month()), Day: uint8(gTime.Day())}
+	Time := mxf2go.TTimeStruct{Hour: uint8(gTime.Hour()), Minute: uint8(gTime.Minute()), Second: uint8(gTime.Second())}
 
 	mw.writeInformation.buildTimeTime = gTime
-	mw.writeInformation.buildTime = generatedmrx.TTimeStamp{Date: Date, Time: Time}
+	mw.writeInformation.buildTime = mxf2go.TTimeStamp{Date: Date, Time: Time}
 }
 
 // RIP Layout is the simple layout of a partition in an mrx file
@@ -595,6 +655,7 @@ type RIPLayout struct {
 	partitionPosition uint64
 }
 
+// RIPKey is the Byte key for the random index pack of the mrx file
 var RIPKey = []byte{0x6, 0xe, 0x2B, 0x34, 0x02, 0x05, 0x01, 0x01, 0x0d, 0x01, 0x02, 0x01, 0x01, 0x11, 0x01, 0x00}
 
 func rIPPack(partitions []RIPLayout) []byte {
@@ -603,7 +664,7 @@ func rIPPack(partitions []RIPLayout) []byte {
 	// Write key then length
 	ribBuffer.Write(RIPKey)
 	// we can predict the length as it is an array so don't need to calculate after the pack is written
-	berBytes := generatedmrx.BEREncode(12*len(partitions) + 4)
+	berBytes := mxf2go.BEREncode(12*len(partitions) + 4)
 	ribBuffer.Write(berBytes)
 
 	// generate the SID and the position
@@ -617,7 +678,7 @@ func rIPPack(partitions []RIPLayout) []byte {
 		ribBuffer.Write(partOffset)
 	}
 
-	//calculate the total length and append it
+	// calculate the total length and append it
 	totalLength := make([]byte, 4)
 	order.PutUint32(totalLength, uint32(12*len(partitions)+16+len(berBytes)+4))
 	ribBuffer.Write(totalLength)
@@ -626,75 +687,74 @@ func rIPPack(partitions []RIPLayout) []byte {
 }
 
 // header minimum required - material package and a source package
-func (mw *MxfWriter) metaData(stream mrxLayout) []byte {
+func (mw *MrxWriter) metaData(stream mrxLayout) []byte {
 
 	essenceKeys := stream.containerKeys
 	// tauidKeys is the genereated form of the essence keys 060e34...
 	// and is used as part of the preface package
-	tauidKeys := make([]generatedmrx.TAUID, len(essenceKeys))
+	tauidKeys := make([]mxf2go.TAUID, len(essenceKeys))
 	for i, ek := range essenceKeys {
 		var array8 [8]uint8
 
-		for j, arr := range ek[8:] {
-			array8[j] = arr
-		}
+		copy(array8[:], ek[8:])
 
-		tauidKeys[i] = generatedmrx.TAUID{
+		tauidKeys[i] = mxf2go.TAUID{
 			Data1: order.Uint32(ek[0:4]),
 			Data2: order.Uint16(ek[4:6]),
 			Data3: order.Uint16(ek[6:8]),
-			Data4: generatedmrx.TUInt8Array8(array8),
+			Data4: mxf2go.TUInt8Array8(array8),
 		}
 	}
 
 	// dynamic tags for the primer pack
 	// the tag decrements down from 0xffff to 0x8000 if they do not have a predeclared value
 	// tags is a map of dynamic and preallocated bytes and their long name
-	tagStart := uint16(0xfffe)
-	tag := &tagStart
-	tags := make(map[string][]byte)
+	primer := mxf2go.NewPrimer()
 
 	// gtime is when the thing was written
 	gTime := time.Now()
-	Date := generatedmrx.TDateStruct{Year: int16(gTime.Year()), Month: uint8(gTime.Month()), Day: uint8(gTime.Day())}
-	Time := generatedmrx.TTimeStruct{Hour: uint8(gTime.Hour()), Minute: uint8(gTime.Minute()), Second: uint8(gTime.Second())}
+	Date := mxf2go.TDateStruct{Year: int16(gTime.Year()), Month: uint8(gTime.Month()), Day: uint8(gTime.Day())}
+	Time := mxf2go.TTimeStruct{Hour: uint8(gTime.Hour()), Minute: uint8(gTime.Minute()), Second: uint8(gTime.Second())}
 
 	mw.frameInformation.ContainerKeys = essenceKeys
-	contentBytes, contentID := mw.contentStorage(tag, tags, stream)
+	contentBytes, contentID := mw.contentStorage(primer, stream)
 
-	idb, idid := identification(tag, tags)
+	idb, idid := identification(primer)
 	//	isxdBytes := isxdHeader(tag, tags)
 
 	// @TODO move to primer to seperate function
-	pre := generatedmrx.GPrefaceStruct{FormatVersion: generatedmrx.TVersionType{VersionMajor: 1, VersionMinor: 3}, DescriptiveSchemes: generatedmrx.TAUIDSet{productID},
-		ContentStorageObject: generatedmrx.TStrongReference(contentID[:]), EssenceContainers: tauidKeys, InstanceID: generatedmrx.TUUID(uuid.New()),
-		FileLastModified: generatedmrx.TTimeStamp{Date: Date, Time: Time}, IdentificationList: generatedmrx.TIdentificationStrongReferenceVector{idid[:]},
-		OperationalPattern: generatedmrx.TAUID{
+	pre := mxf2go.GPrefaceStruct{FormatVersion: mxf2go.TVersionType{VersionMajor: 1, VersionMinor: 3}, DescriptiveSchemes: mxf2go.TAUIDSet{productID},
+		ContentStorageObject: mxf2go.TStrongReference(contentID[:]), EssenceContainers: tauidKeys, InstanceID: mxf2go.TUUID(uuid.New()),
+		FileLastModified: mxf2go.TTimeStamp{Date: Date, Time: Time}, IdentificationList: mxf2go.TIdentificationStrongReferenceVector{idid[:]},
+		OperationalPattern: mxf2go.TAUID{
 			Data1: 0x060e2b34,
 			Data2: 0x0401,
 			Data3: 0x0101,
 			Data4: [8]byte{0x0d, 01, 02, 01, 01, 01, 01, 00},
 		}}
 
-	prefaceBytes, _ := pre.Encode(tag, tags)
+	prefaceBytes, _ := pre.Encode(primer)
 
-	Primer := primerEncode(tags)
+	Primer := primerEncode(primer)
 
 	// add the preface
 	Primer = append(Primer, prefaceBytes...)
 
-	//add the content bytes
+	// add the content bytes
 	Primer = append(Primer, contentBytes...)
 	Primer = append(Primer, idb...)
 
 	// generate the isxd header
-	//Primer = append(Primer, isxdBytes...)
-	return Primer //append(Primer, cb...)
+	// Primer = append(Primer, isxdBytes...)
+	return Primer // append(Primer, cb...)
 }
 
-func primerEncode(tags map[string][]byte) []byte {
+func primerEncode(primer *mxf2go.Primer) []byte {
 	Primer := []byte{0x06, 0x0e, 0x2b, 0x34, 0x02, 0x05, 0x01, 0x01, 0x0d, 0x01, 0x02, 0x01, 0x01, 0x05, 0x01, 0x00}
 	length := []byte{0x83}
+
+	tags := primer.Tags
+
 	byte3 := order.AppendUint32([]byte{}, 8+uint32(len(tags))*18)
 	//	fmt.Println(order.AppendUint32([]byte{}, 8+uint32(len(tags))*18), tags)
 	length = append(length, byte3[1:]...) // has to be four byte long BER
@@ -703,10 +763,10 @@ func primerEncode(tags map[string][]byte) []byte {
 	length = order.AppendUint32(length, uint32(len(tags)))
 	length = order.AppendUint32(length, 18)
 	// add the shorthnad nad long tags
-	for key, full := range tags {
+	for full, shortHand := range tags {
 
-		length = append(length, []byte(key)...)
-		length = append(length, full...)
+		length = append(length, shortHand...)
+		length = append(length, []byte(full)...)
 	}
 
 	Primer = append(Primer, length...)
@@ -734,7 +794,7 @@ type partitionPack struct {
 func encodePartition(header partitionPack, essenceKeys [][]byte) ([]byte, int) {
 
 	var headerBytes bytes.Buffer
-	headerBytes.Write(header.Signature[:]) //convert the array to a slice
+	headerBytes.Write(header.Signature[:]) // convert the array to a slice
 	headerBytes.Write([]byte{0x83, 0, 0, byte(header.PartitionLength)})
 	headerBytes.Write(order.AppendUint16([]byte{}, header.MajorVersion))
 	headerBytes.Write(order.AppendUint16([]byte{}, header.MinorVersion))
@@ -747,8 +807,8 @@ func encodePartition(header partitionPack, essenceKeys [][]byte) ([]byte, int) {
 	headerBytes.Write(order.AppendUint32([]byte{}, header.IndexSID))
 	headerBytes.Write(order.AppendUint64([]byte{}, header.BodyOffset))
 	headerBytes.Write(order.AppendUint32([]byte{}, header.BodySID))
-	//extra bits which I haven't changed
-	//060E2B3404010101.0D01020101010100
+	// extra bits which I haven't changed
+	// 060E2B3404010101.0D01020101010100
 	// get operational pattern
 	op := generateOperationalPattern()
 	headerBytes.Write(op[:]) // Operational pattern of the mrx file
@@ -769,41 +829,42 @@ const (
 
 // encode manifest generates the json bytes of a mainfest.
 // using any previous manifests if required
-func (mw *MxfWriter) encodeRoundTrip(setup *Roundtrip, manifesters []Overview, mrxChans mrxLayout, manifestCount int) ([]byte, error) {
+func (mw *MrxWriter) encodeRoundTrip(setup *manifest.RoundTrip, manifesters []manifest.Overview, mrxChans mrxLayout, manifestCount int) ([]byte, error) {
 	prevManifest := setup.Manifest
-
-	prevManifestTag := TaggedManifest{Manifest: prevManifest}
+	prevManifestTag := manifest.TaggedManifest{Manifest: prevManifest}
 
 	UUIDb, _ := mw.writeInformation.mrxUMID.MarshalText()
-	manifest := Manifest{UMID: string(UUIDb), MRXTool: mrxTool, Version: " 0.0.0.1"}
+	destManifest := manifest.Manifest{UMID: string(UUIDb), MRXTool: mrxTool, Version: " 0.0.0.1"}
 
-	//if it a manifest has been found
-	if !reflect.DeepEqual(prevManifestTag.Manifest, Manifest{}) {
+	// if it a manifest has been found
+	if !reflect.DeepEqual(prevManifestTag.Manifest, manifest.Manifest{}) {
 		history := prevManifest.History
 		prevManifest.History = nil
 
-		manifest.History = append([]TaggedManifest{*&prevManifestTag}, history...)
+		destManifest.History = append([]manifest.TaggedManifest{prevManifestTag}, history...)
 	}
 	// else continue as normal as there is no mainpulation of th eprevious manifest
 
-	manifest.DataStreams = manifesters
-	//handle how many previous manifests are included in the manifest
+	destManifest.DataStreams = manifesters
+	// handle how many previous manifests are included in the manifest
 	x := manifestCount
-	if x == -1 || x > len(manifest.History) {
+
+	switch {
+	case x == -1 || x > len(destManifest.History):
 		// do nothing, as the user has asked for all the history
-	} else if x == 0 { // if  0 do not assign
-		manifest.History = nil
-	} else { //else trim to the desired length
-		manifest.History = manifest.History[:x]
+	case x == 0: // if  0 do not assign
+		destManifest.History = nil
+	default: // else trim to the desired length
+		destManifest.History = destManifest.History[:x]
 	}
 
 	// update the set up to contain the mainfest information
-	setup.Manifest = manifest
+	setup.Manifest = destManifest
 
 	if mrxChans.reorder {
 
-		reorder := Configuration{Version: setup.Config.Version, Default: setup.Config.Default,
-			StreamProperties: make(map[int]StreamProperties)}
+		reorder := manifest.Configuration{Version: setup.Config.Version, Default: setup.Config.Default,
+			StreamProperties: make(map[int]manifest.StreamProperties)}
 		fwCount := 0
 		clipWrapped := []int{}
 		for i, mrxChan := range mrxChans.dataStreams {
@@ -830,7 +891,7 @@ func (mw *MxfWriter) encodeRoundTrip(setup *Roundtrip, manifesters []Overview, m
 		return nil, fmt.Errorf("error encoding the manifest: %v", err)
 	}
 
-	length := generatedmrx.BEREncode(len(manb))
+	length := mxf2go.BEREncode(len(manb))
 
 	var buffer bytes.Buffer
 	buffer.Write(manifestKey[:])

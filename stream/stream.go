@@ -1,19 +1,19 @@
+// Package stream handles data streaming functions
 package stream
 
 import (
 	"bufio"
-	"encoding/binary"
 	"fmt"
 	"io"
 )
-
-var order = binary.BigEndian
 
 type Packet struct {
 	Packet   []byte
 	Position int
 }
 
+// BufferManager splits a reader into packets, each packet is the size of
+// 10mb / size
 func BufferManager(stream io.Reader, bufferStream chan *Packet, size int) error {
 	bufferDiv := size
 
@@ -22,19 +22,16 @@ func BufferManager(stream io.Reader, bufferStream chan *Packet, size int) error 
 
 	bufReader := bufio.NewReaderSize(stream, sizer)
 
-	//count labels
+	// count labels
 	count := 0
 	for {
-		// TODO multiplexer requred for true streams
+		// @TODO multiplexer requred for true streams
 
 		bufferPacket := make([]byte, sizer)
 		bufFill, err := bufReader.Read(bufferPacket)
 
-		// insert a method for reading here which truncates
-		// the packet if not all the bytes are written
-
 		if err != nil {
-			//fmt.Println(err)
+			// fmt.Println(err)
 			//	quit <- false
 			close(bufferStream)
 			if err == io.EOF {
