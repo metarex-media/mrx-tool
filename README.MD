@@ -19,6 +19,7 @@ and don't know where to start, then this is the tool for you.
   - [The split flag](#the-split-flag)
 - [Yaml Layout](#yaml-layout)
 - [Notes for developers](#notes-for-developers)
+- [Extra Tools to Visualise MRX files](#extra-tools-to-visualise-mrx-files)
 
 ## Overview
 
@@ -383,6 +384,17 @@ The multiple stream runs concurrently before and during the mrx
 encoding function. It is set up with an initialisation call that
 saves all the information and starts writing the metadata. It is
 not dependant on the MRX writer to start the metadata sending process.
+
+## Extra Tools to Visualise MRX files
+
+The following tools are also available to help get a greater
+understanding of the contents of an MRX file. These are independently generated
+mxf verification tools, showing that mrx, at its core is just an mxf file. That follows
+the 20 year old standard.
+
+- [MXF inspect](https://github.com/Myriadbits/MXFInspect) you can look at the physical layout of the file.
+- [Reg-XML](https://registry.smpte-ra.org/apps/regxmldump/view/published/)
+Gives more details here about the header information of an mrx file.
 
 ## Things to add - future work
 
