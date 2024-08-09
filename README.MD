@@ -100,8 +100,8 @@ one structure file with the split `result/rexy_sunbathe_mrx_Split.yaml` and
 one without `result/rexy_sunbathe_mrx.yaml`.
 
 ```console
-./mrx-tool.exe decode --input ./testdata/rexy_sunbathe_mrx.mxf --output result/rexy_sunbathe_mrx.yaml
-./mrx-tool.exe decode --input ./testdata/rexy_sunbathe_mrx.mxf --output result/rexy_sunbathe_mrx_Split.yaml --split 3,5,6,7,3
+./mrx-tool decode --input ./testdata/rexy_sunbathe_mrx.mxf --output result/rexy_sunbathe_mrx.yaml
+./mrx-tool decode --input ./testdata/rexy_sunbathe_mrx.mxf --output result/rexy_sunbathe_mrx_Split.yaml --split 3,5,6,7,3
 ```
 
 Check the difference between the two yaml files that you
@@ -124,7 +124,7 @@ The following command will split
 each folder contains the metadata files in the order they were found in the file.
 
 ```console
-./mrx-tool.exe decodesave --input ./testdata/rexy_sunbathe_mrx.mxf --output result/rexy_sunbathe_mrx_contents/
+./mrx-tool decodesave --input ./testdata/rexy_sunbathe_mrx.mxf --output result/rexy_sunbathe_mrx_contents/
 ```
 
 Check out `result/rexy_sunbathe_mrx_contents/` see how the metadata has been split up
@@ -148,7 +148,7 @@ the [the decodesave demo](#the-decodesave-flag), so please make sure you have ru
 demo first.
 
 ```cmd
-./mrx-tool.exe encode --input ./result/rexy_sunbathe_mrx_contents/ --output ./testdata/newrexy.mrx --framerate 24/1 
+./mrx-tool encode --input ./result/rexy_sunbathe_mrx_contents/ --output ./testdata/newrexy.mrx --framerate 24/1 
 ```
 
 Checkout your newly generated mrx file at `./testdata/newrexy.mrx`,
@@ -246,7 +246,7 @@ mw = encode.NewMRXWriter()
 mw.UpdateEncoder(writeMethod)
 
 // 3. run the encoder
-err = mw.Encode(w, &encode.MrxEncodeOptions{ManifestHistoryCount: encodeManifestCount})
+err = mw.Encode(w, &encode.MrxEncodeOptions{})
 ```
 
 The mrx object uses an encoder object to handle the metadata streams.
@@ -307,7 +307,7 @@ and sends the data through the channels to be handled by the writer.
 
 In the example below multiple channels are being written to.
 When writing this it is imperative that all the channels you
-send metadata are closed after they are finished writing to.
+send metadata are closed, after they are finished writing to.
 As this signals to the writer that the metadata streams have finished
 and the file can be finished being written.
 
@@ -354,13 +354,15 @@ func (st *ExampleMultipleStream) EssenceChannels(essChan chan *ChannelPackets) e
 This section is about designing your own MRX encoders.
 The encode library contains the methods for writing the MRX and
 the focus of this section is passing the metadata to the writer.
+As the internals of the library handle the layout of the MRX file,
+that us generated.
 
 There are two MRX encoder options currently available within the mrx-tool repo.
 These are fully working integrations that you can use.
 The [folderscan code](./folderscan/folderscan.go), is used for the cli
 and hoovering up locally saved files to be encoded as an MRX file. And the
 [multiple stream example encoder][encEx], which
-streams a single stream of metadata to
+streams any amount of streams of metadata to
 the MRX encoder.
 
 These both stream the metadata to the encoder,
@@ -375,7 +377,7 @@ and runs in the following order when encoding files:
 3. EssenceChannels
 
 Folderscan saves the outputs from these functions and saves
-them for later calls.
+them for later function calls.
 
 The multiple stream runs concurrently before and during the mrx
 encoding function. It is set up with an initialisation call that

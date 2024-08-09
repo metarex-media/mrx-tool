@@ -124,7 +124,7 @@ of the folders, because it is clip wrapped data.
 
 MRX is based off of the [Material Exchange Format (MXF)][MXFspec], which is
 a video and audio file format, therefore it has inbuilt timing
-for the metadata.
+as part of the file properties.
 
 Metadata is currently measured in frames per second (fps) in an MRX file,
 and the metadata within the file can be any fps. For frame wrapped data the default
@@ -134,7 +134,7 @@ the encoding process sets the frame rate for the rest of the frame wrapped data
 and the mrx file.
 This is because of the multiplexing of the metadata in MRX file, multiplexing
 is the interlacing of all frame wrapped data together, so instead of being
-a stream of x data and then a stream of y data, its a series of groups of x and y data
+a stream of x data and then a stream of y data, its a stream of groups of x and y data
 at each timing step.
 
 For example if the first
@@ -143,7 +143,7 @@ is 48fps, then there will be one file of source 1 (24fps) for
 every 2 files from source 2 (48fps) saved in the MRX file.
 
 The data stream in the file would be
-multiplexed together and look like so
+multiplexed together and look like so:
 
 - Source 1 (24fps)
 - Source 2 (48fps)
@@ -160,7 +160,8 @@ to avoid timing and multiplexing issues. As you can't have half a metadata in a 
 
 ## The Mrx Roundtrip File
 
-The final partition of the mrx contains the "RoundTrip file", which contains
+Every MRX file generated comes with a roundtrip file,
+this is the last bit of metadata generated, it contains
 the history of the generated data and
 the configuration settings of the metadata channels.
 
@@ -191,7 +192,7 @@ are declared.
 
 These fields are the:
 
-- `FrameRate` - this is in the form "x/y" or "static" and a label of the
+- `FrameRate` - this is in the form "x/y" fps or "static" and a label of the
 data. "static" does not need to be declared, as it is not used internally for identifying
 embedded data, but may be useful for reading over
 the configuration to understand the metadata channel properties.
@@ -272,7 +273,7 @@ All MRX files have been generated following the op1a operational pattern.
 The frame wrapped data is multiplexed into a mxf stream, which shares the same
 base timing for all the frame wrapped data. This is to be wrapped with left
 aligned grouping, where the frame rate content is declared first. As in SMPTE
-379-1 for generic containers,
+379-1 for generic containers.
 
 The essence data keys cover:
 
@@ -295,7 +296,7 @@ of the same type. The element number is the incremental count of this element
 type, if three frame wrapped data elements are present then they will have
 element numbers of 00, 01 and 02 respectively.
 
-The IXSD essence key from does not follow this format. The 14th byte is the
+The IXSD essence key, from [rdd 47][r47] does not follow this format. The 14th byte is the
 element number and the 16th byte is the element type. This is different from the
 generic partition key and the rdd 47 key values in their documents.
 In the MRX specification we use the 14th byte as
@@ -307,9 +308,9 @@ based documents are stored in generic partitions. Each generic partition has an
 incremental stream id, they are placed immediately before the manifest
 partition. Then the footer partition follows the manifest partition.
 
-The essence keys for generic stream partitions follow RP2057 and ST 410, with
+The essence keys for generic stream partitions follow RP2057 and [ST 410][410], with
 the addition of the use of the 13th byte in the key. This is to flag if the data
-is binary or text based where the 1st bit of the 13byte equals 1 for binary
+is binary or text based where the 1st bit of the 13th byte equals 1 for binary
 data, it remains 0 for text data.
 
 The timing rules are as follows:
@@ -334,3 +335,6 @@ and ChannelID are the same.
 
 [rm]: ./README.MD
 [mxfspec]: https://pub.smpte.org/doc/377/
+[r47]: https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=8552735
+[410]:https://pub.smpte.org/latest/st410/st0410-2008.pdf
+
