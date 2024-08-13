@@ -66,7 +66,7 @@ func (l *layout) metadataTest(metaData []*klv.KLV) {
 // TestMetaData runs tests on these bits of the metadata
 func (c *CompleteTest) TestMetaData() {
 	c.segment.Test("Checking the this partition pointer matches the actual byte offset of the file", func() bool {
-		return c.t.Expect(0).To(Equal(0),
+		return c.Expect(0).To(Equal(0),
 			fmt.Sprintf("The byte offset %v, did not match the this partition value %v", 0, 0))
 	})
 }

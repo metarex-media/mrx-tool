@@ -120,17 +120,31 @@ func (l *layout) essenceTests(partition mxfPartition) {
 // partition
 func (c *CompleteTest) TestEssenceKeyFramePattern(pattern pattern, keys [][]byte) {
 	allMatch := true
+	missPoint := 0
 	for keyPos, key := range keys {
 		if !reflect.DeepEqual(pattern.pattern[keyPos%pattern.length], key) {
 			allMatch = false
+			missPoint = keyPos
 		}
 	}
 
 	c.segment.Test("Checking the essence keys do not change order", func() bool {
-		return c.t.Expect(allMatch).To(BeTrue(),
-			fmt.Sprintf("The essence keys deviate from their original pattern of %s", "xyz"))
+		return c.Expect(allMatch).To(BeTrue(),
+			fmt.Sprintf("The essence keys deviate from their original pattern of %s at the %v key", pattern.pattern, missPoint))
 	})
+
+	// c.t.ExpectAllkeysPresent.To(BeTrue)
+	/*
+		if I have a structure for ahving all these keys
+
+		c.t.Expect(MrxKEyPesent(MetarexKey)).To(BeTrue
+
+		c.t.Expect(HeaderBytes).To(Contain(mxf2go.J2kSubDescriptor))
+	*/
 }
+
+// func COntais(// type of the )
+// contains UL group
 
 // TestEssenceKeyLayouts checks the structure of the metarex essence keys.
 // ensuring that the element count etc is preserved.
@@ -151,7 +165,7 @@ func (c *CompleteTest) TestEssenceKeyLayouts(pattern pattern) {
 		if bytes.Equal(keyCopy, binaryClockedKey[:]) || bytes.Equal(keyCopy, textClockedKey[:]) {
 			if Pos == 0 && key[13] != 1 { // first element must have a count of 1
 				fail = true
-				errMessage += fmt.Sprintf("The first clocked element must have an element count of 1, received a value of %v for %s\n", key[13], fullName(key))
+				errMessage += fmt.Sprintf("The first clocked element must have an element count of 1, received a value of %v for %s, Element count is the 14th byte value\n", key[13], fullName(key))
 			}
 
 			// @TODO inlcude a 0 bit as then the count is wrong
@@ -185,7 +199,7 @@ func (c *CompleteTest) TestEssenceKeyLayouts(pattern pattern) {
 	}
 
 	c.segment.Test("Checking the metarex essence keys have the correct element number and count", func() bool {
-		return c.t.Expect(fail).To(BeFalse(),
+		return c.Expect(fail).To(BeFalse(),
 			errMessage)
 	})
 }
@@ -227,7 +241,7 @@ func (c *CompleteTest) TestEssenceKeyPartitionType(pattern pattern, partition st
 	}
 
 	c.segment.Test("Checking the metarex essence keys are located in the correct partition types", func() bool {
-		return c.t.Expect(fail).To(BeFalse(),
+		return c.Expect(fail).To(BeFalse(),
 			errMessage)
 	})
 

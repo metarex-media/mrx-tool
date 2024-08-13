@@ -7,7 +7,6 @@ package mrxUnitTest
 import (
 	"context"
 	"io"
-	"os"
 
 	"github.com/metarex-media/mrx-tool/klv"
 	"golang.org/x/sync/errgroup"
@@ -75,10 +74,12 @@ Each step should have some error checking:
 
 */
 
-func decode(stream io.Reader) error {
+// TestMRX tests an MRX, it writes the log output to dest
+func TestMRX(stream io.Reader, dest io.Writer) error {
 
 	klvChan := make(chan *klv.KLV, 1000)
-	_, err := Decodeklv(stream, klvChan, 10)
+
+	err := Decodeklv(stream, dest, klvChan, 10)
 
 	if err != nil {
 		return err
@@ -88,7 +89,7 @@ func decode(stream io.Reader) error {
 }
 
 // inlcude the logger? if there's any errors flush them - discard ifo for unkown keys fro the moment
-func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, error) { // wg *sync.WaitGroup, buffer chan packet, errChan chan error) {
+func Decodeklv(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) error { // wg *sync.WaitGroup, buffer chan packet, errChan chan error) {
 
 	// use errs to handle errors while runnig concurrently
 	errs, _ := errgroup.WithContext(context.Background())
@@ -99,8 +100,8 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 	})
 
 	var contents layout
-	f, _ := os.Create("test.log")
-	contents.testLog = f
+
+	contents.testLog = dest
 
 	// @TODO set this up with errs so test breaking errors are returned
 	errs.Go(func() error {
@@ -142,7 +143,7 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 				} else {
 					// decode the partition - get the raw information out and handle the metadata
 					// intermediate stage is binning of the metadata
-					err := contents.partitionDecode(klvItem, buffer)
+					err := contents.partitionTests(klvItem, buffer)
 
 					if err != nil {
 						// handle it
@@ -187,19 +188,10 @@ func Decodeklv(stream io.Reader, buffer chan *klv.KLV, size int) (*MrxContents, 
 		return nil
 	})
 
-	// collect any errors from the decode process
-	err := errs.Wait()
-	// fmt.Println(err, "potential error here")
-	if err != nil {
-		// log the fatal error
-		// errors do not contribute to the testing process
-		return nil, err
-	}
-
 	// post processing data if the klv hasn't returned an error
 	// count of partitions
 
-	return &MrxContents{}, nil
+	return errs.Wait()
 }
 
 type layout struct {

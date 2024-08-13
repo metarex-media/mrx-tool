@@ -33,7 +33,7 @@ func partitionName(namebytes []byte) string {
 		namebytes[8], namebytes[9], namebytes[10], namebytes[11], namebytes[12], namebytes[15])
 }
 
-func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error {
+func (l *layout) partitionTests(klvItem *klv.KLV, metadata chan *klv.KLV) error {
 	// maybe hadle everything on a partition basis
 
 	// /	e.essenceCount = 0
@@ -50,10 +50,13 @@ func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error
 	tester.TestPartitionPosition(l.TotalByteCount, int(partitionLayout.ThisPartition))
 	tester.TestPartitionPrevPosition(l.currentPartPos, int(partitionLayout.PreviousPartition))
 
+	// generate the positional information
 	l.currentPartition = &partitionLayout
 	l.Rip = append(l.Rip, RIP{byteOffset: uint64(l.TotalByteCount), sid: partitionLayout.BodySID})
 	l.currentPartPos = l.TotalByteCount
 	l.TotalByteCount += klvItem.TotalLength()
+
+	var p []byte
 
 	// flush out the header metadata
 	// as it is not used yet (apart from the primer)
@@ -62,7 +65,9 @@ func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error
 	// store the metadata for handling as part of the tests
 	for metaByteCount < int(partitionLayout.HeaderByteCount) {
 		flush, open := <-metadata
-
+		p = append(p, flush.Key...)
+		p = append(p, flush.Length...)
+		p = append(p, flush.Value...)
 		if !open {
 			return fmt.Errorf("error when using klv data klv stream interrupted")
 		}
@@ -86,6 +91,9 @@ func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error
 		}
 		l.TotalByteCount += index.TotalLength()
 	}
+
+	HeaderContainsGroup(tester, "060e2b34.027f0101.0d010201.01050100", p)
+
 	// position += md.currentContainer.HeaderLength
 
 	/* handle the essence here
@@ -102,7 +110,7 @@ func (l *layout) partitionDecode(klvItem *klv.KLV, metadata chan *klv.KLV) error
 // matches the actual location of the previous partition.
 func (c *CompleteTest) TestPartitionPrevPosition(actualPrevPosition, declaredPrevPosition int) {
 	c.segment.Test("Checking the previous partition pointer is the correct byte position", func() bool {
-		return c.t.Expect(actualPrevPosition).To(Equal(declaredPrevPosition),
+		return c.Expect(actualPrevPosition).To(Equal(declaredPrevPosition),
 			fmt.Sprintf("The previous partition at %v, did not match the declared previous partition value %v", actualPrevPosition, declaredPrevPosition))
 	})
 }
@@ -111,7 +119,7 @@ func (c *CompleteTest) TestPartitionPrevPosition(actualPrevPosition, declaredPre
 // matches the actual location of the current partition.
 func (c *CompleteTest) TestPartitionPosition(actualPosition, declaredPosition int) {
 	c.segment.Test("Checking the this partition pointer matches the actual byte offset of the file", func() bool {
-		return c.t.Expect(actualPosition).To(Equal(declaredPosition),
+		return c.Expect(actualPosition).To(Equal(declaredPosition),
 			fmt.Sprintf("The byte offset %v, did not match the this partition value %v", actualPosition, declaredPosition))
 	})
 }
@@ -120,7 +128,7 @@ func (c *CompleteTest) TestPartitionPosition(actualPosition, declaredPosition in
 // the declared byte count in the partition header.
 func (c *CompleteTest) TestPartitionMetadataCount(actualMdCount, declaredMdCount int) {
 	c.segment.Test("Checking the header metadata count matches the actual count of the metadata", func() bool {
-		return c.t.Expect(actualMdCount).To(Equal(declaredMdCount),
+		return c.Expect(actualMdCount).To(Equal(declaredMdCount),
 			fmt.Sprintf("The metadata count %v, did not match the declared partition header byte count %v", actualMdCount, declaredMdCount))
 	})
 }
@@ -269,6 +277,6 @@ func (l *layout) ripHandle(rip *klv.KLV) {
 // changes in total byte count and SID of partitions are logged in the RIP
 func (c *CompleteTest) TestRandomIndexPack(actualRip, declaredRip []RIP) {
 	c.segment.Test("Checking the partition positions in the file match those in the supplied random index pack", func() bool {
-		return c.t.Expect(actualRip).To(Equal(declaredRip), "The generated index pack did not match the file index Pack")
+		return c.Expect(actualRip).To(Equal(declaredRip), "The generated index pack did not match the file index Pack")
 	})
 }

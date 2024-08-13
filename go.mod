@@ -5,7 +5,7 @@ go 1.22.0
 require (
 	github.com/cbroglie/mustache v1.4.0
 	github.com/google/uuid v1.6.0
-	github.com/metarex-media/mxf-to-go v0.0.0-20240809144753-663ca5222ba1
+	github.com/metarex-media/mxf-to-go v0.0.0-20240812144922-38cd2ce670e6
 	github.com/onsi/gomega v1.34.1
 	github.com/peterbourgon/mergemap v0.0.1
 	github.com/smartystreets/goconvey v1.8.1

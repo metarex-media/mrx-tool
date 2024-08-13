@@ -1,0 +1,86 @@
+Running Partition 0 MetaData Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+Ran 1 tests: Passed:1 , Failed: 0
+Running Partition 0 Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+	Checking the previous partition pointer is the correct byte position
+        Pass
+	Checking the header metadata count matches the actual count of the metadata
+        Pass
+	Checking if the partition contains the group 060e2b34.027f0101.0d010201.01050100
+        Pass
+Ran 4 tests: Passed:4 , Failed: 0
+Running Partition 1 MetaData Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+Ran 1 tests: Passed:1 , Failed: 0
+Running Partition 1 Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+	Checking the previous partition pointer is the correct byte position
+        Pass
+	Checking the header metadata count matches the actual count of the metadata
+        Pass
+	Checking if the partition contains the group 060e2b34.027f0101.0d010201.01050100
+        Fail!
+            the group was not found
+            Expected
+            	[]byte(nil)
+            to contain the group ID of
+            	"060e2b34.027f0101.0d010201.01050100"
+Ran 4 tests: Passed:3 , Failed: 1
+Running Partition 1 Essence Tests tests:
+	Checking the essence keys do not change order
+        Pass
+	Checking the metarex essence keys are located in the correct partition types
+        Pass
+	Checking the metarex essence keys have the correct element number and count
+        Pass
+Ran 3 tests: Passed:3 , Failed: 0
+Running Partition 2 MetaData Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+Ran 1 tests: Passed:1 , Failed: 0
+Running Partition 2 Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+	Checking the previous partition pointer is the correct byte position
+        Pass
+	Checking the header metadata count matches the actual count of the metadata
+        Pass
+	Checking if the partition contains the group 060e2b34.027f0101.0d010201.01050100
+        Fail!
+            the group was not found
+            Expected
+            	[]byte(nil)
+            to contain the group ID of
+            	"060e2b34.027f0101.0d010201.01050100"
+Ran 4 tests: Passed:3 , Failed: 1
+Running Partition 2 Essence Tests tests:
+	Checking the essence keys do not change order
+        Pass
+	Checking the metarex essence keys are located in the correct partition types
+        Pass
+	Checking the metarex essence keys have the correct element number and count
+        Pass
+Ran 3 tests: Passed:3 , Failed: 0
+Running Partition 3 MetaData Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+Ran 1 tests: Passed:1 , Failed: 0
+Running Partition 3 Tests tests:
+	Checking the this partition pointer matches the actual byte offset of the file
+        Pass
+	Checking the previous partition pointer is the correct byte position
+        Pass
+	Checking the header metadata count matches the actual count of the metadata
+        Pass
+	Checking if the partition contains the group 060e2b34.027f0101.0d010201.01050100
+        Pass
+Ran 4 tests: Passed:4 , Failed: 0
+Running Random Index Pack Tests tests:
+	Checking the partition positions in the file match those in the supplied random index pack
+        Pass
+Ran 1 tests: Passed:1 , Failed: 0

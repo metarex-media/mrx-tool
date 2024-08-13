@@ -1,0 +1,1261 @@
+children:
+    - key:
+        nstart: 0
+        nend: 16
+      length:
+        nstart: 16
+        nend: 20
+      value:
+        nstart: 20
+        nend: 140
+      properties:
+        partitioncount: 0
+        partitiontype: header
+      children:
+        - key:
+            nstart: 762
+            nend: 778
+          length:
+            nstart: 778
+            nend: 780
+          value:
+            nstart: 780
+            nend: 958
+          properties:
+            uuid: 2bb4a6552cf2444ab09a99871a95c41e
+          children:
+            - key:
+                nstart: 958
+                nend: 974
+              length:
+                nstart: 974
+                nend: 975
+              value:
+                nstart: 975
+                nend: 1039
+              properties:
+                uuid: b66c2745dd9842cd935faed8b3c1e9c5
+              children:
+                - key:
+                    nstart: 1039
+                    nend: 1055
+                  length:
+                    nstart: 1055
+                    nend: 1056
+                  value:
+                    nstart: 1056
+                    nend: 1164
+                  properties:
+                    uuid: ed0495f463df46158e01b103cf337d47
+                  children:
+                    - key:
+                        nstart: 1164
+                        nend: 1180
+                      length:
+                        nstart: 1180
+                        nend: 1181
+                      value:
+                        nstart: 1181
+                        nend: 1261
+                      properties:
+                        uuid: 6ba3d33afd5646719eb7eabd275c124f
+                      children:
+                        - key:
+                            nstart: 1261
+                            nend: 1277
+                          length:
+                            nstart: 1277
+                            nend: 1278
+                          value:
+                            nstart: 1278
+                            nend: 1346
+                          properties:
+                            uuid: 134c56a47b8b42bea28bc44ae7d67074
+                          children:
+                            - key:
+                                nstart: 1346
+                                nend: 1362
+                              length:
+                                nstart: 1362
+                                nend: 1363
+                              value:
+                                nstart: 1363
+                                nend: 1459
+                              properties:
+                                uuid: f6e6c5af135a47d4975085043ba6cdca
+                              children: []
+                - key:
+                    nstart: 1459
+                    nend: 1475
+                  length:
+                    nstart: 1475
+                    nend: 1477
+                  value:
+                    nstart: 1477
+                    nend: 1605
+                  properties:
+                    uuid: 79ba03c29096484b8b84c909095af45e
+                  children:
+                    - key:
+                        nstart: 1605
+                        nend: 1621
+                      length:
+                        nstart: 1621
+                        nend: 1622
+                      value:
+                        nstart: 1622
+                        nend: 1702
+                      properties:
+                        uuid: 10562902aefb4608b596e5fd19d8abf2
+                      children:
+                        - key:
+                            nstart: 1702
+                            nend: 1718
+                          length:
+                            nstart: 1718
+                            nend: 1719
+                          value:
+                            nstart: 1719
+                            nend: 1787
+                          properties:
+                            uuid: 00b47bdb94de40afa4b5946d7715be00
+                          children:
+                            - key:
+                                nstart: 1787
+                                nend: 1803
+                              length:
+                                nstart: 1803
+                                nend: 1804
+                              value:
+                                nstart: 1804
+                                nend: 1900
+                              properties:
+                                uuid: dfd736b71d8f4296bdca187ce726401b
+                              children: []
+                    - key:
+                        nstart: 1900
+                        nend: 1916
+                      length:
+                        nstart: 1916
+                        nend: 1917
+                      value:
+                        nstart: 1917
+                        nend: 2038
+                      properties:
+                        uuid: fab9ce2e6522490582ff04fe1d41c0bb
+                      children: []
+            - key:
+                nstart: 2075
+                nend: 2091
+              length:
+                nstart: 2091
+                nend: 2093
+              value:
+                nstart: 2093
+                nend: 2243
+              properties:
+                uuid: 892a5aef86474c6e89a47ea05aef283b
+              children: []
+        - key:
+            nstart: 140
+            nend: 156
+          length:
+            nstart: 156
+            nend: 160
+          value:
+            nstart: 160
+            nend: 762
+          properties: null
+          children: []
+        - key:
+            nstart: 2038
+            nend: 2054
+          length:
+            nstart: 2054
+            nend: 2055
+          value:
+            nstart: 2055
+            nend: 2075
+          properties:
+            uuid: c07f64e0fb1d48dd84d73af3ace57266
+          children: []
+    - key:
+        nstart: 2243
+        nend: 2259
+      length:
+        nstart: 2259
+        nend: 2263
+      value:
+        nstart: 2263
+        nend: 2383
+      properties:
+        partitioncount: 1
+        partitiontype: body
+      children:
+        - key:
+            nstart: 2383
+            nend: 2399
+          length:
+            nstart: 2399
+            nend: 2401
+          value:
+            nstart: 2401
+            nend: 2643
+          properties: null
+          children: []
+        - key:
+            nstart: 2643
+            nend: 2659
+          length:
+            nstart: 2659
+            nend: 2661
+          value:
+            nstart: 2661
+            nend: 2903
+          properties: null
+          children: []
+        - key:
+            nstart: 2903
+            nend: 2919
+          length:
+            nstart: 2919
+            nend: 2921
+          value:
+            nstart: 2921
+            nend: 3163
+          properties: null
+          children: []
+        - key:
+            nstart: 3163
+            nend: 3179
+          length:
+            nstart: 3179
+            nend: 3181
+          value:
+            nstart: 3181
+            nend: 3423
+          properties: null
+          children: []
+        - key:
+            nstart: 3423
+            nend: 3439
+          length:
+            nstart: 3439
+            nend: 3441
+          value:
+            nstart: 3441
+            nend: 3683
+          properties: null
+          children: []
+        - key:
+            nstart: 3683
+            nend: 3699
+          length:
+            nstart: 3699
+            nend: 3701
+          value:
+            nstart: 3701
+            nend: 3943
+          properties: null
+          children: []
+        - key:
+            nstart: 3943
+            nend: 3959
+          length:
+            nstart: 3959
+            nend: 3961
+          value:
+            nstart: 3961
+            nend: 4203
+          properties: null
+          children: []
+        - key:
+            nstart: 4203
+            nend: 4219
+          length:
+            nstart: 4219
+            nend: 4221
+          value:
+            nstart: 4221
+            nend: 4463
+          properties: null
+          children: []
+        - key:
+            nstart: 4463
+            nend: 4479
+          length:
+            nstart: 4479
+            nend: 4481
+          value:
+            nstart: 4481
+            nend: 4723
+          properties: null
+          children: []
+        - key:
+            nstart: 4723
+            nend: 4739
+          length:
+            nstart: 4739
+            nend: 4741
+          value:
+            nstart: 4741
+            nend: 4983
+          properties: null
+          children: []
+        - key:
+            nstart: 4983
+            nend: 4999
+          length:
+            nstart: 4999
+            nend: 5001
+          value:
+            nstart: 5001
+            nend: 5243
+          properties: null
+          children: []
+        - key:
+            nstart: 5243
+            nend: 5259
+          length:
+            nstart: 5259
+            nend: 5261
+          value:
+            nstart: 5261
+            nend: 5503
+          properties: null
+          children: []
+        - key:
+            nstart: 5503
+            nend: 5519
+          length:
+            nstart: 5519
+            nend: 5521
+          value:
+            nstart: 5521
+            nend: 5763
+          properties: null
+          children: []
+        - key:
+            nstart: 5763
+            nend: 5779
+          length:
+            nstart: 5779
+            nend: 5781
+          value:
+            nstart: 5781
+            nend: 6023
+          properties: null
+          children: []
+        - key:
+            nstart: 6023
+            nend: 6039
+          length:
+            nstart: 6039
+            nend: 6041
+          value:
+            nstart: 6041
+            nend: 6283
+          properties: null
+          children: []
+        - key:
+            nstart: 6283
+            nend: 6299
+          length:
+            nstart: 6299
+            nend: 6301
+          value:
+            nstart: 6301
+            nend: 6543
+          properties: null
+          children: []
+        - key:
+            nstart: 6543
+            nend: 6559
+          length:
+            nstart: 6559
+            nend: 6561
+          value:
+            nstart: 6561
+            nend: 6803
+          properties: null
+          children: []
+        - key:
+            nstart: 6803
+            nend: 6819
+          length:
+            nstart: 6819
+            nend: 6821
+          value:
+            nstart: 6821
+            nend: 7063
+          properties: null
+          children: []
+        - key:
+            nstart: 7063
+            nend: 7079
+          length:
+            nstart: 7079
+            nend: 7081
+          value:
+            nstart: 7081
+            nend: 7323
+          properties: null
+          children: []
+        - key:
+            nstart: 7323
+            nend: 7339
+          length:
+            nstart: 7339
+            nend: 7341
+          value:
+            nstart: 7341
+            nend: 7583
+          properties: null
+          children: []
+        - key:
+            nstart: 7583
+            nend: 7599
+          length:
+            nstart: 7599
+            nend: 7601
+          value:
+            nstart: 7601
+            nend: 7843
+          properties: null
+          children: []
+        - key:
+            nstart: 7843
+            nend: 7859
+          length:
+            nstart: 7859
+            nend: 7861
+          value:
+            nstart: 7861
+            nend: 8103
+          properties: null
+          children: []
+        - key:
+            nstart: 8103
+            nend: 8119
+          length:
+            nstart: 8119
+            nend: 8121
+          value:
+            nstart: 8121
+            nend: 8363
+          properties: null
+          children: []
+        - key:
+            nstart: 8363
+            nend: 8379
+          length:
+            nstart: 8379
+            nend: 8381
+          value:
+            nstart: 8381
+            nend: 8623
+          properties: null
+          children: []
+        - key:
+            nstart: 8623
+            nend: 8639
+          length:
+            nstart: 8639
+            nend: 8641
+          value:
+            nstart: 8641
+            nend: 8883
+          properties: null
+          children: []
+        - key:
+            nstart: 8883
+            nend: 8899
+          length:
+            nstart: 8899
+            nend: 8901
+          value:
+            nstart: 8901
+            nend: 9143
+          properties: null
+          children: []
+        - key:
+            nstart: 9143
+            nend: 9159
+          length:
+            nstart: 9159
+            nend: 9161
+          value:
+            nstart: 9161
+            nend: 9403
+          properties: null
+          children: []
+        - key:
+            nstart: 9403
+            nend: 9419
+          length:
+            nstart: 9419
+            nend: 9421
+          value:
+            nstart: 9421
+            nend: 9663
+          properties: null
+          children: []
+        - key:
+            nstart: 9663
+            nend: 9679
+          length:
+            nstart: 9679
+            nend: 9681
+          value:
+            nstart: 9681
+            nend: 9923
+          properties: null
+          children: []
+        - key:
+            nstart: 9923
+            nend: 9939
+          length:
+            nstart: 9939
+            nend: 9941
+          value:
+            nstart: 9941
+            nend: 10183
+          properties: null
+          children: []
+        - key:
+            nstart: 10183
+            nend: 10199
+          length:
+            nstart: 10199
+            nend: 10201
+          value:
+            nstart: 10201
+            nend: 10443
+          properties: null
+          children: []
+        - key:
+            nstart: 10443
+            nend: 10459
+          length:
+            nstart: 10459
+            nend: 10461
+          value:
+            nstart: 10461
+            nend: 10703
+          properties: null
+          children: []
+        - key:
+            nstart: 10703
+            nend: 10719
+          length:
+            nstart: 10719
+            nend: 10721
+          value:
+            nstart: 10721
+            nend: 10963
+          properties: null
+          children: []
+        - key:
+            nstart: 10963
+            nend: 10979
+          length:
+            nstart: 10979
+            nend: 10981
+          value:
+            nstart: 10981
+            nend: 11223
+          properties: null
+          children: []
+        - key:
+            nstart: 11223
+            nend: 11239
+          length:
+            nstart: 11239
+            nend: 11241
+          value:
+            nstart: 11241
+            nend: 11483
+          properties: null
+          children: []
+        - key:
+            nstart: 11483
+            nend: 11499
+          length:
+            nstart: 11499
+            nend: 11501
+          value:
+            nstart: 11501
+            nend: 11743
+          properties: null
+          children: []
+        - key:
+            nstart: 11743
+            nend: 11759
+          length:
+            nstart: 11759
+            nend: 11761
+          value:
+            nstart: 11761
+            nend: 12003
+          properties: null
+          children: []
+        - key:
+            nstart: 12003
+            nend: 12019
+          length:
+            nstart: 12019
+            nend: 12021
+          value:
+            nstart: 12021
+            nend: 12263
+          properties: null
+          children: []
+        - key:
+            nstart: 12263
+            nend: 12279
+          length:
+            nstart: 12279
+            nend: 12281
+          value:
+            nstart: 12281
+            nend: 12523
+          properties: null
+          children: []
+        - key:
+            nstart: 12523
+            nend: 12539
+          length:
+            nstart: 12539
+            nend: 12541
+          value:
+            nstart: 12541
+            nend: 12783
+          properties: null
+          children: []
+        - key:
+            nstart: 12783
+            nend: 12799
+          length:
+            nstart: 12799
+            nend: 12801
+          value:
+            nstart: 12801
+            nend: 13043
+          properties: null
+          children: []
+        - key:
+            nstart: 13043
+            nend: 13059
+          length:
+            nstart: 13059
+            nend: 13061
+          value:
+            nstart: 13061
+            nend: 13303
+          properties: null
+          children: []
+        - key:
+            nstart: 13303
+            nend: 13319
+          length:
+            nstart: 13319
+            nend: 13321
+          value:
+            nstart: 13321
+            nend: 13563
+          properties: null
+          children: []
+        - key:
+            nstart: 13563
+            nend: 13579
+          length:
+            nstart: 13579
+            nend: 13581
+          value:
+            nstart: 13581
+            nend: 13823
+          properties: null
+          children: []
+        - key:
+            nstart: 13823
+            nend: 13839
+          length:
+            nstart: 13839
+            nend: 13841
+          value:
+            nstart: 13841
+            nend: 14083
+          properties: null
+          children: []
+        - key:
+            nstart: 14083
+            nend: 14099
+          length:
+            nstart: 14099
+            nend: 14101
+          value:
+            nstart: 14101
+            nend: 14343
+          properties: null
+          children: []
+        - key:
+            nstart: 14343
+            nend: 14359
+          length:
+            nstart: 14359
+            nend: 14361
+          value:
+            nstart: 14361
+            nend: 14603
+          properties: null
+          children: []
+        - key:
+            nstart: 14603
+            nend: 14619
+          length:
+            nstart: 14619
+            nend: 14621
+          value:
+            nstart: 14621
+            nend: 14863
+          properties: null
+          children: []
+        - key:
+            nstart: 14863
+            nend: 14879
+          length:
+            nstart: 14879
+            nend: 14881
+          value:
+            nstart: 14881
+            nend: 15123
+          properties: null
+          children: []
+        - key:
+            nstart: 15123
+            nend: 15139
+          length:
+            nstart: 15139
+            nend: 15141
+          value:
+            nstart: 15141
+            nend: 15383
+          properties: null
+          children: []
+        - key:
+            nstart: 15383
+            nend: 15399
+          length:
+            nstart: 15399
+            nend: 15401
+          value:
+            nstart: 15401
+            nend: 15643
+          properties: null
+          children: []
+        - key:
+            nstart: 15643
+            nend: 15659
+          length:
+            nstart: 15659
+            nend: 15661
+          value:
+            nstart: 15661
+            nend: 15903
+          properties: null
+          children: []
+        - key:
+            nstart: 15903
+            nend: 15919
+          length:
+            nstart: 15919
+            nend: 15921
+          value:
+            nstart: 15921
+            nend: 16163
+          properties: null
+          children: []
+        - key:
+            nstart: 16163
+            nend: 16179
+          length:
+            nstart: 16179
+            nend: 16181
+          value:
+            nstart: 16181
+            nend: 16423
+          properties: null
+          children: []
+        - key:
+            nstart: 16423
+            nend: 16439
+          length:
+            nstart: 16439
+            nend: 16441
+          value:
+            nstart: 16441
+            nend: 16683
+          properties: null
+          children: []
+        - key:
+            nstart: 16683
+            nend: 16699
+          length:
+            nstart: 16699
+            nend: 16701
+          value:
+            nstart: 16701
+            nend: 16943
+          properties: null
+          children: []
+        - key:
+            nstart: 16943
+            nend: 16959
+          length:
+            nstart: 16959
+            nend: 16961
+          value:
+            nstart: 16961
+            nend: 17203
+          properties: null
+          children: []
+        - key:
+            nstart: 17203
+            nend: 17219
+          length:
+            nstart: 17219
+            nend: 17221
+          value:
+            nstart: 17221
+            nend: 17463
+          properties: null
+          children: []
+        - key:
+            nstart: 17463
+            nend: 17479
+          length:
+            nstart: 17479
+            nend: 17481
+          value:
+            nstart: 17481
+            nend: 17723
+          properties: null
+          children: []
+        - key:
+            nstart: 17723
+            nend: 17739
+          length:
+            nstart: 17739
+            nend: 17741
+          value:
+            nstart: 17741
+            nend: 17983
+          properties: null
+          children: []
+        - key:
+            nstart: 17983
+            nend: 17999
+          length:
+            nstart: 17999
+            nend: 18001
+          value:
+            nstart: 18001
+            nend: 18243
+          properties: null
+          children: []
+        - key:
+            nstart: 18243
+            nend: 18259
+          length:
+            nstart: 18259
+            nend: 18261
+          value:
+            nstart: 18261
+            nend: 18503
+          properties: null
+          children: []
+        - key:
+            nstart: 18503
+            nend: 18519
+          length:
+            nstart: 18519
+            nend: 18521
+          value:
+            nstart: 18521
+            nend: 18763
+          properties: null
+          children: []
+        - key:
+            nstart: 18763
+            nend: 18779
+          length:
+            nstart: 18779
+            nend: 18781
+          value:
+            nstart: 18781
+            nend: 19023
+          properties: null
+          children: []
+        - key:
+            nstart: 19023
+            nend: 19039
+          length:
+            nstart: 19039
+            nend: 19041
+          value:
+            nstart: 19041
+            nend: 19283
+          properties: null
+          children: []
+        - key:
+            nstart: 19283
+            nend: 19299
+          length:
+            nstart: 19299
+            nend: 19301
+          value:
+            nstart: 19301
+            nend: 19543
+          properties: null
+          children: []
+        - key:
+            nstart: 19543
+            nend: 19559
+          length:
+            nstart: 19559
+            nend: 19561
+          value:
+            nstart: 19561
+            nend: 19803
+          properties: null
+          children: []
+        - key:
+            nstart: 19803
+            nend: 19819
+          length:
+            nstart: 19819
+            nend: 19821
+          value:
+            nstart: 19821
+            nend: 20063
+          properties: null
+          children: []
+        - key:
+            nstart: 20063
+            nend: 20079
+          length:
+            nstart: 20079
+            nend: 20081
+          value:
+            nstart: 20081
+            nend: 20323
+          properties: null
+          children: []
+        - key:
+            nstart: 20323
+            nend: 20339
+          length:
+            nstart: 20339
+            nend: 20341
+          value:
+            nstart: 20341
+            nend: 20583
+          properties: null
+          children: []
+        - key:
+            nstart: 20583
+            nend: 20599
+          length:
+            nstart: 20599
+            nend: 20601
+          value:
+            nstart: 20601
+            nend: 20843
+          properties: null
+          children: []
+        - key:
+            nstart: 20843
+            nend: 20859
+          length:
+            nstart: 20859
+            nend: 20861
+          value:
+            nstart: 20861
+            nend: 21103
+          properties: null
+          children: []
+    - key:
+        nstart: 21103
+        nend: 21119
+      length:
+        nstart: 21119
+        nend: 21123
+      value:
+        nstart: 21123
+        nend: 21243
+      properties:
+        partitioncount: 2
+        partitiontype: body
+      children:
+        - key:
+            nstart: 21243
+            nend: 21259
+          length:
+            nstart: 21259
+            nend: 21262
+          value:
+            nstart: 21262
+            nend: 21535
+          properties: null
+          children: []
+    - key:
+        nstart: 21535
+        nend: 21551
+      length:
+        nstart: 21551
+        nend: 21555
+      value:
+        nstart: 21555
+        nend: 21675
+      properties:
+        partitioncount: 3
+        partitiontype: body
+      children:
+        - key:
+            nstart: 21675
+            nend: 21691
+          length:
+            nstart: 21691
+            nend: 21694
+          value:
+            nstart: 21694
+            nend: 27541
+          properties: null
+          children: []
+    - key:
+        nstart: 27541
+        nend: 27557
+      length:
+        nstart: 27557
+        nend: 27561
+      value:
+        nstart: 27561
+        nend: 27681
+      properties:
+        partitioncount: 4
+        partitiontype: footer
+      children:
+        - key:
+            nstart: 27681
+            nend: 27697
+          length:
+            nstart: 27697
+            nend: 27701
+          value:
+            nstart: 27701
+            nend: 28303
+          properties: null
+          children: []
+        - key:
+            nstart: 28303
+            nend: 28319
+          length:
+            nstart: 28319
+            nend: 28321
+          value:
+            nstart: 28321
+            nend: 28499
+          properties:
+            uuid: 2bb4a6552cf2444ab09a99871a95c41e
+          children:
+            - key:
+                nstart: 28499
+                nend: 28515
+              length:
+                nstart: 28515
+                nend: 28516
+              value:
+                nstart: 28516
+                nend: 28580
+              properties:
+                uuid: b66c2745dd9842cd935faed8b3c1e9c5
+              children:
+                - key:
+                    nstart: 28580
+                    nend: 28596
+                  length:
+                    nstart: 28596
+                    nend: 28597
+                  value:
+                    nstart: 28597
+                    nend: 28705
+                  properties:
+                    uuid: ed0495f463df46158e01b103cf337d47
+                  children:
+                    - key:
+                        nstart: 28705
+                        nend: 28721
+                      length:
+                        nstart: 28721
+                        nend: 28722
+                      value:
+                        nstart: 28722
+                        nend: 28802
+                      properties:
+                        uuid: 6ba3d33afd5646719eb7eabd275c124f
+                      children:
+                        - key:
+                            nstart: 28802
+                            nend: 28818
+                          length:
+                            nstart: 28818
+                            nend: 28819
+                          value:
+                            nstart: 28819
+                            nend: 28887
+                          properties:
+                            uuid: 134c56a47b8b42bea28bc44ae7d67074
+                          children:
+                            - key:
+                                nstart: 28887
+                                nend: 28903
+                              length:
+                                nstart: 28903
+                                nend: 28904
+                              value:
+                                nstart: 28904
+                                nend: 29000
+                              properties:
+                                uuid: f6e6c5af135a47d4975085043ba6cdca
+                              children: []
+                - key:
+                    nstart: 29000
+                    nend: 29016
+                  length:
+                    nstart: 29016
+                    nend: 29018
+                  value:
+                    nstart: 29018
+                    nend: 29146
+                  properties:
+                    uuid: 79ba03c29096484b8b84c909095af45e
+                  children:
+                    - key:
+                        nstart: 29146
+                        nend: 29162
+                      length:
+                        nstart: 29162
+                        nend: 29163
+                      value:
+                        nstart: 29163
+                        nend: 29243
+                      properties:
+                        uuid: 10562902aefb4608b596e5fd19d8abf2
+                      children:
+                        - key:
+                            nstart: 29243
+                            nend: 29259
+                          length:
+                            nstart: 29259
+                            nend: 29260
+                          value:
+                            nstart: 29260
+                            nend: 29328
+                          properties:
+                            uuid: 00b47bdb94de40afa4b5946d7715be00
+                          children:
+                            - key:
+                                nstart: 29328
+                                nend: 29344
+                              length:
+                                nstart: 29344
+                                nend: 29345
+                              value:
+                                nstart: 29345
+                                nend: 29441
+                              properties:
+                                uuid: dfd736b71d8f4296bdca187ce726401b
+                              children: []
+                    - key:
+                        nstart: 29441
+                        nend: 29457
+                      length:
+                        nstart: 29457
+                        nend: 29458
+                      value:
+                        nstart: 29458
+                        nend: 29579
+                      properties:
+                        uuid: fab9ce2e6522490582ff04fe1d41c0bb
+                      children: []
+            - key:
+                nstart: 29616
+                nend: 29632
+              length:
+                nstart: 29632
+                nend: 29634
+              value:
+                nstart: 29634
+                nend: 29784
+              properties:
+                uuid: 892a5aef86474c6e89a47ea05aef283b
+              children: []
+        - key:
+            nstart: 29579
+            nend: 29595
+          length:
+            nstart: 29595
+            nend: 29596
+          value:
+            nstart: 29596
+            nend: 29616
+          properties:
+            uuid: c07f64e0fb1d48dd84d73af3ace57266
+          children: []
+    - key:
+        nstart: 29784
+        nend: 29800
+      length:
+        nstart: 29800
+        nend: 29801
+      value:
+        nstart: 29801
+        nend: 29865
+      properties:
+        partitioncount: 5
+        partitiontype: RIP
+      children: []
+primer:
+    3b0a: 060e2b34.01010105.01020210.02010000
+    3b0b: 060e2b34.01010105.01020210.02020000
+    3b02: 060e2b34.01010102.07020110.02040000
+    3b03: 060e2b34.01010102.06010104.02010000
+    3b05: 060e2b34.01010102.03010201.05000000
+    3b06: 060e2b34.01010102.06010104.06040000
+    3b09: 060e2b34.01010105.01020203.00000000
+    3c0a: 060e2b34.01010101.01011502.00000000
+    3c01: 060e2b34.01010102.05200701.02010000
+    3c02: 060e2b34.01010102.05200701.03010000
+    3c04: 060e2b34.01010102.05200701.05010000
+    3c05: 060e2b34.01010102.05200701.07000000
+    3c09: 060e2b34.01010102.05200701.01000000
+    "3e01": 060e2b34.01010103.04030302.00000000
+    4b01: 060e2b34.01010102.05300405.00000000
+    4b02: 060e2b34.01010102.07020103.01030000
+    "0201": 060e2b34.01010102.04070100.00000000
+    "1001": 060e2b34.01010102.06010104.06090000
+    "1101": 060e2b34.01010102.06010103.01000000
+    "1102": 060e2b34.01010102.06010103.02000000
+    "1201": 060e2b34.01010102.07020103.01040000
+    "1901": 060e2b34.01010102.06010104.05010000
+    "3001": 060e2b34.01010101.04060101.00000000
+    "3004": 060e2b34.01010102.06010104.01020000
+    "4401": 060e2b34.01010101.01011510.00000000
+    "4403": 060e2b34.01010102.06010104.06050000
+    "4404": 060e2b34.01010102.07020110.02050000
+    "4405": 060e2b34.01010102.07020110.01030000
+    "4701": 060e2b34.01010102.06010104.02030000
+    "4801": 060e2b34.01010102.01070101.00000000
+    "4803": 060e2b34.01010102.06010104.02040000
+    "4804": 060e2b34.01010102.01040103.00000000
+    fffe: 060e2b34.01010105.0e090400.00000000

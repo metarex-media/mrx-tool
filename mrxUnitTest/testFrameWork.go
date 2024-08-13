@@ -10,16 +10,23 @@ import (
 	"github.com/onsi/gomega/types"
 )
 
+// NewTester generates a new tester for a segment of tests
 func newTester(dest io.Writer, segmentHeader string) *CompleteTest {
 
 	var log bytes.Buffer
 	seg := &segmentTest{header: segmentHeader, errChannel: make(chan string, 5), testBuffer: log, log: dest}
 
-	return &CompleteTest{
+	ct := &CompleteTest{
 		segment: seg,
-		t:       NewWithT(seg),
 	}
+	// initialise the gomega tester object
+	ct.tester = NewWithT(seg)
+	return ct
 
+}
+
+func (c *CompleteTest) Test(message string, assert func() bool) {
+	c.segment.Test(message, assert)
 }
 
 func (c *CompleteTest) Result() {
@@ -28,7 +35,12 @@ func (c *CompleteTest) Result() {
 
 type CompleteTest struct {
 	segment *segmentTest
-	t       tester
+	tester
+}
+
+type Test interface {
+	Test(message string, assert func() bool)
+	Expect(actual interface{}, extra ...interface{}) types.Assertion
 }
 
 // tester is a workaround to wrap the gomega/internal object
@@ -36,19 +48,7 @@ type tester interface {
 	Expect(actual interface{}, extra ...interface{}) types.Assertion
 }
 
-/*
-type mrxTest struct {
-	// this will be a parent struct that handles all the different segments
-	// or at least supplies the writer
-}*/
-/*
-func newSegmentTest(dest io.Writer, segmentHeader string) *segmentTest {
-	var log bytes.Buffer
-
-	return &segmentTest{header: segmentHeader, errChannel: make(chan string, 5), testBuffer: log, log: dest}
-
-}
-*/
+// wrap the results for later
 func (s *segmentTest) result() {
 
 	s.log.Write([]byte(fmt.Sprintf("Running %s tests:\n", s.header)))
@@ -74,8 +74,7 @@ type segmentTest struct {
 	log        io.Writer
 }
 
-// have a function to defer that does all the cleaning up when the tests
-
+// Test runs the
 func (s *segmentTest) Test(message string, assert func() bool) {
 	s.testCount++
 
