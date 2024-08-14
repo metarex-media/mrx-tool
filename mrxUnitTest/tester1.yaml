@@ -1,859 +1,1026 @@
+key:
+    start: 0
+    end: 0
+length:
+    start: 0
+    end: 0
+value:
+    start: 0
+    end: 0
+properties: null
 children:
     - key:
-        nstart: 0
-        nend: 16
+        start: 0
+        end: 16
       length:
-        nstart: 16
-        nend: 20
+        start: 16
+        end: 20
       value:
-        nstart: 20
-        nend: 140
+        start: 20
+        end: 140
       properties:
         partitioncount: 0
         partitiontype: header
+        primer: {}
       children:
         - key:
-            nstart: 1531
-            nend: 1547
+            start: 140
+            end: 156
           length:
-            nstart: 1547
-            nend: 1548
+            start: 156
+            end: 160
           value:
-            nstart: 1548
-            nend: 1628
+            start: 160
+            end: 834
           properties:
-            uuid: 57cfeb9f9c8747f98c73afc2bb5e07b7
-          children:
-            - key:
-                nstart: 1333
-                nend: 1349
-              length:
-                nstart: 1349
-                nend: 1350
-              value:
-                nstart: 1350
-                nend: 1418
-              properties:
-                uuid: c38af914055749bc8e764032b5c3a0dd
-              children:
-                - key:
-                    nstart: 1418
-                    nend: 1434
-                  length:
-                    nstart: 1434
-                    nend: 1435
-                  value:
-                    nstart: 1435
-                    nend: 1531
-                  properties:
-                    uuid: 3021cb390be34914bb28520c61f807ce
-                  children: []
-        - key:
-            nstart: 1713
-            nend: 1729
-          length:
-            nstart: 1729
-            nend: 1730
-          value:
-            nstart: 1730
-            nend: 1793
-          properties:
-            uuid: 7c6c4a420a1f4082adf014b5273fab17
+            uuid: "00000000000000000000000000000000"
+            symb: ""
           children: []
         - key:
-            nstart: 834
-            nend: 850
+            start: 834
+            end: 850
           length:
-            nstart: 850
-            nend: 852
+            start: 850
+            end: 852
           value:
-            nstart: 852
-            nend: 1030
+            start: 852
+            end: 1030
           properties:
             uuid: d2b4b48ce6ca419fae42e62e69a2d660
+            symb: ""
           children:
             - key:
-                nstart: 1030
-                nend: 1046
+                start: 1030
+                end: 1046
               length:
-                nstart: 1046
-                nend: 1047
+                start: 1046
+                end: 1047
               value:
-                nstart: 1047
-                nend: 1111
+                start: 1047
+                end: 1111
               properties:
                 uuid: 6007d2d4875f42db840d2c402ed8eea5
+                symb: ""
               children:
                 - key:
-                    nstart: 1111
-                    nend: 1127
+                    start: 1111
+                    end: 1127
                   length:
-                    nstart: 1127
-                    nend: 1128
+                    start: 1127
+                    end: 1128
                   value:
-                    nstart: 1128
-                    nend: 1236
+                    start: 1128
+                    end: 1236
                   properties:
                     uuid: 7df287873fd14cd4a5c7a93c3fbaa255
+                    symb: ""
                   children:
                     - key:
-                        nstart: 1236
-                        nend: 1252
+                        start: 1236
+                        end: 1252
                       length:
-                        nstart: 1252
-                        nend: 1253
+                        start: 1252
+                        end: 1253
                       value:
-                        nstart: 1253
-                        nend: 1333
+                        start: 1253
+                        end: 1333
                       properties:
                         uuid: 620015f6cd584a3a9c0a20872d58c3bc
+                        symb: ""
                       children:
                         - key:
-                            nstart: 1333
-                            nend: 1349
+                            start: 1333
+                            end: 1349
                           length:
-                            nstart: 1349
-                            nend: 1350
+                            start: 1349
+                            end: 1350
                           value:
-                            nstart: 1350
-                            nend: 1418
+                            start: 1350
+                            end: 1418
                           properties:
                             uuid: c38af914055749bc8e764032b5c3a0dd
+                            symb: 060e2b34.04010101.01030202.03000000
                           children:
                             - key:
-                                nstart: 1418
-                                nend: 1434
+                                start: 1418
+                                end: 1434
                               length:
-                                nstart: 1434
-                                nend: 1435
+                                start: 1434
+                                end: 1435
                               value:
-                                nstart: 1435
-                                nend: 1531
+                                start: 1435
+                                end: 1531
                               properties:
                                 uuid: 3021cb390be34914bb28520c61f807ce
+                                symb: 060e2b34.04010101.01030202.03000000
                               children: []
                 - key:
-                    nstart: 1793
-                    nend: 1809
+                    start: 1793
+                    end: 1809
                   length:
-                    nstart: 1809
-                    nend: 1811
+                    start: 1809
+                    end: 1811
                   value:
-                    nstart: 1811
-                    nend: 1939
+                    start: 1811
+                    end: 1939
                   properties:
                     uuid: 9326d112067a4ac78f31b717350db516
+                    symb: ""
                   children:
                     - key:
-                        nstart: 1939
-                        nend: 1955
+                        start: 1939
+                        end: 1955
                       length:
-                        nstart: 1955
-                        nend: 1956
+                        start: 1955
+                        end: 1956
                       value:
-                        nstart: 1956
-                        nend: 2036
+                        start: 1956
+                        end: 2036
                       properties:
                         uuid: b7908a85cfab45a7865ceb86a06fd8fb
+                        symb: ""
                       children:
                         - key:
-                            nstart: 2036
-                            nend: 2052
+                            start: 2036
+                            end: 2052
                           length:
-                            nstart: 2052
-                            nend: 2053
+                            start: 2052
+                            end: 2053
                           value:
-                            nstart: 2053
-                            nend: 2121
+                            start: 2053
+                            end: 2121
                           properties:
                             uuid: 758afd35f3e74112aa3c66e1a82e26a3
+                            symb: 060e2b34.04010101.01030202.03000000
                           children:
                             - key:
-                                nstart: 2121
-                                nend: 2137
+                                start: 2121
+                                end: 2137
                               length:
-                                nstart: 2137
-                                nend: 2138
+                                start: 2137
+                                end: 2138
                               value:
-                                nstart: 2138
-                                nend: 2234
+                                start: 2138
+                                end: 2234
                               properties:
                                 uuid: 5704b6ae86814645b45f1d294a71611e
+                                symb: 060e2b34.04010101.01030202.03000000
                               children: []
                     - key:
-                        nstart: 2234
-                        nend: 2250
+                        start: 2234
+                        end: 2250
                       length:
-                        nstart: 2250
-                        nend: 2252
+                        start: 2250
+                        end: 2252
                       value:
-                        nstart: 2252
-                        nend: 2467
+                        start: 2252
+                        end: 2467
                       properties:
                         uuid: fe55623bb8b0430986b6c75f62d34e59
+                        symb: ""
                       children: []
             - key:
-                nstart: 2508
-                nend: 2524
+                start: 2508
+                end: 2524
               length:
-                nstart: 2524
-                nend: 2525
+                start: 2524
+                end: 2525
               value:
-                nstart: 2525
-                nend: 2649
+                start: 2525
+                end: 2649
               properties:
                 uuid: 7d00c1ca76b94e9c88043ec30d1a2391
+                symb: ""
               children: []
         - key:
-            nstart: 2467
-            nend: 2483
+            start: 1531
+            end: 1547
           length:
-            nstart: 2483
-            nend: 2484
+            start: 1547
+            end: 1548
           value:
-            nstart: 2484
-            nend: 2508
+            start: 1548
+            end: 1628
           properties:
-            uuid: aa50a97a4c224f919bfcec617d622129
-          children:
-            - null
-        - key:
-            nstart: 1628
-            nend: 1644
-          length:
-            nstart: 1644
-            nend: 1645
-          value:
-            nstart: 1645
-            nend: 1713
-          properties:
-            uuid: 6a197c05299d4ed1acb9d24641059d03
+            uuid: 57cfeb9f9c8747f98c73afc2bb5e07b7
+            symb: ""
           children:
             - key:
-                nstart: 1418
-                nend: 1434
+                start: 1333
+                end: 1349
               length:
-                nstart: 1434
-                nend: 1435
+                start: 1349
+                end: 1350
               value:
-                nstart: 1435
-                nend: 1531
+                start: 1350
+                end: 1418
+              properties:
+                uuid: c38af914055749bc8e764032b5c3a0dd
+                symb: 060e2b34.04010101.01030202.03000000
+              children:
+                - key:
+                    start: 1418
+                    end: 1434
+                  length:
+                    start: 1434
+                    end: 1435
+                  value:
+                    start: 1435
+                    end: 1531
+                  properties:
+                    uuid: 3021cb390be34914bb28520c61f807ce
+                    symb: 060e2b34.04010101.01030202.03000000
+                  children: []
+        - key:
+            start: 1628
+            end: 1644
+          length:
+            start: 1644
+            end: 1645
+          value:
+            start: 1645
+            end: 1713
+          properties:
+            uuid: 6a197c05299d4ed1acb9d24641059d03
+            symb: 060e2b34.04010101.01030202.03000000
+          children:
+            - key:
+                start: 1418
+                end: 1434
+              length:
+                start: 1434
+                end: 1435
+              value:
+                start: 1435
+                end: 1531
               properties:
                 uuid: 3021cb390be34914bb28520c61f807ce
+                symb: 060e2b34.04010101.01030202.03000000
               children: []
         - key:
-            nstart: 140
-            nend: 156
+            start: 1713
+            end: 1729
           length:
-            nstart: 156
-            nend: 160
+            start: 1729
+            end: 1730
           value:
-            nstart: 160
-            nend: 834
-          properties: null
+            start: 1730
+            end: 1793
+          properties:
+            uuid: 7c6c4a420a1f4082adf014b5273fab17
+            symb: 060e2b34.04010101.01030202.03000000
           children: []
+        - key:
+            start: 2467
+            end: 2483
+          length:
+            start: 2483
+            end: 2484
+          value:
+            start: 2484
+            end: 2508
+          properties:
+            uuid: aa50a97a4c224f919bfcec617d622129
+            symb: ""
+          children:
+            - null
     - key:
-        nstart: 2649
-        nend: 2665
+        start: 2649
+        end: 2665
       length:
-        nstart: 2665
-        nend: 2669
+        start: 2665
+        end: 2669
       value:
-        nstart: 2669
-        nend: 2789
+        start: 2669
+        end: 2789
       properties:
         partitioncount: 1
         partitiontype: body
+        primer:
+            3b0a: 060e2b34.01010105.01020210.02010000
+            3b0b: 060e2b34.01010105.01020210.02020000
+            3b02: 060e2b34.01010102.07020110.02040000
+            3b03: 060e2b34.01010102.06010104.02010000
+            3b05: 060e2b34.01010102.03010201.05000000
+            3b06: 060e2b34.01010102.06010104.06040000
+            3b09: 060e2b34.01010105.01020203.00000000
+            3c0a: 060e2b34.01010101.01011502.00000000
+            3c01: 060e2b34.01010102.05200701.02010000
+            3c02: 060e2b34.01010102.05200701.03010000
+            3c04: 060e2b34.01010102.05200701.05010000
+            3c05: 060e2b34.01010102.05200701.07000000
+            3c09: 060e2b34.01010102.05200701.01000000
+            "3e01": 060e2b34.01010103.04030302.00000000
+            4b01: 060e2b34.01010102.05300405.00000000
+            4b02: 060e2b34.01010102.07020103.01030000
+            "0201": 060e2b34.01010102.04070100.00000000
+            "1001": 060e2b34.01010102.06010104.06090000
+            "1101": 060e2b34.01010102.06010103.01000000
+            "1102": 060e2b34.01010102.06010103.02000000
+            "1201": 060e2b34.01010102.07020103.01040000
+            "1501": 060e2b34.01010102.07020103.01050000
+            "1502": 060e2b34.01010102.04040101.02060000
+            "1503": 060e2b34.01010101.04040101.05000000
+            "1901": 060e2b34.01010102.06010104.05010000
+            "3001": 060e2b34.01010101.04060101.00000000
+            "3004": 060e2b34.01010102.06010104.01020000
+            "4401": 060e2b34.01010101.01011510.00000000
+            "4403": 060e2b34.01010102.06010104.06050000
+            "4404": 060e2b34.01010102.07020110.02050000
+            "4405": 060e2b34.01010102.07020110.01030000
+            "4701": 060e2b34.01010102.06010104.02030000
+            "4801": 060e2b34.01010102.01070101.00000000
+            "4803": 060e2b34.01010102.06010104.02040000
+            "4804": 060e2b34.01010102.01040103.00000000
+            fffe: 060e2b34.0101010d.06010104.05410100
+            ffff: 060e2b34.01010105.0e090400.00000000
       children:
         - key:
-            nstart: 2789
-            nend: 2805
+            start: 2789
+            end: 2805
           length:
-            nstart: 2805
-            nend: 2806
+            start: 2805
+            end: 2806
           value:
-            nstart: 2806
-            nend: 2823
+            start: 2806
+            end: 2823
           properties: null
           children: []
         - key:
-            nstart: 2823
-            nend: 2839
+            start: 2823
+            end: 2839
           length:
-            nstart: 2839
-            nend: 2840
+            start: 2839
+            end: 2840
           value:
-            nstart: 2840
-            nend: 2855
+            start: 2840
+            end: 2855
           properties: null
           children: []
         - key:
-            nstart: 2855
-            nend: 2871
+            start: 2855
+            end: 2871
           length:
-            nstart: 2871
-            nend: 2872
+            start: 2871
+            end: 2872
           value:
-            nstart: 2872
-            nend: 2888
+            start: 2872
+            end: 2888
           properties: null
           children: []
         - key:
-            nstart: 2888
-            nend: 2904
+            start: 2888
+            end: 2904
           length:
-            nstart: 2904
-            nend: 2905
+            start: 2904
+            end: 2905
           value:
-            nstart: 2905
-            nend: 2921
+            start: 2905
+            end: 2921
           properties: null
           children: []
         - key:
-            nstart: 2921
-            nend: 2937
+            start: 2921
+            end: 2937
           length:
-            nstart: 2937
-            nend: 2938
+            start: 2937
+            end: 2938
           value:
-            nstart: 2938
-            nend: 2955
+            start: 2938
+            end: 2955
           properties: null
           children: []
         - key:
-            nstart: 2955
-            nend: 2971
+            start: 2955
+            end: 2971
           length:
-            nstart: 2971
-            nend: 2972
+            start: 2971
+            end: 2972
           value:
-            nstart: 2972
-            nend: 2987
+            start: 2972
+            end: 2987
           properties: null
           children: []
         - key:
-            nstart: 2987
-            nend: 3003
+            start: 2987
+            end: 3003
           length:
-            nstart: 3003
-            nend: 3004
+            start: 3003
+            end: 3004
           value:
-            nstart: 3004
-            nend: 3020
+            start: 3004
+            end: 3020
           properties: null
           children: []
         - key:
-            nstart: 3020
-            nend: 3036
+            start: 3020
+            end: 3036
           length:
-            nstart: 3036
-            nend: 3037
+            start: 3036
+            end: 3037
           value:
-            nstart: 3037
-            nend: 3053
+            start: 3037
+            end: 3053
           properties: null
           children: []
         - key:
-            nstart: 3053
-            nend: 3069
+            start: 3053
+            end: 3069
           length:
-            nstart: 3069
-            nend: 3070
+            start: 3069
+            end: 3070
           value:
-            nstart: 3070
-            nend: 3087
+            start: 3070
+            end: 3087
           properties: null
           children: []
         - key:
-            nstart: 3087
-            nend: 3103
+            start: 3087
+            end: 3103
           length:
-            nstart: 3103
-            nend: 3104
+            start: 3103
+            end: 3104
           value:
-            nstart: 3104
-            nend: 3119
+            start: 3104
+            end: 3119
           properties: null
           children: []
         - key:
-            nstart: 3119
-            nend: 3135
+            start: 3119
+            end: 3135
           length:
-            nstart: 3135
-            nend: 3136
+            start: 3135
+            end: 3136
           value:
-            nstart: 3136
-            nend: 3152
+            start: 3136
+            end: 3152
           properties: null
           children: []
         - key:
-            nstart: 3152
-            nend: 3168
+            start: 3152
+            end: 3168
           length:
-            nstart: 3168
-            nend: 3169
+            start: 3168
+            end: 3169
           value:
-            nstart: 3169
-            nend: 3185
+            start: 3169
+            end: 3185
           properties: null
           children: []
         - key:
-            nstart: 3185
-            nend: 3201
+            start: 3185
+            end: 3201
           length:
-            nstart: 3201
-            nend: 3202
+            start: 3201
+            end: 3202
           value:
-            nstart: 3202
-            nend: 3219
+            start: 3202
+            end: 3219
           properties: null
           children: []
         - key:
-            nstart: 3219
-            nend: 3235
+            start: 3219
+            end: 3235
           length:
-            nstart: 3235
-            nend: 3236
+            start: 3235
+            end: 3236
           value:
-            nstart: 3236
-            nend: 3251
+            start: 3236
+            end: 3251
           properties: null
           children: []
         - key:
-            nstart: 3251
-            nend: 3267
+            start: 3251
+            end: 3267
           length:
-            nstart: 3267
-            nend: 3268
+            start: 3267
+            end: 3268
           value:
-            nstart: 3268
-            nend: 3284
+            start: 3268
+            end: 3284
           properties: null
           children: []
         - key:
-            nstart: 3284
-            nend: 3300
+            start: 3284
+            end: 3300
           length:
-            nstart: 3300
-            nend: 3301
+            start: 3300
+            end: 3301
           value:
-            nstart: 3301
-            nend: 3317
+            start: 3301
+            end: 3317
           properties: null
           children: []
         - key:
-            nstart: 3317
-            nend: 3333
+            start: 3317
+            end: 3333
           length:
-            nstart: 3333
-            nend: 3334
+            start: 3333
+            end: 3334
           value:
-            nstart: 3334
-            nend: 3351
+            start: 3334
+            end: 3351
           properties: null
           children: []
         - key:
-            nstart: 3351
-            nend: 3367
+            start: 3351
+            end: 3367
           length:
-            nstart: 3367
-            nend: 3368
+            start: 3367
+            end: 3368
           value:
-            nstart: 3368
-            nend: 3383
+            start: 3368
+            end: 3383
           properties: null
           children: []
         - key:
-            nstart: 3383
-            nend: 3399
+            start: 3383
+            end: 3399
           length:
-            nstart: 3399
-            nend: 3400
+            start: 3399
+            end: 3400
           value:
-            nstart: 3400
-            nend: 3416
+            start: 3400
+            end: 3416
           properties: null
           children: []
         - key:
-            nstart: 3416
-            nend: 3432
+            start: 3416
+            end: 3432
           length:
-            nstart: 3432
-            nend: 3433
+            start: 3432
+            end: 3433
           value:
-            nstart: 3433
-            nend: 3449
+            start: 3433
+            end: 3449
           properties: null
           children: []
         - key:
-            nstart: 3449
-            nend: 3465
+            start: 3449
+            end: 3465
           length:
-            nstart: 3465
-            nend: 3466
+            start: 3465
+            end: 3466
           value:
-            nstart: 3466
-            nend: 3483
+            start: 3466
+            end: 3483
           properties: null
           children: []
         - key:
-            nstart: 3483
-            nend: 3499
+            start: 3483
+            end: 3499
           length:
-            nstart: 3499
-            nend: 3500
+            start: 3499
+            end: 3500
           value:
-            nstart: 3500
-            nend: 3515
+            start: 3500
+            end: 3515
           properties: null
           children: []
         - key:
-            nstart: 3515
-            nend: 3531
+            start: 3515
+            end: 3531
           length:
-            nstart: 3531
-            nend: 3532
+            start: 3531
+            end: 3532
           value:
-            nstart: 3532
-            nend: 3548
+            start: 3532
+            end: 3548
           properties: null
           children: []
         - key:
-            nstart: 3548
-            nend: 3564
+            start: 3548
+            end: 3564
           length:
-            nstart: 3564
-            nend: 3565
+            start: 3564
+            end: 3565
           value:
-            nstart: 3565
-            nend: 3581
+            start: 3565
+            end: 3581
           properties: null
           children: []
     - key:
-        nstart: 3581
-        nend: 3597
+        start: 3581
+        end: 3597
       length:
-        nstart: 3597
-        nend: 3601
+        start: 3597
+        end: 3601
       value:
-        nstart: 3601
-        nend: 3721
+        start: 3601
+        end: 3721
       properties:
         partitioncount: 2
         partitiontype: body
+        primer:
+            3b0a: 060e2b34.01010105.01020210.02010000
+            3b0b: 060e2b34.01010105.01020210.02020000
+            3b02: 060e2b34.01010102.07020110.02040000
+            3b03: 060e2b34.01010102.06010104.02010000
+            3b05: 060e2b34.01010102.03010201.05000000
+            3b06: 060e2b34.01010102.06010104.06040000
+            3b09: 060e2b34.01010105.01020203.00000000
+            3c0a: 060e2b34.01010101.01011502.00000000
+            3c01: 060e2b34.01010102.05200701.02010000
+            3c02: 060e2b34.01010102.05200701.03010000
+            3c04: 060e2b34.01010102.05200701.05010000
+            3c05: 060e2b34.01010102.05200701.07000000
+            3c09: 060e2b34.01010102.05200701.01000000
+            "3e01": 060e2b34.01010103.04030302.00000000
+            4b01: 060e2b34.01010102.05300405.00000000
+            4b02: 060e2b34.01010102.07020103.01030000
+            "0201": 060e2b34.01010102.04070100.00000000
+            "1001": 060e2b34.01010102.06010104.06090000
+            "1101": 060e2b34.01010102.06010103.01000000
+            "1102": 060e2b34.01010102.06010103.02000000
+            "1201": 060e2b34.01010102.07020103.01040000
+            "1501": 060e2b34.01010102.07020103.01050000
+            "1502": 060e2b34.01010102.04040101.02060000
+            "1503": 060e2b34.01010101.04040101.05000000
+            "1901": 060e2b34.01010102.06010104.05010000
+            "3001": 060e2b34.01010101.04060101.00000000
+            "3004": 060e2b34.01010102.06010104.01020000
+            "4401": 060e2b34.01010101.01011510.00000000
+            "4403": 060e2b34.01010102.06010104.06050000
+            "4404": 060e2b34.01010102.07020110.02050000
+            "4405": 060e2b34.01010102.07020110.01030000
+            "4701": 060e2b34.01010102.06010104.02030000
+            "4801": 060e2b34.01010102.01070101.00000000
+            "4803": 060e2b34.01010102.06010104.02040000
+            "4804": 060e2b34.01010102.01040103.00000000
+            fffe: 060e2b34.0101010d.06010104.05410100
+            ffff: 060e2b34.01010105.0e090400.00000000
       children:
         - key:
-            nstart: 3721
-            nend: 3737
+            start: 3721
+            end: 3737
           length:
-            nstart: 3737
-            nend: 3740
+            start: 3737
+            end: 3740
           value:
-            nstart: 3740
-            nend: 6671
+            start: 3740
+            end: 6671
           properties: null
           children: []
     - key:
-        nstart: 6671
-        nend: 6687
+        start: 6671
+        end: 6687
       length:
-        nstart: 6687
-        nend: 6691
+        start: 6687
+        end: 6691
       value:
-        nstart: 6691
-        nend: 6811
+        start: 6691
+        end: 6811
       properties:
         partitioncount: 3
         partitiontype: footer
+        primer:
+            3b0a: 060e2b34.01010105.01020210.02010000
+            3b0b: 060e2b34.01010105.01020210.02020000
+            3b02: 060e2b34.01010102.07020110.02040000
+            3b03: 060e2b34.01010102.06010104.02010000
+            3b05: 060e2b34.01010102.03010201.05000000
+            3b06: 060e2b34.01010102.06010104.06040000
+            3b09: 060e2b34.01010105.01020203.00000000
+            3c0a: 060e2b34.01010101.01011502.00000000
+            3c01: 060e2b34.01010102.05200701.02010000
+            3c02: 060e2b34.01010102.05200701.03010000
+            3c04: 060e2b34.01010102.05200701.05010000
+            3c05: 060e2b34.01010102.05200701.07000000
+            3c09: 060e2b34.01010102.05200701.01000000
+            "3e01": 060e2b34.01010103.04030302.00000000
+            4b01: 060e2b34.01010102.05300405.00000000
+            4b02: 060e2b34.01010102.07020103.01030000
+            "0201": 060e2b34.01010102.04070100.00000000
+            "1001": 060e2b34.01010102.06010104.06090000
+            "1101": 060e2b34.01010102.06010103.01000000
+            "1102": 060e2b34.01010102.06010103.02000000
+            "1201": 060e2b34.01010102.07020103.01040000
+            "1501": 060e2b34.01010102.07020103.01050000
+            "1502": 060e2b34.01010102.04040101.02060000
+            "1503": 060e2b34.01010101.04040101.05000000
+            "1901": 060e2b34.01010102.06010104.05010000
+            "3001": 060e2b34.01010101.04060101.00000000
+            "3004": 060e2b34.01010102.06010104.01020000
+            "4401": 060e2b34.01010101.01011510.00000000
+            "4403": 060e2b34.01010102.06010104.06050000
+            "4404": 060e2b34.01010102.07020110.02050000
+            "4405": 060e2b34.01010102.07020110.01030000
+            "4701": 060e2b34.01010102.06010104.02030000
+            "4801": 060e2b34.01010102.01070101.00000000
+            "4803": 060e2b34.01010102.06010104.02040000
+            "4804": 060e2b34.01010102.01040103.00000000
+            fffe: 060e2b34.0101010d.06010104.05410100
+            ffff: 060e2b34.01010105.0e090400.00000000
       children:
         - key:
-            nstart: 7505
-            nend: 7521
+            start: 6811
+            end: 6827
           length:
-            nstart: 7521
-            nend: 7523
+            start: 6827
+            end: 6831
           value:
-            nstart: 7523
-            nend: 7701
+            start: 6831
+            end: 7505
+          properties:
+            uuid: "00000000000000000000000000000000"
+            symb: ""
+          children: []
+        - key:
+            start: 7505
+            end: 7521
+          length:
+            start: 7521
+            end: 7523
+          value:
+            start: 7523
+            end: 7701
           properties:
             uuid: d2b4b48ce6ca419fae42e62e69a2d660
+            symb: ""
           children:
             - key:
-                nstart: 7701
-                nend: 7717
+                start: 7701
+                end: 7717
               length:
-                nstart: 7717
-                nend: 7718
+                start: 7717
+                end: 7718
               value:
-                nstart: 7718
-                nend: 7782
+                start: 7718
+                end: 7782
               properties:
                 uuid: 6007d2d4875f42db840d2c402ed8eea5
+                symb: ""
               children:
                 - key:
-                    nstart: 7782
-                    nend: 7798
+                    start: 7782
+                    end: 7798
                   length:
-                    nstart: 7798
-                    nend: 7799
+                    start: 7798
+                    end: 7799
                   value:
-                    nstart: 7799
-                    nend: 7907
+                    start: 7799
+                    end: 7907
                   properties:
                     uuid: 7df287873fd14cd4a5c7a93c3fbaa255
+                    symb: ""
                   children:
                     - key:
-                        nstart: 7907
-                        nend: 7923
+                        start: 7907
+                        end: 7923
                       length:
-                        nstart: 7923
-                        nend: 7924
+                        start: 7923
+                        end: 7924
                       value:
-                        nstart: 7924
-                        nend: 8004
+                        start: 7924
+                        end: 8004
                       properties:
                         uuid: 620015f6cd584a3a9c0a20872d58c3bc
+                        symb: ""
                       children:
                         - key:
-                            nstart: 8004
-                            nend: 8020
+                            start: 8004
+                            end: 8020
                           length:
-                            nstart: 8020
-                            nend: 8021
+                            start: 8020
+                            end: 8021
                           value:
-                            nstart: 8021
-                            nend: 8089
+                            start: 8021
+                            end: 8089
                           properties:
                             uuid: c38af914055749bc8e764032b5c3a0dd
+                            symb: 060e2b34.04010101.01030202.03000000
                           children:
                             - key:
-                                nstart: 8089
-                                nend: 8105
+                                start: 8089
+                                end: 8105
                               length:
-                                nstart: 8105
-                                nend: 8106
+                                start: 8105
+                                end: 8106
                               value:
-                                nstart: 8106
-                                nend: 8202
+                                start: 8106
+                                end: 8202
                               properties:
                                 uuid: 3021cb390be34914bb28520c61f807ce
+                                symb: 060e2b34.04010101.01030202.03000000
                               children: []
                 - key:
-                    nstart: 8464
-                    nend: 8480
+                    start: 8464
+                    end: 8480
                   length:
-                    nstart: 8480
-                    nend: 8482
+                    start: 8480
+                    end: 8482
                   value:
-                    nstart: 8482
-                    nend: 8610
+                    start: 8482
+                    end: 8610
                   properties:
                     uuid: 9326d112067a4ac78f31b717350db516
+                    symb: ""
                   children:
                     - key:
-                        nstart: 8610
-                        nend: 8626
+                        start: 8610
+                        end: 8626
                       length:
-                        nstart: 8626
-                        nend: 8627
+                        start: 8626
+                        end: 8627
                       value:
-                        nstart: 8627
-                        nend: 8707
+                        start: 8627
+                        end: 8707
                       properties:
                         uuid: b7908a85cfab45a7865ceb86a06fd8fb
+                        symb: ""
                       children:
                         - key:
-                            nstart: 8707
-                            nend: 8723
+                            start: 8707
+                            end: 8723
                           length:
-                            nstart: 8723
-                            nend: 8724
+                            start: 8723
+                            end: 8724
                           value:
-                            nstart: 8724
-                            nend: 8792
+                            start: 8724
+                            end: 8792
                           properties:
                             uuid: 758afd35f3e74112aa3c66e1a82e26a3
+                            symb: 060e2b34.04010101.01030202.03000000
                           children:
                             - key:
-                                nstart: 8792
-                                nend: 8808
+                                start: 8792
+                                end: 8808
                               length:
-                                nstart: 8808
-                                nend: 8809
+                                start: 8808
+                                end: 8809
                               value:
-                                nstart: 8809
-                                nend: 8905
+                                start: 8809
+                                end: 8905
                               properties:
                                 uuid: 5704b6ae86814645b45f1d294a71611e
+                                symb: 060e2b34.04010101.01030202.03000000
                               children: []
                     - key:
-                        nstart: 8905
-                        nend: 8921
+                        start: 8905
+                        end: 8921
                       length:
-                        nstart: 8921
-                        nend: 8923
+                        start: 8921
+                        end: 8923
                       value:
-                        nstart: 8923
-                        nend: 9138
+                        start: 8923
+                        end: 9138
                       properties:
                         uuid: fe55623bb8b0430986b6c75f62d34e59
+                        symb: ""
                       children: []
             - key:
-                nstart: 9179
-                nend: 9195
+                start: 9179
+                end: 9195
               length:
-                nstart: 9195
-                nend: 9196
+                start: 9195
+                end: 9196
               value:
-                nstart: 9196
-                nend: 9320
+                start: 9196
+                end: 9320
               properties:
                 uuid: 7d00c1ca76b94e9c88043ec30d1a2391
+                symb: ""
               children: []
         - key:
-            nstart: 8202
-            nend: 8218
+            start: 8202
+            end: 8218
           length:
-            nstart: 8218
-            nend: 8219
+            start: 8218
+            end: 8219
           value:
-            nstart: 8219
-            nend: 8299
+            start: 8219
+            end: 8299
           properties:
             uuid: 57cfeb9f9c8747f98c73afc2bb5e07b7
+            symb: ""
           children:
             - key:
-                nstart: 8004
-                nend: 8020
+                start: 8004
+                end: 8020
               length:
-                nstart: 8020
-                nend: 8021
+                start: 8020
+                end: 8021
               value:
-                nstart: 8021
-                nend: 8089
+                start: 8021
+                end: 8089
               properties:
                 uuid: c38af914055749bc8e764032b5c3a0dd
+                symb: 060e2b34.04010101.01030202.03000000
               children:
                 - key:
-                    nstart: 8089
-                    nend: 8105
+                    start: 8089
+                    end: 8105
                   length:
-                    nstart: 8105
-                    nend: 8106
+                    start: 8105
+                    end: 8106
                   value:
-                    nstart: 8106
-                    nend: 8202
+                    start: 8106
+                    end: 8202
                   properties:
                     uuid: 3021cb390be34914bb28520c61f807ce
+                    symb: 060e2b34.04010101.01030202.03000000
                   children: []
         - key:
-            nstart: 8299
-            nend: 8315
+            start: 8299
+            end: 8315
           length:
-            nstart: 8315
-            nend: 8316
+            start: 8315
+            end: 8316
           value:
-            nstart: 8316
-            nend: 8384
+            start: 8316
+            end: 8384
           properties:
             uuid: 6a197c05299d4ed1acb9d24641059d03
+            symb: 060e2b34.04010101.01030202.03000000
           children:
             - key:
-                nstart: 8089
-                nend: 8105
+                start: 8089
+                end: 8105
               length:
-                nstart: 8105
-                nend: 8106
+                start: 8105
+                end: 8106
               value:
-                nstart: 8106
-                nend: 8202
+                start: 8106
+                end: 8202
               properties:
                 uuid: 3021cb390be34914bb28520c61f807ce
+                symb: 060e2b34.04010101.01030202.03000000
               children: []
         - key:
-            nstart: 8384
-            nend: 8400
+            start: 8384
+            end: 8400
           length:
-            nstart: 8400
-            nend: 8401
+            start: 8400
+            end: 8401
           value:
-            nstart: 8401
-            nend: 8464
+            start: 8401
+            end: 8464
           properties:
             uuid: 7c6c4a420a1f4082adf014b5273fab17
+            symb: 060e2b34.04010101.01030202.03000000
           children: []
         - key:
-            nstart: 6811
-            nend: 6827
+            start: 9138
+            end: 9154
           length:
-            nstart: 6827
-            nend: 6831
+            start: 9154
+            end: 9155
           value:
-            nstart: 6831
-            nend: 7505
-          properties: null
-          children: []
-        - key:
-            nstart: 9138
-            nend: 9154
-          length:
-            nstart: 9154
-            nend: 9155
-          value:
-            nstart: 9155
-            nend: 9179
+            start: 9155
+            end: 9179
           properties:
             uuid: aa50a97a4c224f919bfcec617d622129
+            symb: ""
           children:
             - null
     - key:
-        nstart: 9320
-        nend: 9336
+        start: 9320
+        end: 9336
       length:
-        nstart: 9336
-        nend: 9337
+        start: 9336
+        end: 9337
       value:
-        nstart: 9337
-        nend: 9389
+        start: 9337
+        end: 9389
       properties:
         partitioncount: 4
         partitiontype: RIP
+        primer:
+            3b0a: 060e2b34.01010105.01020210.02010000
+            3b0b: 060e2b34.01010105.01020210.02020000
+            3b02: 060e2b34.01010102.07020110.02040000
+            3b03: 060e2b34.01010102.06010104.02010000
+            3b05: 060e2b34.01010102.03010201.05000000
+            3b06: 060e2b34.01010102.06010104.06040000
+            3b09: 060e2b34.01010105.01020203.00000000
+            3c0a: 060e2b34.01010101.01011502.00000000
+            3c01: 060e2b34.01010102.05200701.02010000
+            3c02: 060e2b34.01010102.05200701.03010000
+            3c04: 060e2b34.01010102.05200701.05010000
+            3c05: 060e2b34.01010102.05200701.07000000
+            3c09: 060e2b34.01010102.05200701.01000000
+            "3e01": 060e2b34.01010103.04030302.00000000
+            4b01: 060e2b34.01010102.05300405.00000000
+            4b02: 060e2b34.01010102.07020103.01030000
+            "0201": 060e2b34.01010102.04070100.00000000
+            "1001": 060e2b34.01010102.06010104.06090000
+            "1101": 060e2b34.01010102.06010103.01000000
+            "1102": 060e2b34.01010102.06010103.02000000
+            "1201": 060e2b34.01010102.07020103.01040000
+            "1501": 060e2b34.01010102.07020103.01050000
+            "1502": 060e2b34.01010102.04040101.02060000
+            "1503": 060e2b34.01010101.04040101.05000000
+            "1901": 060e2b34.01010102.06010104.05010000
+            "3001": 060e2b34.01010101.04060101.00000000
+            "3004": 060e2b34.01010102.06010104.01020000
+            "4401": 060e2b34.01010101.01011510.00000000
+            "4403": 060e2b34.01010102.06010104.06050000
+            "4404": 060e2b34.01010102.07020110.02050000
+            "4405": 060e2b34.01010102.07020110.01030000
+            "4701": 060e2b34.01010102.06010104.02030000
+            "4801": 060e2b34.01010102.01070101.00000000
+            "4803": 060e2b34.01010102.06010104.02040000
+            "4804": 060e2b34.01010102.01040103.00000000
+            fffe: 060e2b34.0101010d.06010104.05410100
+            ffff: 060e2b34.01010105.0e090400.00000000
       children: []
-primer:
-    3b0a: 060e2b34.01010105.01020210.02010000
-    3b0b: 060e2b34.01010105.01020210.02020000
-    3b02: 060e2b34.01010102.07020110.02040000
-    3b03: 060e2b34.01010102.06010104.02010000
-    3b05: 060e2b34.01010102.03010201.05000000
-    3b06: 060e2b34.01010102.06010104.06040000
-    3b09: 060e2b34.01010105.01020203.00000000
-    3c0a: 060e2b34.01010101.01011502.00000000
-    3c01: 060e2b34.01010102.05200701.02010000
-    3c02: 060e2b34.01010102.05200701.03010000
-    3c04: 060e2b34.01010102.05200701.05010000
-    3c05: 060e2b34.01010102.05200701.07000000
-    3c09: 060e2b34.01010102.05200701.01000000
-    "3e01": 060e2b34.01010103.04030302.00000000
-    4b01: 060e2b34.01010102.05300405.00000000
-    4b02: 060e2b34.01010102.07020103.01030000
-    "0201": 060e2b34.01010102.04070100.00000000
-    "1001": 060e2b34.01010102.06010104.06090000
-    "1101": 060e2b34.01010102.06010103.01000000
-    "1102": 060e2b34.01010102.06010103.02000000
-    "1201": 060e2b34.01010102.07020103.01040000
-    "1501": 060e2b34.01010102.07020103.01050000
-    "1502": 060e2b34.01010102.04040101.02060000
-    "1503": 060e2b34.01010101.04040101.05000000
-    "1901": 060e2b34.01010102.06010104.05010000
-    "3001": 060e2b34.01010101.04060101.00000000
-    "3004": 060e2b34.01010102.06010104.01020000
-    "4401": 060e2b34.01010101.01011510.00000000
-    "4403": 060e2b34.01010102.06010104.06050000
-    "4404": 060e2b34.01010102.07020110.02050000
-    "4405": 060e2b34.01010102.07020110.01030000
-    "4701": 060e2b34.01010102.06010104.02030000
-    "4801": 060e2b34.01010102.01070101.00000000
-    "4803": 060e2b34.01010102.06010104.02040000
-    "4804": 060e2b34.01010102.01040103.00000000
-    fffe: 060e2b34.0101010d.06010104.05410100
-    ffff: 060e2b34.01010105.0e090400.00000000

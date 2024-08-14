@@ -33,6 +33,10 @@ func (c *CompleteTest) Result() {
 	c.segment.result()
 }
 
+func (c *CompleteTest) Fail() {
+
+}
+
 type CompleteTest struct {
 	segment *segmentTest
 	tester
@@ -77,15 +81,24 @@ type segmentTest struct {
 // Test runs the
 func (s *segmentTest) Test(message string, assert func() bool) {
 	s.testCount++
-
-	s.testBuffer.Write([]byte(fmt.Sprintf("	%v\n", message)))
+	gap := "    "
+	s.testBuffer.Write([]byte(fmt.Sprintf("	%s%v\n", gap, message)))
 	if assert() {
-		s.testBuffer.Write([]byte("        Pass\n"))
+		s.testBuffer.Write([]byte(fmt.Sprintf("        %sPass\n", gap)))
 	} else {
 		s.failCount++
-		s.testBuffer.Write([]byte("        Fail!"))
-		s.testBuffer.Write([]byte(fmt.Sprintf("%v\n", strings.ReplaceAll(<-s.errChannel, "\n", "\n            "))))
+		s.testBuffer.Write([]byte(fmt.Sprintf("        %sFail!", gap)))
+		s.testBuffer.Write([]byte(fmt.Sprintf("%v\n", strings.ReplaceAll(<-s.errChannel, "\n", "\n            "+gap))))
 	}
+}
+
+// Header is a wrapper for the tests,
+// Adding more context to the results
+func (s *segmentTest) Header(message string, tests func()) {
+	// s.testCount++
+	// log headers
+	s.testBuffer.Write([]byte(fmt.Sprintf("	%v\n", message)))
+	tests()
 }
 
 func (s *segmentTest) Fail() {

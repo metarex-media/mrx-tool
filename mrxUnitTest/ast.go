@@ -6,51 +6,147 @@ import (
 	"fmt"
 	"io"
 	"reflect"
+	"slices"
 	"strings"
 
 	"github.com/metarex-media/mrx-tool/klv"
 	mxf2go "github.com/metarex-media/mxf-to-go"
+
 	"golang.org/x/sync/errgroup"
 	"gopkg.in/yaml.v3"
 )
 
+// Node is a object in the abstact syntax tree
+// it can be a child, a parent or both.
 type Node struct {
-	Key, Length, Value Noder
-	Properties         any
+	Key, Length, Value Position
+	Properties         MXFProperty
 	// talk through the children role with Bruce
 	// but keep as this
 	Children []*Node
 }
 
-type Noder interface {
-	Start() int
-	End() int
+// FindSymbol returns the first Node with that symbol found in the
+// Node Tree. Depth first search
+func (n *Node) FindSymbol(sym string) *Node {
+	if n == nil {
+		return nil
+	}
+	for _, n := range n.Children {
+
+		if n != nil {
+			if n.Properties != nil {
+				if n.Properties.Symbol() == sym {
+					return n
+				}
+
+				// check the childrens children
+				found := n.FindSymbol(sym)
+				if found != nil {
+					return found
+				}
+			}
+		}
+
+	}
+	return nil
 }
 
-type n struct {
-	NStart, NEnd int
+// FindSymbol returns all the Nodes with the symbol(s) found in the
+// Node Tree.
+func (n *Node) FindSymbols(sym ...string) []*Node {
+
+	if n == nil {
+		return nil
+	}
+
+	foundNodes := make([]*Node, 0)
+
+	for _, n := range n.Children {
+
+		if n != nil {
+			if n.Properties != nil {
+				if slices.Contains(sym, n.Properties.Symbol()) {
+					foundNodes = append(foundNodes, n)
+				}
+
+				// check the childrens children
+				found := n.FindSymbols(sym...)
+				if found != nil {
+					foundNodes = append(foundNodes, found...)
+				}
+			}
+		}
+
+	}
+	if len(foundNodes) > 0 {
+		return foundNodes
+	}
+
+	return nil
 }
 
-func (n n) Start() int { return n.NStart }
-func (n n) End() int   { return n.NEnd }
+// Position is a demo position for this library
+// @TODO update it
+type Position struct {
+	Start, End int
+}
 
-type MXFControlNode struct {
-	// each child is a partition from the mxf
-	Children []*Node
-	Primer   map[string]string //
+type MXFProperty interface {
+	// symbol returns the MXF UL associated with the node.
+	// if there is one
+	Symbol() string
+	//ID returns the ID associated with the property
+	ID() string
 }
 
 type EssenceProperties struct {
-	SID int
+	Parition  int
+	SID       int
+	EssSymbol string
+}
+
+func (e EssenceProperties) ID() string {
+
+	return ""
+}
+
+// symbol returns the partition type
+func (e EssenceProperties) Symbol() string {
+	return e.EssSymbol
 }
 
 type GroupProperties struct {
 	UUID mxf2go.TUUID
+	Symb string
+}
+
+func (gp GroupProperties) ID() string {
+	var fullUUID string
+	for _, uid := range gp.UUID {
+		fullUUID += fmt.Sprintf("%02x", uid)
+	}
+	return fullUUID
+}
+
+func (gp GroupProperties) Symbol() string {
+	return gp.Symb
 }
 
 type PartitionProperties struct {
 	PartitionCount int // the count of the partition along the MXF
 	PartitionType  string
+	Primer         map[string]string
+}
+
+func (p PartitionProperties) ID() string {
+
+	return ""
+}
+
+// symbol returns the partition type
+func (p PartitionProperties) Symbol() string {
+	return p.PartitionType
 }
 
 /*
@@ -100,7 +196,7 @@ type refAndChild struct {
 }
 
 // inlcude the logger? if there's any errors flush them - discard ifo for unkown keys fro the moment
-func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (MXFControlNode, error) { // wg *sync.WaitGroup, buffer chan packet, errChan chan error) {
+func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (*Node, error) { // wg *sync.WaitGroup, buffer chan packet, errChan chan error) {
 
 	// use errs to handle errors while runnig concurrently
 	errs, _ := errgroup.WithContext(context.Background())
@@ -110,9 +206,10 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 		return klv.StartKLVStream(stream, buffer, size)
 	})
 
-	mxf := MXFControlNode{Children: make([]*Node, 0)}
+	mxf := &Node{}
 	var currentNode *Node
 	var currentPartition int
+	var primer map[string]string
 	// @TODO set this up with errs so test breaking errors are returned
 	errs.Go(func() error {
 
@@ -141,9 +238,9 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 
 				// add details from now
 				currentNode = &Node{
-					Key:      n{NStart: offset, NEnd: offset + len(klvItem.Key)},
-					Length:   n{NStart: offset + len(klvItem.Key), NEnd: offset + len(klvItem.Key) + len(klvItem.Length)},
-					Value:    n{NStart: offset + len(klvItem.Key) + len(klvItem.Length), NEnd: offset + klvItem.TotalLength()},
+					Key:      Position{Start: offset, End: offset + len(klvItem.Key)},
+					Length:   Position{Start: offset + len(klvItem.Key), End: offset + len(klvItem.Key) + len(klvItem.Length)},
+					Value:    Position{Start: offset + len(klvItem.Key) + len(klvItem.Length), End: offset + klvItem.TotalLength()},
 					Children: make([]*Node, 0),
 				}
 
@@ -176,7 +273,8 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 					partProps.PartitionType = "invalid"
 
 				}
-
+				// primer will get updated because of pointer magic
+				partProps.Primer = primer
 				currentNode.Properties = partProps
 
 				partitionLayout := partitionExtract(klvItem)
@@ -192,9 +290,10 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 					// decode the essence here
 
 					flushNode := &Node{
-						Key:    n{NStart: offset, NEnd: offset + len(flush.Key)},
-						Length: n{NStart: offset + len(flush.Key), NEnd: offset + len(flush.Key) + len(flush.Length)},
-						Value:  n{NStart: offset + len(flush.Key) + len(flush.Length), NEnd: offset + flush.TotalLength()},
+						Key:        Position{Start: offset, End: offset + len(flush.Key)},
+						Length:     Position{Start: offset + len(flush.Key), End: offset + len(flush.Key) + len(flush.Length)},
+						Value:      Position{Start: offset + len(flush.Key) + len(flush.Length), End: offset + flush.TotalLength()},
+						Properties: GroupProperties{},
 					}
 
 					refMap[flushNode] = refAndChild{}
@@ -208,7 +307,7 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 						if fullName(flush.Key) == "060e2b34.027f0101.0d010201.01050100" {
 							out := make(map[string]string)
 							primerUnpack(flush.Value, out)
-							mxf.Primer = out
+							primer = out
 
 						}
 						// want to loop through them all?
@@ -228,15 +327,25 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 							key, klength := dec.keyFunc(flush.Value[pos : pos+dec.keyLen])
 							length, lenlength := dec.lengthFunc(flush.Value[pos+dec.keyLen : pos+dec.keyLen+dec.lengthLen])
 							if klength != 16 {
-								key = mxf.Primer[key]
+								key = primer[key]
 							}
-							if key == "060e2b34.01010101.01011502.00000000" {
+
+							// @TODO inlude the key for other AUIDs and ObjectIDs as part of the process
+							switch key {
+							case "060e2b34.01010101.01011502.00000000":
 								out, _ := mxf2go.DecodeTUUID(flush.Value[pos+dec.keyLen+dec.lengthLen : pos+dec.keyLen+dec.lengthLen+length])
-								flushNode.Properties = GroupProperties{UUID: out.(mxf2go.TUUID)}
+								mid := flushNode.Properties.(GroupProperties)
+								mid.UUID = out.(mxf2go.TUUID)
+								flushNode.Properties = mid
 								UUID := out.(mxf2go.TUUID)
 								idMap[string(UUID[:])] = flushNode
+							case "060e2b34.01010102.04070100.00000000":
 
-							} else {
+								out, _ := mxf2go.DecodeTWeakReference(flush.Value[pos+dec.keyLen+dec.lengthLen : pos+dec.keyLen+dec.lengthLen+length])
+								mid := flushNode.Properties.(GroupProperties)
+								mid.Symb = fullName(out.(mxf2go.TWeakReference))
+								flushNode.Properties = mid
+							default:
 
 								if ok {
 									// check the decoder for the field
@@ -288,12 +397,17 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 					}
 				}
 
+				// order the map by appearance order
+				slices.SortFunc(currentNode.Children, func(a, b *Node) int {
+					return a.Key.Start - b.Key.Start
+				})
+
 			} else {
 
 				essNode := &Node{
-					Key:      n{NStart: offset, NEnd: offset + len(klvItem.Key)},
-					Length:   n{NStart: offset + len(klvItem.Key), NEnd: offset + len(klvItem.Key) + len(klvItem.Length)},
-					Value:    n{NStart: offset + len(klvItem.Key) + len(klvItem.Length), NEnd: offset + klvItem.TotalLength()},
+					Key:      Position{Start: offset, End: offset + len(klvItem.Key)},
+					Length:   Position{Start: offset + len(klvItem.Key), End: offset + len(klvItem.Key) + len(klvItem.Length)},
+					Value:    Position{Start: offset + len(klvItem.Key) + len(klvItem.Length), End: offset + klvItem.TotalLength()},
 					Children: make([]*Node, 0),
 				}
 
@@ -344,14 +458,15 @@ func oneNameKL(namebytes []byte) (string, int) {
 	return fmt.Sprintf("%02x", namebytes[0:1:1]), 1
 }
 
-func oneLengthKL(lengthbytes []byte) (int, int) {
-	if len(lengthbytes) != 1 {
-		return 0, 0
+/*
+	func oneLengthKL(lengthbytes []byte) (int, int) {
+		if len(lengthbytes) != 1 {
+			return 0, 0
+		}
+
+		return int(lengthbytes[0]), 1
 	}
-
-	return int(lengthbytes[0]), 1
-}
-
+*/
 func twoNameKL(namebytes []byte) (string, int) {
 	if len(namebytes) != 2 {
 		return "", 0
@@ -432,7 +547,7 @@ func decodeBuilder(key uint8) (keyLength, bool) {
 // if the uuid is found
 // then assignt he child to the parents
 
-// StrongRegerence checks if a type is strong reference,
+// StrongReference checks if a type is strong reference,
 // then recurisvely searches through the types to find the strong set version
 func StrongReference(field any) [][]byte {
 
