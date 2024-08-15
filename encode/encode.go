@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"io"
 	"reflect"
+	"slices"
 	"time"
 
 	"github.com/google/uuid"
@@ -149,7 +150,7 @@ func (mw *MrxWriter) Encode(w io.Writer, encodeOptions *MrxEncodeOptions) error 
 		return err
 	}
 	// write the manifest and update the position
-	err = writePartition(w, filePosition, headerName(body, false, false), 0, []byte{}, containerKeys)
+	err = writePartition(w, filePosition, headerName(genericStream, false, false), 0, []byte{}, containerKeys)
 	if err != nil {
 		return err
 	}
@@ -722,8 +723,32 @@ func (mw *MrxWriter) metaData(stream mrxLayout) []byte {
 	idb, idid := identification(primer)
 	//	isxdBytes := isxdHeader(tag, tags)
 
+	// data essence track
+	dataEss := mxf2go.TAUID{
+		Data1: 101591860,
+		Data2: 1025,
+		Data3: 257,
+		Data4: mxf2go.TUInt8Array8{01, 03, 02, 02, 03, 00, 00, 00}} //  060e2b34.04010101.01030202.03000000
+	// descriptive essence track
+	// @TODO check with 2057 that this is the corect key
+	descTrack := mxf2go.TAUID{
+		Data1: 101591860,
+		Data2: 1025,
+		Data3: 257,
+		Data4: mxf2go.TUInt8Array8{01, 03, 02, 01, 0x10, 00, 00, 00}}
+	GotData := mxf2go.TAUIDSet{}
+	for _, s := range stream.dataStreams {
+		if s.clocked && !slices.Contains(GotData, dataEss) {
+			GotData = append(GotData, dataEss)
+		} else if !slices.Contains(GotData, descTrack) {
+			GotData = append(GotData, descTrack)
+		} else if len(GotData) == 2 {
+			break
+		}
+	}
+
 	// @TODO move to primer to seperate function
-	pre := mxf2go.GPrefaceStruct{FormatVersion: mxf2go.TVersionType{VersionMajor: 1, VersionMinor: 3}, DescriptiveSchemes: mxf2go.TAUIDSet{productID},
+	pre := mxf2go.GPrefaceStruct{FormatVersion: mxf2go.TVersionType{VersionMajor: 1, VersionMinor: 3}, DescriptiveSchemes: GotData,
 		ContentStorageObject: mxf2go.TStrongReference(contentID[:]), EssenceContainers: tauidKeys, InstanceID: mxf2go.TUUID(uuid.New()),
 		FileLastModified: mxf2go.TTimeStamp{Date: Date, Time: Time}, IdentificationList: mxf2go.TIdentificationStrongReferenceVector{idid[:]},
 		OperationalPattern: mxf2go.TAUID{

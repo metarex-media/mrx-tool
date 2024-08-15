@@ -303,7 +303,7 @@ In the MRX specification we use the 14th byte as
 the essence count and the 16th byte as the element number,
 to keep conformity across Metarex.
 
-Clip wrapped data (binary and text) follows the methods layed out in RP2057 and rdd 47, where text
+Clip wrapped data (binary and text and the manifest) follows the methods layed out in RP2057 and rdd 47, where text
 based documents are stored in generic partitions. Each generic partition has an
 incremental stream id, they are placed immediately before the manifest
 partition. Then the footer partition follows the manifest partition.

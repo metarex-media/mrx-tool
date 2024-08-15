@@ -104,8 +104,8 @@ func (l *layout) essenceTests(partition mxfPartition) {
 	// are there any exact tests in the
 	// check just the pattern for the moment
 	switch l.currentPartition.PartitionType {
-	case bodyPartition:
-	case genericStreamPartition:
+	case BodyPartition:
+	case GenericStreamPartition:
 		/*
 			check the length if more than one bit is found, not illegal
 		*/
@@ -217,10 +217,10 @@ func (c *CompleteTest) TestEssenceKeyPartitionType(pattern pattern, partition st
 		keyCopy[13], keyCopy[15] = 0x7f, 0x7f
 
 		if bytes.Equal(keyCopy, binaryClockedKey[:]) || bytes.Equal(keyCopy, textClockedKey[:]) {
-			expectedP = bodyPartition
+			expectedP = BodyPartition
 
 		} else if bytes.Equal(key, embeddedBinaryKey[:]) || bytes.Equal(key, embeddedTextKey[:]) {
-			expectedP = genericStreamPartition
+			expectedP = GenericStreamPartition
 		}
 
 		if expectedP != partition && expectedP != "" {

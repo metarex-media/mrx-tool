@@ -86,6 +86,42 @@ func (n *Node) FindSymbols(sym ...string) []*Node {
 	return nil
 }
 
+// FindSymbol returns all the Nodes with the symbol(s) found in the
+// Node Tree.
+func (n *Node) FindTypes(typ ...string) []*Node {
+
+	if n == nil {
+		return nil
+	}
+
+	foundNodes := make([]*Node, 0)
+
+	for _, n := range n.Children {
+
+		if n != nil {
+			if n.Properties != nil {
+				for _, label := range n.Properties.Label() {
+					if slices.Contains(typ, label) {
+						foundNodes = append(foundNodes, n)
+					}
+				}
+
+				// check the childrens children
+				found := n.FindTypes(typ...)
+				if found != nil {
+					foundNodes = append(foundNodes, found...)
+				}
+			}
+		}
+
+	}
+	if len(foundNodes) > 0 {
+		return foundNodes
+	}
+
+	return nil
+}
+
 // Position is a demo position for this library
 // @TODO update it
 type Position struct {
@@ -98,11 +134,12 @@ type MXFProperty interface {
 	Symbol() string
 	//ID returns the ID associated with the property
 	ID() string
+	// Returns the type of that node
+	// e.g. essence, partition or the group type like Descriptivemetadata
+	Label() []string
 }
 
 type EssenceProperties struct {
-	Parition  int
-	SID       int
 	EssSymbol string
 }
 
@@ -111,14 +148,22 @@ func (e EssenceProperties) ID() string {
 	return ""
 }
 
+const EssenceLabel = "essence"
+
+func (e EssenceProperties) Label() []string {
+
+	return []string{EssenceLabel}
+}
+
 // symbol returns the partition type
 func (e EssenceProperties) Symbol() string {
 	return e.EssSymbol
 }
 
 type GroupProperties struct {
-	UUID mxf2go.TUUID
-	Symb string
+	UUID       mxf2go.TUUID
+	UL         string
+	GroupLabel []string
 }
 
 func (gp GroupProperties) ID() string {
@@ -130,7 +175,11 @@ func (gp GroupProperties) ID() string {
 }
 
 func (gp GroupProperties) Symbol() string {
-	return gp.Symb
+	return gp.UL
+}
+
+func (gp GroupProperties) Label() []string {
+	return gp.GroupLabel
 }
 
 type PartitionProperties struct {
@@ -144,8 +193,16 @@ func (p PartitionProperties) ID() string {
 	return ""
 }
 
+const PartitionType = "partition"
+
+func (p PartitionProperties) Label() []string {
+
+	return []string{PartitionType}
+}
+
 // symbol returns the partition type
 func (p PartitionProperties) Symbol() string {
+	//fmt.Println(p.PartitionType)
 	return p.PartitionType
 }
 
@@ -254,20 +311,20 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 				currentPartition++
 				switch klvItem.Key[13] {
 				case 17:
-					partProps.PartitionType = "RIP"
+					partProps.PartitionType = RIPPartition
 				case 02:
 					// header
-					partProps.PartitionType = headerPartition
+					partProps.PartitionType = HeaderPartition
 				case 03:
 					// body
 					if klvItem.Key[14] == 17 {
-						partProps.PartitionType = genericStreamPartition
+						partProps.PartitionType = GenericStreamPartition
 					} else {
-						partProps.PartitionType = bodyPartition
+						partProps.PartitionType = BodyPartition
 					}
 				case 04:
 					// footer
-					partProps.PartitionType = footerPartition
+					partProps.PartitionType = FooterPartition
 				default:
 					// is nothing
 					partProps.PartitionType = "invalid"
@@ -290,10 +347,9 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 					// decode the essence here
 
 					flushNode := &Node{
-						Key:        Position{Start: offset, End: offset + len(flush.Key)},
-						Length:     Position{Start: offset + len(flush.Key), End: offset + len(flush.Key) + len(flush.Length)},
-						Value:      Position{Start: offset + len(flush.Key) + len(flush.Length), End: offset + flush.TotalLength()},
-						Properties: GroupProperties{},
+						Key:    Position{Start: offset, End: offset + len(flush.Key)},
+						Length: Position{Start: offset + len(flush.Key), End: offset + len(flush.Key) + len(flush.Length)},
+						Value:  Position{Start: offset + len(flush.Key) + len(flush.Length), End: offset + flush.TotalLength()},
 					}
 
 					refMap[flushNode] = refAndChild{}
@@ -321,6 +377,8 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 							decoders, ok = mxf2go.Groups["urn:smpte:ul:"+fullName(flush.Key)]
 						}
 
+						// assign the generic name as the key
+						flushNode.Properties = GroupProperties{UL: fullName(flush.Key)}
 						// find the groups first
 						pos := 0
 						for pos < len(flush.Value) {
@@ -339,12 +397,7 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 								flushNode.Properties = mid
 								UUID := out.(mxf2go.TUUID)
 								idMap[string(UUID[:])] = flushNode
-							case "060e2b34.01010102.04070100.00000000":
 
-								out, _ := mxf2go.DecodeTWeakReference(flush.Value[pos+dec.keyLen+dec.lengthLen : pos+dec.keyLen+dec.lengthLen+length])
-								mid := flushNode.Properties.(GroupProperties)
-								mid.Symb = fullName(out.(mxf2go.TWeakReference))
-								flushNode.Properties = mid
 							default:
 
 								if ok {
@@ -354,11 +407,23 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 									if ok {
 
 										b, _ := decodeF.Decode(flush.Value[pos+dec.keyLen+dec.lengthLen : pos+dec.keyLen+dec.lengthLen+length])
-										strongRefs := StrongReference(b)
+										strongRefs := ReferenceExtract(b, strongRef)
 										if len(strongRefs) > 0 {
 											mid := refMap[flushNode]
 											mid.ref = append(mid.ref, strongRefs...)
 											refMap[flushNode] = mid
+										} else {
+											weakRefs := ReferenceExtract(b, weakRef)
+											if len(weakRefs) != 0 {
+												outString := make([]string, len(weakRefs))
+												for i, wr := range weakRefs {
+													outString[i] = fullName(wr)
+												}
+
+												mid := flushNode.Properties.(GroupProperties)
+												mid.GroupLabel = outString
+												flushNode.Properties = mid
+											}
 										}
 									}
 								}
@@ -403,12 +468,33 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 				})
 
 			} else {
+				// check the name as it came
+				name := fullName(klvItem.Key)
+				_, ok := mxf2go.EssenceLookUp["urn:smpte:ul:"+name]
+				if !ok {
+					// check for a 7f masked version at the final byte
+					klvItem.Key[15] = 0x7f
+					_, ok = mxf2go.EssenceLookUp["urn:smpte:ul:"+fullName(klvItem.Key)]
+					if !ok {
+						// check for a 7f masked version at the final byte and the 14th byte
+						klvItem.Key[13] = 0x7f
+						_, ok = mxf2go.EssenceLookUp["urn:smpte:ul:"+fullName(klvItem.Key)]
+						if ok {
+							name = fullName(klvItem.Key)
+						}
+					} else {
+						name = fullName(klvItem.Key)
+					}
+				}
+
+				// the output symbol is the name of the key
 
 				essNode := &Node{
-					Key:      Position{Start: offset, End: offset + len(klvItem.Key)},
-					Length:   Position{Start: offset + len(klvItem.Key), End: offset + len(klvItem.Key) + len(klvItem.Length)},
-					Value:    Position{Start: offset + len(klvItem.Key) + len(klvItem.Length), End: offset + klvItem.TotalLength()},
-					Children: make([]*Node, 0),
+					Key:        Position{Start: offset, End: offset + len(klvItem.Key)},
+					Length:     Position{Start: offset + len(klvItem.Key), End: offset + len(klvItem.Key) + len(klvItem.Length)},
+					Value:      Position{Start: offset + len(klvItem.Key) + len(klvItem.Length), End: offset + klvItem.TotalLength()},
+					Properties: EssenceProperties{EssSymbol: name},
+					Children:   make([]*Node, 0),
 				}
 
 				currentNode.Children = append(currentNode.Children, essNode)
@@ -543,20 +629,25 @@ func decodeBuilder(key uint8) (keyLength, bool) {
 	return decodeOption, skip
 }
 
+const (
+	strongRef = "StrongReference"
+	weakRef   = "WeakReference"
+)
+
 // map of UUID and parents
 // if the uuid is found
 // then assignt he child to the parents
 
 // StrongReference checks if a type is strong reference,
 // then recurisvely searches through the types to find the strong set version
-func StrongReference(field any) [][]byte {
+func ReferenceExtract(field any, reftype string) [][]byte {
 
 	switch v := field.(type) {
 	case mxf2go.TStrongReference:
 		return [][]byte{v}
 	default:
 		switch {
-		case strings.Contains(reflect.TypeOf(field).Name(), "StrongReferenceSet") || strings.Contains(reflect.TypeOf(field).Name(), "StrongReferenceVector"):
+		case strings.Contains(reflect.TypeOf(field).Name(), reftype+"Set") || strings.Contains(reflect.TypeOf(field).Name(), reftype+"Vector"):
 			arr := reflect.ValueOf(field)
 			arrLen := arr.Len()
 			referenced := make([][]byte, arrLen)
@@ -570,12 +661,12 @@ func StrongReference(field any) [][]byte {
 				// fmt.Println(strid, ok, []byte(strid))
 				// the midmap ensures the preservation of the object order
 				// result := StrongReference(idmap[string(id)].mapper, idmap)
-				result := StrongReference(arrField)
+				result := ReferenceExtract(arrField, reftype)
 				referenced[i] = result[0]
 			}
 
 			return referenced
-		case strings.Contains(reflect.TypeOf(field).Name(), "StrongReference"):
+		case strings.Contains(reflect.TypeOf(field).Name(), reftype):
 			return [][]byte{getId(v)}
 		default:
 

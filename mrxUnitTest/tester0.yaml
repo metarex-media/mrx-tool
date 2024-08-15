@@ -32,9 +32,7 @@ children:
           value:
             start: 160
             end: 762
-          properties:
-            uuid: "00000000000000000000000000000000"
-            symb: ""
+          properties: null
           children: []
         - key:
             start: 762
@@ -47,7 +45,8 @@ children:
             end: 958
           properties:
             uuid: 2bb4a6552cf2444ab09a99871a95c41e
-            symb: ""
+            ul: 060e2b34.027f0101.0d010101.01012f00
+            grouplabel: []
           children:
             - key:
                 start: 958
@@ -60,7 +59,8 @@ children:
                 end: 1039
               properties:
                 uuid: b66c2745dd9842cd935faed8b3c1e9c5
-                symb: ""
+                ul: 060e2b34.027f0101.0d010101.01011800
+                grouplabel: []
               children:
                 - key:
                     start: 1039
@@ -73,7 +73,8 @@ children:
                     end: 1164
                   properties:
                     uuid: ed0495f463df46158e01b103cf337d47
-                    symb: ""
+                    ul: 060e2b34.027f0101.0d010101.01013600
+                    grouplabel: []
                   children:
                     - key:
                         start: 1164
@@ -86,7 +87,8 @@ children:
                         end: 1261
                       properties:
                         uuid: 6ba3d33afd5646719eb7eabd275c124f
-                        symb: ""
+                        ul: 060e2b34.027f0101.0d010101.01013b00
+                        grouplabel: []
                       children:
                         - key:
                             start: 1261
@@ -99,7 +101,9 @@ children:
                             end: 1346
                           properties:
                             uuid: 134c56a47b8b42bea28bc44ae7d67074
-                            symb: 060e2b34.04010101.01030202.03000000
+                            ul: 060e2b34.027f0101.0d010101.01010f00
+                            grouplabel:
+                                - 060e2b34.04010101.01030202.03000000
                           children:
                             - key:
                                 start: 1346
@@ -112,7 +116,9 @@ children:
                                 end: 1459
                               properties:
                                 uuid: f6e6c5af135a47d4975085043ba6cdca
-                                symb: 060e2b34.04010101.01030202.03000000
+                                ul: 060e2b34.027f0101.0d010101.01011100
+                                grouplabel:
+                                    - 060e2b34.04010101.01030202.03000000
                               children: []
                 - key:
                     start: 1459
@@ -125,7 +131,8 @@ children:
                     end: 1605
                   properties:
                     uuid: 79ba03c29096484b8b84c909095af45e
-                    symb: ""
+                    ul: 060e2b34.027f0101.0d010101.01013700
+                    grouplabel: []
                   children:
                     - key:
                         start: 1605
@@ -138,7 +145,8 @@ children:
                         end: 1702
                       properties:
                         uuid: 10562902aefb4608b596e5fd19d8abf2
-                        symb: ""
+                        ul: 060e2b34.027f0101.0d010101.01013b00
+                        grouplabel: []
                       children:
                         - key:
                             start: 1702
@@ -151,7 +159,9 @@ children:
                             end: 1787
                           properties:
                             uuid: 00b47bdb94de40afa4b5946d7715be00
-                            symb: 060e2b34.04010101.01030202.03000000
+                            ul: 060e2b34.027f0101.0d010101.01010f00
+                            grouplabel:
+                                - 060e2b34.04010101.01030202.03000000
                           children:
                             - key:
                                 start: 1787
@@ -164,7 +174,9 @@ children:
                                 end: 1900
                               properties:
                                 uuid: dfd736b71d8f4296bdca187ce726401b
-                                symb: 060e2b34.04010101.01030202.03000000
+                                ul: 060e2b34.027f0101.0d010101.01011100
+                                grouplabel:
+                                    - 060e2b34.04010101.01030202.03000000
                               children: []
                     - key:
                         start: 1900
@@ -177,7 +189,8 @@ children:
                         end: 2038
                       properties:
                         uuid: fab9ce2e6522490582ff04fe1d41c0bb
-                        symb: ""
+                        ul: 060e2b34.027f0105.0e090502.007f0000
+                        grouplabel: []
                       children: []
             - key:
                 start: 2075
@@ -190,7 +203,8 @@ children:
                 end: 2243
               properties:
                 uuid: 892a5aef86474c6e89a47ea05aef283b
-                symb: ""
+                ul: 060e2b34.027f0101.0d010101.01013000
+                grouplabel: []
               children: []
         - key:
             start: 2038
@@ -203,7 +217,8 @@ children:
             end: 2075
           properties:
             uuid: c07f64e0fb1d48dd84d73af3ace57266
-            symb: ""
+            ul: 060e2b34.027f0101.0d010401.04010100
+            grouplabel: []
           children: []
     - key:
         start: 2243
@@ -261,7 +276,8 @@ children:
           value:
             start: 2401
             end: 2643
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 2643
@@ -272,7 +288,8 @@ children:
           value:
             start: 2661
             end: 2903
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 2903
@@ -283,7 +300,8 @@ children:
           value:
             start: 2921
             end: 3163
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 3163
@@ -294,7 +312,8 @@ children:
           value:
             start: 3181
             end: 3423
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 3423
@@ -305,7 +324,8 @@ children:
           value:
             start: 3441
             end: 3683
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 3683
@@ -316,7 +336,8 @@ children:
           value:
             start: 3701
             end: 3943
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 3943
@@ -327,7 +348,8 @@ children:
           value:
             start: 3961
             end: 4203
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 4203
@@ -338,7 +360,8 @@ children:
           value:
             start: 4221
             end: 4463
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 4463
@@ -349,7 +372,8 @@ children:
           value:
             start: 4481
             end: 4723
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 4723
@@ -360,7 +384,8 @@ children:
           value:
             start: 4741
             end: 4983
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 4983
@@ -371,7 +396,8 @@ children:
           value:
             start: 5001
             end: 5243
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 5243
@@ -382,7 +408,8 @@ children:
           value:
             start: 5261
             end: 5503
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 5503
@@ -393,7 +420,8 @@ children:
           value:
             start: 5521
             end: 5763
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 5763
@@ -404,7 +432,8 @@ children:
           value:
             start: 5781
             end: 6023
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 6023
@@ -415,7 +444,8 @@ children:
           value:
             start: 6041
             end: 6283
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 6283
@@ -426,7 +456,8 @@ children:
           value:
             start: 6301
             end: 6543
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 6543
@@ -437,7 +468,8 @@ children:
           value:
             start: 6561
             end: 6803
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 6803
@@ -448,7 +480,8 @@ children:
           value:
             start: 6821
             end: 7063
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 7063
@@ -459,7 +492,8 @@ children:
           value:
             start: 7081
             end: 7323
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 7323
@@ -470,7 +504,8 @@ children:
           value:
             start: 7341
             end: 7583
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 7583
@@ -481,7 +516,8 @@ children:
           value:
             start: 7601
             end: 7843
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 7843
@@ -492,7 +528,8 @@ children:
           value:
             start: 7861
             end: 8103
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 8103
@@ -503,7 +540,8 @@ children:
           value:
             start: 8121
             end: 8363
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 8363
@@ -514,7 +552,8 @@ children:
           value:
             start: 8381
             end: 8623
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 8623
@@ -525,7 +564,8 @@ children:
           value:
             start: 8641
             end: 8883
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 8883
@@ -536,7 +576,8 @@ children:
           value:
             start: 8901
             end: 9143
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 9143
@@ -547,7 +588,8 @@ children:
           value:
             start: 9161
             end: 9403
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 9403
@@ -558,7 +600,8 @@ children:
           value:
             start: 9421
             end: 9663
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 9663
@@ -569,7 +612,8 @@ children:
           value:
             start: 9681
             end: 9923
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 9923
@@ -580,7 +624,8 @@ children:
           value:
             start: 9941
             end: 10183
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 10183
@@ -591,7 +636,8 @@ children:
           value:
             start: 10201
             end: 10443
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 10443
@@ -602,7 +648,8 @@ children:
           value:
             start: 10461
             end: 10703
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 10703
@@ -613,7 +660,8 @@ children:
           value:
             start: 10721
             end: 10963
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 10963
@@ -624,7 +672,8 @@ children:
           value:
             start: 10981
             end: 11223
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 11223
@@ -635,7 +684,8 @@ children:
           value:
             start: 11241
             end: 11483
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 11483
@@ -646,7 +696,8 @@ children:
           value:
             start: 11501
             end: 11743
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 11743
@@ -657,7 +708,8 @@ children:
           value:
             start: 11761
             end: 12003
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 12003
@@ -668,7 +720,8 @@ children:
           value:
             start: 12021
             end: 12263
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 12263
@@ -679,7 +732,8 @@ children:
           value:
             start: 12281
             end: 12523
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 12523
@@ -690,7 +744,8 @@ children:
           value:
             start: 12541
             end: 12783
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 12783
@@ -701,7 +756,8 @@ children:
           value:
             start: 12801
             end: 13043
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 13043
@@ -712,7 +768,8 @@ children:
           value:
             start: 13061
             end: 13303
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 13303
@@ -723,7 +780,8 @@ children:
           value:
             start: 13321
             end: 13563
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 13563
@@ -734,7 +792,8 @@ children:
           value:
             start: 13581
             end: 13823
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 13823
@@ -745,7 +804,8 @@ children:
           value:
             start: 13841
             end: 14083
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 14083
@@ -756,7 +816,8 @@ children:
           value:
             start: 14101
             end: 14343
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 14343
@@ -767,7 +828,8 @@ children:
           value:
             start: 14361
             end: 14603
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 14603
@@ -778,7 +840,8 @@ children:
           value:
             start: 14621
             end: 14863
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 14863
@@ -789,7 +852,8 @@ children:
           value:
             start: 14881
             end: 15123
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 15123
@@ -800,7 +864,8 @@ children:
           value:
             start: 15141
             end: 15383
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 15383
@@ -811,7 +876,8 @@ children:
           value:
             start: 15401
             end: 15643
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 15643
@@ -822,7 +888,8 @@ children:
           value:
             start: 15661
             end: 15903
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 15903
@@ -833,7 +900,8 @@ children:
           value:
             start: 15921
             end: 16163
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 16163
@@ -844,7 +912,8 @@ children:
           value:
             start: 16181
             end: 16423
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 16423
@@ -855,7 +924,8 @@ children:
           value:
             start: 16441
             end: 16683
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 16683
@@ -866,7 +936,8 @@ children:
           value:
             start: 16701
             end: 16943
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 16943
@@ -877,7 +948,8 @@ children:
           value:
             start: 16961
             end: 17203
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 17203
@@ -888,7 +960,8 @@ children:
           value:
             start: 17221
             end: 17463
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 17463
@@ -899,7 +972,8 @@ children:
           value:
             start: 17481
             end: 17723
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 17723
@@ -910,7 +984,8 @@ children:
           value:
             start: 17741
             end: 17983
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 17983
@@ -921,7 +996,8 @@ children:
           value:
             start: 18001
             end: 18243
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 18243
@@ -932,7 +1008,8 @@ children:
           value:
             start: 18261
             end: 18503
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 18503
@@ -943,7 +1020,8 @@ children:
           value:
             start: 18521
             end: 18763
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 18763
@@ -954,7 +1032,8 @@ children:
           value:
             start: 18781
             end: 19023
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 19023
@@ -965,7 +1044,8 @@ children:
           value:
             start: 19041
             end: 19283
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 19283
@@ -976,7 +1056,8 @@ children:
           value:
             start: 19301
             end: 19543
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 19543
@@ -987,7 +1068,8 @@ children:
           value:
             start: 19561
             end: 19803
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 19803
@@ -998,7 +1080,8 @@ children:
           value:
             start: 19821
             end: 20063
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 20063
@@ -1009,7 +1092,8 @@ children:
           value:
             start: 20081
             end: 20323
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 20323
@@ -1020,7 +1104,8 @@ children:
           value:
             start: 20341
             end: 20583
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 20583
@@ -1031,7 +1116,8 @@ children:
           value:
             start: 20601
             end: 20843
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
         - key:
             start: 20843
@@ -1042,7 +1128,8 @@ children:
           value:
             start: 20861
             end: 21103
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
     - key:
         start: 21103
@@ -1100,7 +1187,8 @@ children:
           value:
             start: 21262
             end: 21535
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020101.0f020101.017f007f
           children: []
     - key:
         start: 21535
@@ -1158,7 +1246,8 @@ children:
           value:
             start: 21694
             end: 27541
-          properties: null
+          properties:
+            esssymbol: 060e2b34.01020101.0f020101.017f007f
           children: []
     - key:
         start: 27541
@@ -1216,9 +1305,7 @@ children:
           value:
             start: 27701
             end: 28303
-          properties:
-            uuid: "00000000000000000000000000000000"
-            symb: ""
+          properties: null
           children: []
         - key:
             start: 28303
@@ -1231,7 +1318,8 @@ children:
             end: 28499
           properties:
             uuid: 2bb4a6552cf2444ab09a99871a95c41e
-            symb: ""
+            ul: 060e2b34.027f0101.0d010101.01012f00
+            grouplabel: []
           children:
             - key:
                 start: 28499
@@ -1244,7 +1332,8 @@ children:
                 end: 28580
               properties:
                 uuid: b66c2745dd9842cd935faed8b3c1e9c5
-                symb: ""
+                ul: 060e2b34.027f0101.0d010101.01011800
+                grouplabel: []
               children:
                 - key:
                     start: 28580
@@ -1257,7 +1346,8 @@ children:
                     end: 28705
                   properties:
                     uuid: ed0495f463df46158e01b103cf337d47
-                    symb: ""
+                    ul: 060e2b34.027f0101.0d010101.01013600
+                    grouplabel: []
                   children:
                     - key:
                         start: 28705
@@ -1270,7 +1360,8 @@ children:
                         end: 28802
                       properties:
                         uuid: 6ba3d33afd5646719eb7eabd275c124f
-                        symb: ""
+                        ul: 060e2b34.027f0101.0d010101.01013b00
+                        grouplabel: []
                       children:
                         - key:
                             start: 28802
@@ -1283,7 +1374,9 @@ children:
                             end: 28887
                           properties:
                             uuid: 134c56a47b8b42bea28bc44ae7d67074
-                            symb: 060e2b34.04010101.01030202.03000000
+                            ul: 060e2b34.027f0101.0d010101.01010f00
+                            grouplabel:
+                                - 060e2b34.04010101.01030202.03000000
                           children:
                             - key:
                                 start: 28887
@@ -1296,7 +1389,9 @@ children:
                                 end: 29000
                               properties:
                                 uuid: f6e6c5af135a47d4975085043ba6cdca
-                                symb: 060e2b34.04010101.01030202.03000000
+                                ul: 060e2b34.027f0101.0d010101.01011100
+                                grouplabel:
+                                    - 060e2b34.04010101.01030202.03000000
                               children: []
                 - key:
                     start: 29000
@@ -1309,7 +1404,8 @@ children:
                     end: 29146
                   properties:
                     uuid: 79ba03c29096484b8b84c909095af45e
-                    symb: ""
+                    ul: 060e2b34.027f0101.0d010101.01013700
+                    grouplabel: []
                   children:
                     - key:
                         start: 29146
@@ -1322,7 +1418,8 @@ children:
                         end: 29243
                       properties:
                         uuid: 10562902aefb4608b596e5fd19d8abf2
-                        symb: ""
+                        ul: 060e2b34.027f0101.0d010101.01013b00
+                        grouplabel: []
                       children:
                         - key:
                             start: 29243
@@ -1335,7 +1432,9 @@ children:
                             end: 29328
                           properties:
                             uuid: 00b47bdb94de40afa4b5946d7715be00
-                            symb: 060e2b34.04010101.01030202.03000000
+                            ul: 060e2b34.027f0101.0d010101.01010f00
+                            grouplabel:
+                                - 060e2b34.04010101.01030202.03000000
                           children:
                             - key:
                                 start: 29328
@@ -1348,7 +1447,9 @@ children:
                                 end: 29441
                               properties:
                                 uuid: dfd736b71d8f4296bdca187ce726401b
-                                symb: 060e2b34.04010101.01030202.03000000
+                                ul: 060e2b34.027f0101.0d010101.01011100
+                                grouplabel:
+                                    - 060e2b34.04010101.01030202.03000000
                               children: []
                     - key:
                         start: 29441
@@ -1361,7 +1462,8 @@ children:
                         end: 29579
                       properties:
                         uuid: fab9ce2e6522490582ff04fe1d41c0bb
-                        symb: ""
+                        ul: 060e2b34.027f0105.0e090502.007f0000
+                        grouplabel: []
                       children: []
             - key:
                 start: 29616
@@ -1374,7 +1476,8 @@ children:
                 end: 29784
               properties:
                 uuid: 892a5aef86474c6e89a47ea05aef283b
-                symb: ""
+                ul: 060e2b34.027f0101.0d010101.01013000
+                grouplabel: []
               children: []
         - key:
             start: 29579
@@ -1387,7 +1490,8 @@ children:
             end: 29616
           properties:
             uuid: c07f64e0fb1d48dd84d73af3ace57266
-            symb: ""
+            ul: 060e2b34.027f0101.0d010401.04010100
+            grouplabel: []
           children: []
     - key:
         start: 29784

@@ -44,6 +44,11 @@ func TestMultipleStreams(t *testing.T) {
 		// 3. run the encoder
 		err := mw.Encode(bufBytes, &MrxEncodeOptions{ManifestHistoryCount: 0})
 
+		//	if len(data) == 4 {
+		///		f, _ := os.Create("all.mxf")
+		//		f.Write(bufBytes.Bytes())
+		//	}
+
 		dec, decErr := decode.ExtractStreamData(bufBytes)
 
 		var nonMatchErr error

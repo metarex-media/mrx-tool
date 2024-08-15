@@ -167,10 +167,11 @@ type mxfPartition struct {
 var (
 	order = binary.BigEndian
 
-	headerPartition        = "header"
-	bodyPartition          = "body"
-	genericStreamPartition = "generic stream partition"
-	footerPartition        = "footer"
+	HeaderPartition        = "header"
+	BodyPartition          = "body"
+	GenericStreamPartition = "generic stream partition"
+	FooterPartition        = "footer"
+	RIPPartition           = "RIP"
 )
 
 func partitionExtract(partionKLV *klv.KLV) mxfPartition {
@@ -181,17 +182,17 @@ func partitionExtract(partionKLV *klv.KLV) mxfPartition {
 	switch partionKLV.Key[13] {
 	case 02:
 		// header
-		partPack.PartitionType = headerPartition
+		partPack.PartitionType = HeaderPartition
 	case 03:
 		// body
 		if partionKLV.Key[14] == 17 {
-			partPack.PartitionType = genericStreamPartition
+			partPack.PartitionType = GenericStreamPartition
 		} else {
-			partPack.PartitionType = bodyPartition
+			partPack.PartitionType = BodyPartition
 		}
 	case 04:
 		// footer
-		partPack.PartitionType = footerPartition
+		partPack.PartitionType = FooterPartition
 	default:
 		// is nothing
 		partPack.PartitionType = "invalid"
