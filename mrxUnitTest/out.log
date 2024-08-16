@@ -86,4 +86,16 @@ Running Checking the generic partition values at byte offset 4404 tests:
 	    Checking the value of the IndexSID is set to zero
             Pass
 Ran 3 tests: Passed:3 , Failed: 0
-ALL Tests PASSED
+Running Validating file against ISXD specification tests:
+	    Checking that a static track is present in the header metadata
+            Pass
+	    Checking that the static track points to a sequence
+            Pass
+	    Checking that the static track sequence has as many sequence children as partitions
+            Fail!
+                Expected
+                    <int>: 2
+                to equal
+                    <int>: 3
+Ran 3 tests: Passed:2 , Failed: 1
+Test Failed

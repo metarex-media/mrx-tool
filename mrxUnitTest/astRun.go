@@ -14,7 +14,49 @@ func validISXD(doc io.ReadSeeker, node *MXFNode, tc *TestContext) {
 	// set up comments for each test and check how it goes
 
 	// XML parser name space etc - skip those
+	tc.Header("Validating file against ISXD specification", func(t Test) {
+		// ISXDs are stand alone and this should be checked against the disney one for tests
 
+		header := node.Partitions[0]
+		GenericCountPositions := make([]int, 0)
+		for i, part := range node.Partitions {
+
+			// check the essence in each partitoin?
+			switch part.Props.PartitionType {
+			case BodyPartition:
+			case GenericStreamPartition:
+				GenericCountPositions = append(GenericCountPositions, i)
+			}
+		}
+
+		if len(GenericCountPositions) > 0 {
+			// ibly run if there's any generic essence
+			var staticTrack *Node
+			for _, child := range header.HeaderMetadata {
+				staticTrack = child.FindSymbol("060e2b34.027f0101.0d010101.01013a00")
+				if staticTrack != nil {
+					break
+				}
+			}
+			t.Test("Checking that a static track is present in the header metadata", func() bool {
+				return t.Expect(staticTrack).ToNot(BeNil())
+			})
+
+			sequence := staticTrack.FindSymbol("060e2b34.027f0101.0d010101.01010f00")
+			t.Test("Checking that the static track points to a sequence", func() bool {
+				return t.Expect(staticTrack).ToNot(BeNil())
+			})
+			t.Test("Checking that the static track sequence has as many sequence children as partitions", func() bool {
+				return t.Expect(len(sequence.Children)).Shall(Equal(len(GenericCountPositions)))
+			})
+			// 060e2b34.027f0101.0d010101.01013a00
+			// check the header and footer for the static track
+			// get the static tracks and count the children
+
+			// calculate teh positions here
+		}
+		// check the order as well
+	})
 	// check the static track has points to every xml file
 
 	// generic partitions should be ordered after the rest of the essence
@@ -22,6 +64,21 @@ func validISXD(doc io.ReadSeeker, node *MXFNode, tc *TestContext) {
 	// ISXD seqeunce elements - read 2067 to find out what these are
 
 	// check for frame wrapping - reread 379
+
+	// no clip wrapping
+	// no custom wtapping
+
+	// no other types only data is allowed
+	// is the essencd xml? - skip for MXF
+
+	// check the essence descriptor is present in the files
+	// 060e2b34.04010105.0e090607.01010103
+
+	// IXSD dataessenceDecriptor - suclass of hte generic data essence descriptor
+	// 060e2b34.01010101.01011502.00000000
+	// check each metadata for that key
+	// not sure how to handle groups yet
+	// Data Essence Coding ID  must be  060E2B34.04010105.0E090606.00000000
 }
 
 func mrxDescriptiveMD(node *MXFNode, tc *TestContext) {
@@ -169,7 +226,7 @@ func ASTTest(f io.ReadSeeker, fout io.Writer) error {
 	mrxPartLayout(f, ast, tc)
 	mrxDescriptiveMD(ast, tc)
 	mrxEmbeddedTimedDocuments(f, ast, tc)
-
+	validISXD(f, ast, tc)
 	// run the tests clean up here
 
 	return nil
