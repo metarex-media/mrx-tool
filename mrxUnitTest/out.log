@@ -1,0 +1,89 @@
+Running Testing partition 0 tests:
+	    Checking the previous partition pointer is the correct byte position
+            Pass
+	    Checking the this partition pointer matches the actual byte offset of the file
+            Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Testing partition 1 tests:
+	    Checking the previous partition pointer is the correct byte position
+            Pass
+	    Checking the this partition pointer matches the actual byte offset of the file
+            Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Testing partition 2 tests:
+	    Checking the previous partition pointer is the correct byte position
+            Pass
+	    Checking the this partition pointer matches the actual byte offset of the file
+            Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Testing partition 3 tests:
+	    Checking the previous partition pointer is the correct byte position
+            Pass
+	    Checking the this partition pointer matches the actual byte offset of the file
+            Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Testing partition 4 tests:
+	    Checking the previous partition pointer is the correct byte position
+            Pass
+	    Checking the this partition pointer matches the actual byte offset of the file
+            Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Testing partition 5 tests:
+	    Checking the previous partition pointer is the correct byte position
+            Pass
+	    Checking the this partition pointer matches the actual byte offset of the file
+            Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Testing random index partition tests:
+	    Checking the partition positions in the file match those in the supplied random index pack
+            Pass
+Ran 1 tests: Passed:1 , Failed: 0
+Running Checking the descriptive metadata is present in the file in the header tests:
+	    Checking the descriptive metadata is present in the file 
+            Pass
+	    Checking the descriptive metadata points to a Text based framework
+            Pass
+	    Checking the text based framework points to a text based object set
+            Pass
+	    Checking the descriptive metadata points to a Text based framework
+            Pass
+	    Checking the text based framework points to a text based object set
+            Pass
+Ran 5 tests: Passed:5 , Failed: 0
+Running Checking the descriptive metadata is present in the file in the footer tests:
+	    Checking the descriptive metadata is present in the file 
+            Pass
+	    Checking the descriptive metadata points to a Text based framework
+            Pass
+	    Checking the text based framework points to a text based object set
+            Pass
+	    Checking the descriptive metadata points to a Text based framework
+            Pass
+	    Checking the text based framework points to a text based object set
+            Pass
+Ran 5 tests: Passed:5 , Failed: 0
+Running Checking the generic partition values at byte offset 4046 tests:
+	    Checking the value of the HeaderByteCount is set to zero
+            Pass
+	    Checking the value of the IndexByteCount is set to zero
+            Pass
+	    Checking the value of the IndexSID is set to zero
+            Pass
+Ran 3 tests: Passed:3 , Failed: 0
+Running Checking the generic partition values at byte offset 4226 tests:
+	    Checking the value of the HeaderByteCount is set to zero
+            Pass
+	    Checking the value of the IndexByteCount is set to zero
+            Pass
+	    Checking the value of the IndexSID is set to zero
+            Pass
+Ran 3 tests: Passed:3 , Failed: 0
+Running Checking the generic partition values at byte offset 4404 tests:
+	    Checking the value of the HeaderByteCount is set to zero
+            Pass
+	    Checking the value of the IndexByteCount is set to zero
+            Pass
+	    Checking the value of the IndexSID is set to zero
+            Pass
+Ran 3 tests: Passed:3 , Failed: 0
+ALL Tests PASSED

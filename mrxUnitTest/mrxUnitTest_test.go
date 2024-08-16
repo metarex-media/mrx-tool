@@ -1,15 +1,10 @@
 package mrxUnitTest
 
-import (
-	"fmt"
-	"os"
-	"testing"
+// . "github.com/onsi/ginkgo"
+// . "github.com/onsi/gomega"
+//	. "github.com/smartystreets/goconvey/convey"
 
-	// . "github.com/onsi/ginkgo"
-	// . "github.com/onsi/gomega"
-	. "github.com/smartystreets/goconvey/convey"
-)
-
+/*
 func TestFileRead(t *testing.T) {
 
 	// run two different test files with and without index tables
@@ -46,3 +41,4 @@ func TestFileRead(t *testing.T) {
 	tester.TestMetaData()
 
 }
+*/

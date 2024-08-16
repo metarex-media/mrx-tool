@@ -10,95 +10,123 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func mrxDescriptiveMD(node *Node) {
+func validISXD(doc io.ReadSeeker, node *MXFNode, tc *TestContext) {
+	// set up comments for each test and check how it goes
 
-	tester := newTester(os.Stdout, fmt.Sprintf("Partition %s Tests", "delete later"))
-	defer tester.Result()
+	// XML parser name space etc - skip those
 
-	//	fmt.Println(node.FindSymbols(mxf2go.LabelsRegister[mxf2go.DescriptiveMetadataTrack].UL))
+	// check the static track has points to every xml file
 
-	tester.segment.Header("Checking the descriptive metadata is present in the file ", func() {
+	// generic partitions should be ordered after the rest of the essence
 
-		descriptives := node.FindTypes(mxf2go.LabelsRegister[mxf2go.DescriptiveMetadataTrack].UL[13:])
-		tester.segment.Test("Checking the descriptive metadata is present in the file ", func() bool {
-			return tester.Expect(descriptives).ToNot(BeNil())
-		})
-		//resTrack := p.FindSymbol(nil, mxf2go.DescriptiveMetadataTrack) // look through the standards you out a test in
-		// find syntax for starting at the route
-		/*
-			resFramework := descriptives[0].FindSymbol(mxf2go.LabelsRegister[mxf2go.MXFTextBasedFramework].UL)
+	// ISXD seqeunce elements - read 2067 to find out what these are
 
-			tester.segment.Test("Checking the descriptive next bit is present in the file ", func() bool {
-				return tester.Expect(resFramework).ToNot(BeNil())
-			})*/
-		//	resIds := p.FindSymbols(resFramework, mrx2go.MetarexID, mrx2go.ExtraID)
-
-		// check the shalls,
-		// then check the behaviour
-		//	tester.Expect(resTrack).ToNot(BeNil())
-		//	tester.Expect(len(resIds)).ToNot(BeNil())
-		//	tester.Expect(resFramework).
-
-	})
+	// check for frame wrapping - reread 379
 }
 
-func mrxEmbeddedTimedDocuments(doc io.ReadSeeker, node *Node) {
+func mrxDescriptiveMD(node *MXFNode, tc *TestContext) {
+
+	//	fmt.Println(node.FindSymbols(mxf2go.LabelsRegister[mxf2go.DescriptiveMetadataTrack].UL))
+	for _, mdnode := range node.Partitions {
+
+		if mdnode.Props.PartitionType == HeaderPartition || mdnode.Props.PartitionType == FooterPartition {
+			tc.Header(fmt.Sprintf("Checking the descriptive metadata is present in the file in the %s", mdnode.Props.PartitionType), func(t Test) {
+				descriptives := make([]*Node, 0)
+				for _, md := range mdnode.HeaderMetadata {
+					descriptives = append(descriptives, md.FindTypes(mxf2go.LabelsRegister[mxf2go.DescriptiveMetadataTrack].UL[13:])...)
+				}
+				t.Test("Checking the descriptive metadata is present in the file ", func() bool {
+					return t.Expect(descriptives).ToNot(BeNil())
+				})
+
+				for _, d := range descriptives {
+					textFramework := d.FindSymbol("060e2b34.027f0101.0d010401.04010100")
+
+					t.Test("Checking the descriptive metadata points to a Text based framework", func() bool {
+						return t.Expect(textFramework).ToNot(BeNil())
+					})
+
+					textObj := d.FindSymbol("060e2b34.027f0101.0d010401.04020100")
+					t.Test("Checking the text based framework points to a text based object set", func() bool {
+						return t.Expect(textObj).ToNot(BeNil())
+					})
+				}
+				//resTrack := p.FindSymbol(nil, mxf2go.DescriptiveMetadataTrack) // look through the standards you out a test in
+				// find syntax for starting at the route
+				/*
+					resFramework := descriptives[0].FindSymbol(mxf2go.LabelsRegister[mxf2go.MXFTextBasedFramework].UL)
+
+					tester.segment.Test("Checking the descriptive next bit is present in the file ", func() bool {
+						return tester.Expect(resFramework).ToNot(BeNil())
+					})*/
+				//	resIds := p.FindSymbols(resFramework, mrx2go.MetarexID, mrx2go.ExtraID)
+
+				// check the shalls,
+				// then check the behaviour
+				//	tester.Expect(resTrack).ToNot(BeNil())
+				//	tester.Expect(len(resIds)).ToNot(BeNil())
+				//	tester.Expect(resFramework).
+
+			})
+		}
+	}
+}
+
+func mrxEmbeddedTimedDocuments(doc io.ReadSeeker, node *MXFNode, tc *TestContext) {
 	// find the st310 contexts
-	genericStreams := node.FindSymbols(GenericStreamPartition)
+	// genericStreams := node.FindSymbols(GenericStreamPartition)
 
 	// run tests on the length value
 	// fmt.Println(genericStreams)
 
-	tester := newTester(os.Stdout, "Embedded document tests")
-	defer tester.Result()
+	for _, gs := range node.Partitions {
+		if gs.Props.PartitionType == GenericStreamPartition {
+			// check the 2057 document is there
+			//documentCount := ctx.FindSymbol(mxf2go.RP2057DocCount)
 
-	for _, gs := range genericStreams {
+			// make a small loop to find the contexts ndocuments that I'm looking for out of this
+			// 2057 partition. MRX path within the go framework.
+			// Keep it metarex friendly
+			tc.Header(fmt.Sprintf("Checking the generic partition values at byte offset %v", gs.Key.Start), func(t Test) {
 
-		// check the 2057 document is there
-		//documentCount := ctx.FindSymbol(mxf2go.RP2057DocCount)
+				partKLV := nodeToKLV(doc, &Node{Key: gs.Key, Length: gs.Length, Value: gs.Value})
+				mxfPartition := partitionExtract(partKLV)
 
-		// make a small loop to find the contexts ndocuments that I'm looking for out of this
-		// 2057 partition. MRX path within the go framework.
-		// Keep it metarex friendly
-		tester.segment.Header(fmt.Sprintf("Checking the generic partition values at byte offset %v", gs.Key.Start), func() {
+				t.Test("Checking the value of the HeaderByteCount is set to zero", func() bool {
+					return t.Expect(mxfPartition.HeaderByteCount).Shall(Equal(uint64(0)),
+						fmt.Sprintf("The expected header count of 0, did not match the this partition value %v", mxfPartition.HeaderByteCount))
+				})
 
-			partKLV := nodeToKLV(doc, gs)
-			mxfPartition := partitionExtract(partKLV)
+				t.Test("Checking the value of the IndexByteCount is set to zero", func() bool {
+					return t.Expect(mxfPartition.IndexByteCount).To(Equal(uint64(0)),
+						fmt.Sprintf("The expected Index Byte Count of 0, did not match the this partition value %v", mxfPartition.IndexByteCount))
+				})
 
-			tester.segment.Test("Checking the value of the HeaderByteCount is set to zero", func() bool {
-				return tester.Expect(mxfPartition.HeaderByteCount).To(Equal(uint64(0)),
-					fmt.Sprintf("The expected header count of 0, did not match the this partition value %v", mxfPartition.HeaderByteCount))
+				t.Test("Checking the value of the IndexSID is set to zero", func() bool {
+					return t.Expect(mxfPartition.IndexSID).To(Equal(uint32(0)),
+						fmt.Sprintf("The expected Index SID of 0, did not match the this partition value %v", mxfPartition.IndexByteCount))
+				})
+
+				// @TODO tests to add
+				// well thats missing
+				// 060e2b34.01010105.01020210.02020000
+				/*
+					6.2.3 - 410
+						- body offset
+						- body SID
+					6.2.1 - 2057
+						- element key bytes
+					7.1
+						- look for the descriptive metadata elements
+
+				*/
+
+				// desc seatch - get the footer - header if not found
+				// get the preface - URN for the preface
+				// search for the desriptive set - which is not currently included.
+
 			})
-
-			tester.segment.Test("Checking the value of the IndexByteCount is set to zero", func() bool {
-				return tester.Expect(mxfPartition.IndexByteCount).To(Equal(uint64(0)),
-					fmt.Sprintf("The expected Index Byte Count of 0, did not match the this partition value %v", mxfPartition.IndexByteCount))
-			})
-
-			tester.segment.Test("Checking the value of the IndexSID is set to zero", func() bool {
-				return tester.Expect(mxfPartition.IndexSID).To(Equal(uint32(0)),
-					fmt.Sprintf("The expected Index SID of 0, did not match the this partition value %v", mxfPartition.IndexByteCount))
-			})
-
-			// @TODO tests to add
-			// well thats missing
-			// 060e2b34.01010105.01020210.02020000
-			/*
-				6.2.3 - 410
-					- body offset
-					- body SID
-				6.2.1 - 2057
-					- element key bytes
-				7.1
-					- look for the descriptive metadata elements
-
-			*/
-
-			// desc seatch - get the footer - header if not found
-			// get the preface - URN for the preface
-			// search for the desriptive set - which is not currently included.
-
-		})
+		}
 	}
 
 }
@@ -133,12 +161,14 @@ func ASTTest(f io.ReadSeeker, fout io.Writer) error {
 		any node functions to include
 	*/
 	// run the partition tests
-
+	fo, _ := os.Create("out.log")
 	// @TODO create a context for running tests
+	tc := NewTestContext(fo)
+	defer tc.EndTest()
 
-	mrxPartLayout(f, ast)
-	mrxDescriptiveMD(ast)
-	mrxEmbeddedTimedDocuments(f, ast)
+	mrxPartLayout(f, ast, tc)
+	mrxDescriptiveMD(ast, tc)
+	mrxEmbeddedTimedDocuments(f, ast, tc)
 
 	// run the tests clean up here
 
@@ -146,19 +176,16 @@ func ASTTest(f io.ReadSeeker, fout io.Writer) error {
 
 }
 
-func mrxPartLayout(stream io.ReadSeeker, node *Node) {
+func mrxPartLayout(stream io.ReadSeeker, node *MXFNode, tc *TestContext) {
 
-	parts := node.FindTypes(PartitionType)
+	parts := node.Partitions
 
 	partitions := make([]RIP, 0)
 
-	// this will only take partitions
-	tester := newTester(os.Stdout, "Testing partition structure")
-	defer tester.Result()
+	for i, part := range parts {
 
-	for _, part := range parts {
-		pklv := nodeToKLV(stream, part)
-		if part.Properties.Symbol() != RIPPartition {
+		pklv := nodeToKLV(stream, &Node{Key: part.Key, Length: part.Length, Value: part.Value})
+		if part.Props.Symbol() != RIPPartition {
 
 			actualPrevPosition := uint64(0)
 			if len(partitions) > 0 {
@@ -166,15 +193,19 @@ func mrxPartLayout(stream io.ReadSeeker, node *Node) {
 			}
 
 			mp := partitionExtract(pklv)
-			// fmt.Println(pt, node)
-			tester.segment.Test("Checking the previous partition pointer is the correct byte position", func() bool {
-				return tester.Expect(actualPrevPosition).To(Equal(mp.PreviousPartition),
-					fmt.Sprintf("The previous partition at %v, did not match the declared previous partition value %v", actualPrevPosition, mp.PreviousPartition))
-			})
 
-			tester.segment.Test("Checking the this partition pointer matches the actual byte offset of the file", func() bool {
-				return tester.Expect(uint64(part.Key.Start)).To(Equal(mp.ThisPartition),
-					fmt.Sprintf("The byte offset %v, did not match the this partition value %v", node.Key.Start, mp.ThisPartition))
+			tc.Header(fmt.Sprintf("Testing partition %v", i), func(t Test) {
+
+				// fmt.Println(pt, node)
+				t.Test("Checking the previous partition pointer is the correct byte position", func() bool {
+					return t.Expect(actualPrevPosition).To(Equal(mp.PreviousPartition),
+						fmt.Sprintf("The previous partition at %v, did not match the declared previous partition value %v", actualPrevPosition, mp.PreviousPartition))
+				})
+
+				t.Test("Checking the this partition pointer matches the actual byte offset of the file", func() bool {
+					return t.Expect(uint64(part.Key.Start)).To(Equal(mp.ThisPartition),
+						fmt.Sprintf("The byte offset %v, did not match the this partition value %v", part.Key.Start, mp.ThisPartition))
+				})
 			})
 
 			partitions = append(partitions, RIP{byteOffset: uint64(part.Key.Start), sid: mp.BodySID})
@@ -188,9 +219,10 @@ func mrxPartLayout(stream io.ReadSeeker, node *Node) {
 			for i := 0; i < ripLength; i += 12 {
 				gotRip = append(gotRip, RIP{sid: order.Uint32(pklv.Value[i : i+4]), byteOffset: order.Uint64(pklv.Value[i+4 : i+12])})
 			}
-
-			tester.segment.Test("Checking the partition positions in the file match those in the supplied random index pack", func() bool {
-				return tester.Expect(gotRip).To(Equal(partitions), "The generated index pack did not match the file index Pack")
+			tc.Header("Testing random index partition", func(t Test) {
+				t.Test("Checking the partition positions in the file match those in the supplied random index pack", func() bool {
+					return t.Expect(gotRip).To(Equal(partitions), "The generated index pack did not match the file index Pack")
+				})
 			})
 		}
 	}

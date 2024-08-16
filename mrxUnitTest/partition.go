@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/metarex-media/mrx-tool/klv"
-
 	. "github.com/onsi/gomega"
 )
 
@@ -31,106 +30,6 @@ func partitionName(namebytes []byte) string {
 	return fmt.Sprintf("%02x%02x%02x%02x.%02x%02x%02x  .%02x%02x%02x%02x.%02x    %02x",
 		namebytes[0], namebytes[1], namebytes[2], namebytes[3], namebytes[4], namebytes[5], namebytes[6],
 		namebytes[8], namebytes[9], namebytes[10], namebytes[11], namebytes[12], namebytes[15])
-}
-
-func (l *layout) partitionTests(klvItem *klv.KLV, metadata chan *klv.KLV) error {
-	// maybe hadle everything on a partition basis
-
-	// /	e.essenceCount = 0
-	//	shift, lengthlength := klvItem
-
-	// TODO break into three sections for handling the partitions on a per partition basis
-	// and defer the writing in the order they should happen
-	partitionLayout := partitionExtract(klvItem)
-
-	tester := newTester(l.testLog, fmt.Sprintf("Partition %0d Tests", len(l.Rip)))
-	defer tester.Result()
-
-	// test partition positions
-	tester.TestPartitionPosition(l.TotalByteCount, int(partitionLayout.ThisPartition))
-	tester.TestPartitionPrevPosition(l.currentPartPos, int(partitionLayout.PreviousPartition))
-
-	// generate the positional information
-	l.currentPartition = &partitionLayout
-	l.Rip = append(l.Rip, RIP{byteOffset: uint64(l.TotalByteCount), sid: partitionLayout.BodySID})
-	l.currentPartPos = l.TotalByteCount
-	l.TotalByteCount += klvItem.TotalLength()
-
-	var p []byte
-
-	// flush out the header metadata
-	// as it is not used yet (apart from the primer)
-	metaByteCount := 0
-	flushedMeta := make([]*klv.KLV, 0)
-	// store the metadata for handling as part of the tests
-	for metaByteCount < int(partitionLayout.HeaderByteCount) {
-		flush, open := <-metadata
-		p = append(p, flush.Key...)
-		p = append(p, flush.Length...)
-		p = append(p, flush.Value...)
-		if !open {
-			return fmt.Errorf("error when using klv data klv stream interrupted")
-		}
-		flushedMeta = append(flushedMeta, flush)
-		metaByteCount += flush.TotalLength()
-
-	}
-
-	defer l.metadataTest(flushedMeta)
-	// defer metadata hanlding defer()metadata hndling (which generates a new thing)
-
-	// check the header metadata count
-	tester.TestPartitionMetadataCount(metaByteCount, int(partitionLayout.HeaderByteCount))
-
-	l.TotalByteCount += metaByteCount
-	// hoover up the indextable and remove it to prevent it being mistaken as essence
-	if partitionLayout.IndexTable {
-		index, open := <-metadata
-		if !open {
-			return fmt.Errorf("error when using klv data klv stream interrupted") // explain which partition this occured in.
-		}
-		l.TotalByteCount += index.TotalLength()
-	}
-
-	HeaderContainsGroup(tester, "060e2b34.027f0101.0d010201.01050100", p)
-
-	// position += md.currentContainer.HeaderLength
-
-	/* handle the essence here
-
-	using the channel have a dynamic key manager.
-	for the moment copy the hoover technique
-
-	*/
-
-	return nil
-}
-
-// TestPartitionPrevPosition checks the partition metadata of the previous partition
-// matches the actual location of the previous partition.
-func (c *CompleteTest) TestPartitionPrevPosition(actualPrevPosition, declaredPrevPosition int) {
-	c.segment.Test("Checking the previous partition pointer is the correct byte position", func() bool {
-		return c.Expect(actualPrevPosition).To(Equal(declaredPrevPosition),
-			fmt.Sprintf("The previous partition at %v, did not match the declared previous partition value %v", actualPrevPosition, declaredPrevPosition))
-	})
-}
-
-// TestPartitionPosition checks the partition metadata of the current partition
-// matches the actual location of the current partition.
-func (c *CompleteTest) TestPartitionPosition(actualPosition, declaredPosition int) {
-	c.segment.Test("Checking the this partition pointer matches the actual byte offset of the file", func() bool {
-		return c.Expect(actualPosition).To(Equal(declaredPosition),
-			fmt.Sprintf("The byte offset %v, did not match the this partition value %v", actualPosition, declaredPosition))
-	})
-}
-
-// TestPartitionMetadataCount checks the byte count of the processed metadata matches
-// the declared byte count in the partition header.
-func (c *CompleteTest) TestPartitionMetadataCount(actualMdCount, declaredMdCount int) {
-	c.segment.Test("Checking the header metadata count matches the actual count of the metadata", func() bool {
-		return c.Expect(actualMdCount).To(Equal(declaredMdCount),
-			fmt.Sprintf("The metadata count %v, did not match the declared partition header byte count %v", actualMdCount, declaredMdCount))
-	})
 }
 
 // Test is a demo tes of how to log each individual test to be used

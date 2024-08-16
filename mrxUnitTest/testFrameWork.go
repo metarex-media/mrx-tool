@@ -10,6 +10,49 @@ import (
 	"github.com/onsi/gomega/types"
 )
 
+func NewTestContext(dest io.Writer) *TestContext {
+	return &TestContext{w: dest, globalPass: true}
+}
+
+type TestContext struct {
+	w          io.Writer
+	globalPass bool
+}
+
+func (tc *TestContext) EndTest() {
+	if tc.globalPass {
+		tc.w.Write([]byte("ALL Tests PASSED"))
+		return
+	}
+
+	tc.w.Write([]byte("Test Failed"))
+}
+
+// Header is a wrapper for the tests,
+// Adding more context to the results
+func (s *TestContext) Header(message string, tests func(t Test)) {
+
+	var log bytes.Buffer
+	seg := &segmentTest{header: message, errChannel: make(chan string, 5), testBuffer: log, log: s.w}
+
+	ct := &CompleteTest{
+		segment: seg,
+	}
+	// initialise the gomega tester object
+	mid := NewWithT(seg)
+	out := assertionWrapper{out: mid}
+	ct.gomegaExpect = out
+
+	defer ct.Result()
+
+	log.Write([]byte(fmt.Sprintf("	%v\n", message)))
+	tests(ct)
+
+	if seg.failCount != 0 {
+		s.globalPass = false
+	}
+}
+
 // NewTester generates a new tester for a segment of tests
 func newTester(dest io.Writer, segmentHeader string) *CompleteTest {
 
@@ -20,7 +63,9 @@ func newTester(dest io.Writer, segmentHeader string) *CompleteTest {
 		segment: seg,
 	}
 	// initialise the gomega tester object
-	ct.tester = NewWithT(seg)
+	mid := NewWithT(seg)
+	out := assertionWrapper{out: mid}
+	ct.gomegaExpect = out
 	return ct
 
 }
@@ -37,19 +82,81 @@ func (c *CompleteTest) Fail() {
 
 }
 
+type Assertions interface {
+	Shall(matcher types.GomegaMatcher, optionalDescription ...interface{}) bool
+	types.Assertion
+}
+
+// ExportAssertions wraps the basic types.assertions with some
+// extra names to allow th eMXf library to be followed better
+type ExportAssertions struct {
+	standard types.Assertion
+}
+
+func (e ExportAssertions) Shall(matcher types.GomegaMatcher, optionalDescription ...interface{}) bool {
+	return e.standard.To(matcher, optionalDescription...)
+}
+func (e ExportAssertions) ShallNot(matcher types.GomegaMatcher, optionalDescription ...interface{}) bool {
+	return e.standard.ToNot(matcher, optionalDescription...)
+}
+
+func (e ExportAssertions) NotTo(matcher types.GomegaMatcher, optionalDescription ...interface{}) bool {
+	return e.standard.NotTo(matcher, optionalDescription...)
+}
+func (e ExportAssertions) To(matcher types.GomegaMatcher, optionalDescription ...interface{}) bool {
+	return e.standard.To(matcher, optionalDescription...)
+}
+func (e ExportAssertions) ToNot(matcher types.GomegaMatcher, optionalDescription ...interface{}) bool {
+	return e.standard.ToNot(matcher, optionalDescription...)
+}
+func (e ExportAssertions) Should(matcher types.GomegaMatcher, optionalDescription ...interface{}) bool {
+	return e.standard.To(matcher, optionalDescription...)
+}
+func (e ExportAssertions) ShouldNot(matcher types.GomegaMatcher, optionalDescription ...interface{}) bool {
+	return e.standard.To(matcher, optionalDescription...)
+}
+func (e ExportAssertions) WithOffset(offset int) types.Assertion {
+	return e.standard.WithOffset(offset)
+}
+
+func (e ExportAssertions) Error() types.Assertion {
+	return e.standard.Error()
+}
+
+type assertionWrapper struct {
+	out gomegaExpect
+}
+
+func (aw assertionWrapper) Expect(actual interface{}, extra ...interface{}) Assertions {
+	return ExportAssertions{aw.out.Expect(actual, extra...)}
+}
+
+type gomegaExpect interface {
+	Expect(actual interface{}, extra ...interface{}) types.Assertion
+}
+
 type CompleteTest struct {
-	segment *segmentTest
-	tester
+	segment      *segmentTest
+	gomegaExpect Expecter
+	// tester       Tester
+}
+
+func (ct CompleteTest) Expect(actual interface{}, extra ...interface{}) Assertions {
+	return ct.gomegaExpect.Expect(actual, extra...)
 }
 
 type Test interface {
-	Test(message string, assert func() bool)
-	Expect(actual interface{}, extra ...interface{}) types.Assertion
+	Tester
+	Expecter
 }
 
-// tester is a workaround to wrap the gomega/internal object
-type tester interface {
-	Expect(actual interface{}, extra ...interface{}) types.Assertion
+// Expecter is a workaround to wrap the gomega/internal object
+type Expecter interface {
+	Expect(actual interface{}, extra ...interface{}) Assertions
+}
+
+type Tester interface {
+	Test(message string, assert func() bool)
 }
 
 // wrap the results for later

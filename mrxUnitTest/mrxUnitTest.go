@@ -7,9 +7,6 @@ package mrxUnitTest
 import (
 	"context"
 	"io"
-
-	"github.com/metarex-media/mrx-tool/klv"
-	"golang.org/x/sync/errgroup"
 )
 
 // set up a utility bit for the decodes?
@@ -73,126 +70,6 @@ Each step should have some error checking:
 
 
 */
-
-// TestMRX tests an MRX, it writes the log output to dest
-func TestMRX(stream io.Reader, dest io.Writer) error {
-
-	klvChan := make(chan *klv.KLV, 1000)
-
-	err := Decodeklv(stream, dest, klvChan, 10)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// inlcude the logger? if there's any errors flush them - discard ifo for unkown keys fro the moment
-func Decodeklv(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) error { // wg *sync.WaitGroup, buffer chan packet, errChan chan error) {
-
-	// use errs to handle errors while runnig concurrently
-	errs, _ := errgroup.WithContext(context.Background())
-
-	// initiate the klv stream
-	errs.Go(func() error {
-		return klv.StartKLVStream(stream, buffer, size)
-	})
-
-	var contents layout
-
-	contents.testLog = dest
-
-	// @TODO set this up with errs so test breaking errors are returned
-	errs.Go(func() error {
-
-		defer func() {
-			// this only runs when an error occurs to stop blocking
-			_, klvOpen := <-buffer
-			for klvOpen {
-				_, klvOpen = <-buffer
-			}
-
-		}()
-
-		// get the first bit of stream
-		klvItem, klvOpen := <-buffer
-
-		// handle each klv packet
-		for klvOpen {
-
-			// check if it is a partition key
-			// if not its presumed to be essence
-			if partitionName(klvItem.Key) == "060e2b34.020501  .0d010201.01    00" {
-
-				// test the previous partitions essence as the final step
-				// if len(contents.RipLayout) == 0 and the cache length !=0 emit an error that essence was found first
-
-				if len(contents.cache.keys) != 0 {
-					contents.essenceTests(*contents.currentPartition)
-				}
-
-				if klvItem.Key[13] == 17 {
-					// fmt.Println("RIP", klvItem.TotalLength())
-					contents.TotalByteCount += klvItem.TotalLength()
-					contents.ripHandle(klvItem)
-					// handle the rip
-
-					// then hoover the rest of the essence saying 25 bytes were found after the end of  file
-
-				} else {
-					// decode the partition - get the raw information out and handle the metadata
-					// intermediate stage is binning of the metadata
-					err := contents.partitionTests(klvItem, buffer)
-
-					if err != nil {
-						// handle it
-						return err
-					}
-				}
-			} else {
-
-				// throw a warning here saying expected partition got KEY : fullname
-
-				contents.essenceCheck(klvItem)
-				// some key handling
-
-				/*
-					seg testing function to be closed when the result is run
-					a new test is generated for the keys of partition
-
-					test the keys as they come in
-					and stash some in the partition cache for later
-				*/
-
-				contents.TotalByteCount += klvItem.TotalLength()
-				// decode the essence key - don't look in it what the data is
-				/*
-
-					get the key
-					if making the frame include it in the sequence
-
-					if the keys is recognised run additional checks - such as only one key in the clip wrapping etc element count
-
-
-					else check it matches the position in the relative sequence
-
-				*/
-
-			}
-
-			// get the next item for a loop
-			klvItem, klvOpen = <-buffer
-		}
-
-		return nil
-	})
-
-	// post processing data if the klv hasn't returned an error
-	// count of partitions
-
-	return errs.Wait()
-}
 
 type layout struct {
 	currentPartPos   int

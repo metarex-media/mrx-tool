@@ -26,6 +26,35 @@ type Node struct {
 	Children []*Node
 }
 
+type MXFNode struct {
+	Partitions []*PartitionNode
+}
+
+type PartitionNode struct {
+	Key, Length, Value Position
+	HeaderMetadata     []*Node
+	Essence            []*Node
+	Props              PartitionProperties
+}
+
+/*
+example expressoin whant [label:partition,symbol:footer]
+*/
+func (n *Node) Search(expr string) *Node {
+
+	// multiple search expressions in one string
+	/*
+		split the string to search for the first if found
+		search the children for the remaining nodes
+
+		repeat the sting break up each iteration.
+
+		or nest it as search params []string
+
+	*/
+	return nil
+}
+
 // FindSymbol returns the first Node with that symbol found in the
 // Node Tree. Depth first search
 func (n *Node) FindSymbol(sym string) *Node {
@@ -253,7 +282,7 @@ type refAndChild struct {
 }
 
 // inlcude the logger? if there's any errors flush them - discard ifo for unkown keys fro the moment
-func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (*Node, error) { // wg *sync.WaitGroup, buffer chan packet, errChan chan error) {
+func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (*MXFNode, error) { // wg *sync.WaitGroup, buffer chan packet, errChan chan error) {
 
 	// use errs to handle errors while runnig concurrently
 	errs, _ := errgroup.WithContext(context.Background())
@@ -263,9 +292,9 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 		return klv.StartKLVStream(stream, buffer, size)
 	})
 
-	mxf := &Node{}
-	var currentNode *Node
-	var currentPartition int
+	mxf := &MXFNode{make([]*PartitionNode, 0)}
+	var currentPartitionNode *PartitionNode
+	// /	var currentPartition int
 	var primer map[string]string
 	// @TODO set this up with errs so test breaking errors are returned
 	errs.Go(func() error {
@@ -289,16 +318,17 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 			// check if it is a partition key
 			// if not its presumed to be essence
 			if partitionName(klvItem.Key) == "060e2b34.020501  .0d010201.01    00" {
-				if currentNode != nil {
-					mxf.Children = append(mxf.Children, currentNode)
+				if currentPartitionNode != nil {
+					mxf.Partitions = append(mxf.Partitions, currentPartitionNode)
 				}
 
 				// add details from now
-				currentNode = &Node{
-					Key:      Position{Start: offset, End: offset + len(klvItem.Key)},
-					Length:   Position{Start: offset + len(klvItem.Key), End: offset + len(klvItem.Key) + len(klvItem.Length)},
-					Value:    Position{Start: offset + len(klvItem.Key) + len(klvItem.Length), End: offset + klvItem.TotalLength()},
-					Children: make([]*Node, 0),
+				currentPartitionNode = &PartitionNode{
+					Key:            Position{Start: offset, End: offset + len(klvItem.Key)},
+					Length:         Position{Start: offset + len(klvItem.Key), End: offset + len(klvItem.Key) + len(klvItem.Length)},
+					Value:          Position{Start: offset + len(klvItem.Key) + len(klvItem.Length), End: offset + klvItem.TotalLength()},
+					HeaderMetadata: make([]*Node, 0),
+					Essence:        make([]*Node, 0),
 				}
 
 				// create a reference map for every node that is found
@@ -307,8 +337,8 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 				// test the previous partitions essence as the final step
 				// if len(contents.RipLayout) == 0 and the cache length !=0 emit an error that essence was found first
 
-				partProps := PartitionProperties{PartitionCount: currentPartition}
-				currentPartition++
+				partProps := PartitionProperties{PartitionCount: len(mxf.Partitions)}
+
 				switch klvItem.Key[13] {
 				case 17:
 					partProps.PartitionType = RIPPartition
@@ -332,7 +362,7 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 				}
 				// primer will get updated because of pointer magic
 				partProps.Primer = primer
-				currentNode.Properties = partProps
+				currentPartitionNode.Props = partProps
 
 				partitionLayout := partitionExtract(klvItem)
 
@@ -458,15 +488,16 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 				for n, refs := range refMap {
 
 					if !refs.child {
-						currentNode.Children = append(currentNode.Children, n)
+						currentPartitionNode.HeaderMetadata = append(currentPartitionNode.HeaderMetadata, n)
 					}
 				}
 
 				// order the map by appearance order
-				slices.SortFunc(currentNode.Children, func(a, b *Node) int {
+				slices.SortFunc(currentPartitionNode.HeaderMetadata, func(a, b *Node) int {
 					return a.Key.Start - b.Key.Start
 				})
 
+				//	currentPartitionNode.HeaderMetadata = append(currentPartitionNode.HeaderMetadata, currentPartitionNode)
 			} else {
 				// check the name as it came
 				name := fullName(klvItem.Key)
@@ -497,7 +528,7 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 					Children:   make([]*Node, 0),
 				}
 
-				currentNode.Children = append(currentNode.Children, essNode)
+				currentPartitionNode.Essence = append(currentPartitionNode.Essence, essNode)
 				offset += klvItem.TotalLength()
 				// throw a warning here saying expected partition got KEY : fullname
 
@@ -506,7 +537,7 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 			// get the next item for a loop
 			klvItem, klvOpen = <-buffer
 		}
-		mxf.Children = append(mxf.Children, currentNode)
+		mxf.Partitions = append(mxf.Partitions, currentPartitionNode)
 		return nil
 	})
 
@@ -516,7 +547,7 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 
 	b, _ := yaml.Marshal(mxf)
 	dest.Write(b)
-
+	fmt.Println(mxf)
 	return mxf, nil
 }
 
