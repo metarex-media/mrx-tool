@@ -84,6 +84,7 @@ func (c *CompleteTest) Fail() {
 
 type Assertions interface {
 	Shall(matcher types.GomegaMatcher, optionalDescription ...interface{}) bool
+	ShallNot(matcher types.GomegaMatcher, optionalDescription ...interface{}) bool
 	types.Assertion
 }
 
@@ -96,6 +97,7 @@ type ExportAssertions struct {
 func (e ExportAssertions) Shall(matcher types.GomegaMatcher, optionalDescription ...interface{}) bool {
 	return e.standard.To(matcher, optionalDescription...)
 }
+
 func (e ExportAssertions) ShallNot(matcher types.GomegaMatcher, optionalDescription ...interface{}) bool {
 	return e.standard.ToNot(matcher, optionalDescription...)
 }

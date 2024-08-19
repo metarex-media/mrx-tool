@@ -387,22 +387,26 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 
 					// @TODO include KLV fill packets
 					dec, skip := decodeBuilder(flush.Key[5])
-					flush.Key[5] = 0x7f
+
 					if skip {
 
 						//unpack the primer
-						if fullName(flush.Key) == "060e2b34.027f0101.0d010201.01050100" {
+
+						if fullNameMask(flush.Key, 5) == "060e2b34.027f0101.0d010201.01050100" {
 							out := make(map[string]string)
 							primerUnpack(flush.Value, out)
 							primer = out
-
+							currentPartitionNode.Props.Primer = primer
 						}
 						// want to loop through them all?
 
 					} else {
-
 						decoders, ok := mxf2go.Groups["urn:smpte:ul:"+fullName(flush.Key)]
 
+						if !ok {
+							flush.Key[5] = 0x7f
+							decoders, ok = mxf2go.Groups["urn:smpte:ul:"+fullName(flush.Key)]
+						}
 						if !ok {
 							flush.Key[13] = 0x7f
 							decoders, ok = mxf2go.Groups["urn:smpte:ul:"+fullName(flush.Key)]
@@ -503,7 +507,7 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 					index, open := <-buffer
 
 					if !open {
-						return fmt.Errorf("Error parsing stream channel unexpectedly closed.")
+						return fmt.Errorf("error parsing stream channel unexpectedly closed.")
 					}
 					currentPartitionNode.IndexTable = &Node{
 						Key:    Position{Start: offset, End: offset + len(index.Key)},
@@ -511,6 +515,7 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 						Value:  Position{Start: offset + len(index.Key) + len(index.Length), End: offset + index.TotalLength()},
 					}
 					offset += index.TotalLength()
+
 					//	fmt.Println(md.currentContainer.IndexTable)
 				}
 
@@ -519,6 +524,7 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 				// check the name as it came
 				name := fullName(klvItem.Key)
 				_, ok := mxf2go.EssenceLookUp["urn:smpte:ul:"+name]
+
 				if !ok {
 					// check for a 7f masked version at the final byte
 					klvItem.Key[15] = 0x7f

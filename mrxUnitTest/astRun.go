@@ -40,12 +40,31 @@ func validISXD(doc io.ReadSeeker, node *MXFNode, tc *TestContext) {
 		if len(GenericCountPositions) > 0 {
 			// ibly run if there's any generic essence
 			var staticTrack *Node
+			var isxdDesc *Node
 			for _, child := range header.HeaderMetadata {
 				staticTrack = child.FindSymbol("060e2b34.027f0101.0d010101.01013a00")
+				isxdDesc = child.FindSymbol("060e2b34.02530105.0e090502.00000000")
 				if staticTrack != nil {
 					break
 				}
 			}
+
+			t.Test("Checking that the isxd descriptor is present in the header metadata", func() bool {
+				return t.Expect(isxdDesc).ShallNot(BeNil())
+			})
+
+			// decode the group
+			isxdDecode, err := DecodeGroupNode(doc, isxdDesc, header.Props.Primer)
+			fmt.Println(isxdDecode, err)
+			t.Test("Checking that the isxd descriptor is present in the header metadata", func() bool {
+				return t.Expect(isxdDecode["DataEssenceCoding"]).Shall(Equal(mxf2go.TAUID{
+					Data1: 101591860,
+					Data2: 1025,
+					Data3: 261,
+					Data4: mxf2go.TUInt8Array8{14, 9, 6, 6, 0, 0, 0, 0},
+				}))
+			})
+
 			t.Test("Checking that a static track is present in the header metadata", func() bool {
 				return t.Expect(staticTrack).ToNot(BeNil())
 			})
@@ -157,6 +176,56 @@ func validISXD(doc io.ReadSeeker, node *MXFNode, tc *TestContext) {
 	// check each metadata for that key
 	// not sure how to handle groups yet
 	// Data Essence Coding ID  must be  060E2B34.04010105.0E090606.00000000
+}
+
+func DecodeGroupNode(doc io.ReadSeeker, node *Node, primer map[string]string) (map[string]any, error) {
+	groupKLV := nodeToKLV(doc, node)
+
+	return DecodeGroup(groupKLV, primer)
+}
+
+func DecodeGroup(group *klv.KLV, primer map[string]string) (map[string]any, error) {
+	dec, skip := decodeBuilder(group.Key[5])
+
+	if skip {
+		return nil, fmt.Errorf("unable to decode essence, unknown decode method byte %0x", group.Key[5])
+	}
+
+	decoders, ok := mxf2go.Groups["urn:smpte:ul:"+fullName(group.Key)]
+
+	if !ok {
+		decoders, ok = mxf2go.Groups["urn:smpte:ul:"+fullNameMask(group.Key, 5)]
+	}
+	if !ok {
+		decoders, ok = mxf2go.Groups["urn:smpte:ul:"+fullNameMask(group.Key, 5, 13)]
+	}
+
+	if !ok {
+		return nil, fmt.Errorf("no group for the key %s was found", fullName(group.Key))
+	}
+
+	output := make(map[string]any)
+	pos := 0
+
+	for pos < len(group.Value) {
+		key, klength := dec.keyFunc(group.Value[pos : pos+dec.keyLen])
+		length, lenlength := dec.lengthFunc(group.Value[pos+dec.keyLen : pos+dec.keyLen+dec.lengthLen])
+		if klength != 16 {
+			key = primer[key]
+		}
+		decodeF, ok := decoders.Group["urn:smpte:ul:"+key]
+		fmt.Println(ok, key, klength, group.Value[pos:pos+dec.keyLen])
+		if ok {
+
+			b, _ := decodeF.Decode(group.Value[pos+dec.keyLen+dec.lengthLen : pos+dec.keyLen+dec.lengthLen+length])
+
+			output[decodeF.UL] = b
+		}
+
+		pos += klength + length + lenlength
+	}
+
+	return output, nil
 }
 
 // fullNameMask mask the speciifed bytes in a key as 7f

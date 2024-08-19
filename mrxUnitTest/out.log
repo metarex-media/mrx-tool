@@ -147,6 +147,10 @@ Running Checking the generic partition values at byte offset 3179926 tests:
             Pass
 Ran 3 tests: Passed:3 , Failed: 0
 Running Validating file against ISXD specification tests:
+	    Checking that the isxd descriptor is present in the header metadata
+            Pass
+	    Checking that the isxd descriptor is present in the header metadata
+            Pass
 	    Checking that a static track is present in the header metadata
             Pass
 	    Checking that the static track points to a sequence
@@ -157,35 +161,35 @@ Running Validating file against ISXD specification tests:
             Pass
 	    Checking that the only ISXD essence keys are found in body partitions
             Pass
-	    Checking that the content package frame partitions are correct
+	    Checking that the content package order are regular throughout the essence stream
             Pass
 	    Checking that the only ISXD essence keys are found in body partitions
             Pass
-	    Checking that the content package frame partitions are correct
+	    Checking that the content package order are regular throughout the essence stream
             Pass
 	    Checking that the only ISXD essence keys are found in body partitions
             Pass
-	    Checking that the content package frame partitions are correct
+	    Checking that the content package order are regular throughout the essence stream
             Pass
 	    Checking that the only ISXD essence keys are found in body partitions
             Pass
-	    Checking that the content package frame partitions are correct
+	    Checking that the content package order are regular throughout the essence stream
             Pass
 	    Checking that the only ISXD essence keys are found in body partitions
             Pass
-	    Checking that the content package frame partitions are correct
+	    Checking that the content package order are regular throughout the essence stream
             Pass
 	    Checking that the only ISXD essence keys are found in body partitions
             Pass
-	    Checking that the content package frame partitions are correct
+	    Checking that the content package order are regular throughout the essence stream
             Pass
 	    Checking that the only ISXD essence keys are found in body partitions
             Pass
-	    Checking that the content package frame partitions are correct
+	    Checking that the content package order are regular throughout the essence stream
             Pass
 	    Checking that the only ISXD essence keys are found in body partitions
             Pass
-	    Checking that the content package frame partitions are correct
+	    Checking that the content package order are regular throughout the essence stream
             Pass
-Ran 20 tests: Passed:20 , Failed: 0
+Ran 22 tests: Passed:22 , Failed: 0
 Test Failed
