@@ -34,6 +34,7 @@ type PartitionNode struct {
 	Key, Length, Value Position
 	HeaderMetadata     []*Node
 	Essence            []*Node
+	IndexTable         *Node
 	Props              PartitionProperties
 }
 
@@ -496,6 +497,22 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 				slices.SortFunc(currentPartitionNode.HeaderMetadata, func(a, b *Node) int {
 					return a.Key.Start - b.Key.Start
 				})
+
+				if partitionLayout.IndexTable {
+					//	index table is after all the metadata
+					index, open := <-buffer
+
+					if !open {
+						return fmt.Errorf("Error parsing stream channel unexpectedly closed.")
+					}
+					currentPartitionNode.IndexTable = &Node{
+						Key:    Position{Start: offset, End: offset + len(index.Key)},
+						Length: Position{Start: offset + len(index.Key), End: offset + len(index.Key) + len(index.Length)},
+						Value:  Position{Start: offset + len(index.Key) + len(index.Length), End: offset + index.TotalLength()},
+					}
+					offset += index.TotalLength()
+					//	fmt.Println(md.currentContainer.IndexTable)
+				}
 
 				//	currentPartitionNode.HeaderMetadata = append(currentPartitionNode.HeaderMetadata, currentPartitionNode)
 			} else {

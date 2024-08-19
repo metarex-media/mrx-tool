@@ -12,20 +12,28 @@ import (
 
 func validISXD(doc io.ReadSeeker, node *MXFNode, tc *TestContext) {
 	// set up comments for each test and check how it goes
-
+	// 	specObject - link to docs - title etc , clause
+	// digital cineams DCI .com have a look and see what they have
+	// list of named documents etc
 	// XML parser name space etc - skip those
 	tc.Header("Validating file against ISXD specification", func(t Test) {
 		// ISXDs are stand alone and this should be checked against the disney one for tests
 
 		header := node.Partitions[0]
 		GenericCountPositions := make([]int, 0)
+		var footerPresent, RIPPresent bool
 		for i, part := range node.Partitions {
 
 			// check the essence in each partitoin?
 			switch part.Props.PartitionType {
 			case BodyPartition:
 			case GenericStreamPartition:
+				// extra check is counting the steamIDs
 				GenericCountPositions = append(GenericCountPositions, i)
+			case FooterPartition:
+				footerPresent = true
+			case RIPPartition:
+				RIPPresent = true
 			}
 		}
 
@@ -44,24 +52,93 @@ func validISXD(doc io.ReadSeeker, node *MXFNode, tc *TestContext) {
 
 			sequence := staticTrack.FindSymbol("060e2b34.027f0101.0d010101.01010f00")
 			t.Test("Checking that the static track points to a sequence", func() bool {
-				return t.Expect(staticTrack).ToNot(BeNil())
+				return t.Expect(sequence).ToNot(BeNil())
 			})
 			t.Test("Checking that the static track sequence has as many sequence children as partitions", func() bool {
 				return t.Expect(len(sequence.Children)).Shall(Equal(len(GenericCountPositions)))
 			})
-			// 060e2b34.027f0101.0d010101.01013a00
-			// check the header and footer for the static track
-			// get the static tracks and count the children
 
-			// calculate teh positions here
+			// calculate the positions here
+			//
+			// find footer and rip
+			endPos := len(node.Partitions)
+			if footerPresent {
+				endPos--
+			}
+			if RIPPresent {
+				endPos--
+			}
+
+			expectedParts := make([]int, len(GenericCountPositions))
+			for j := range expectedParts {
+				expectedParts[j] = endPos - len(expectedParts) + j
+			}
+			t.Test("Checking that the generic partition positions match the expected positions at the end of the file", func() bool {
+				return t.Expect(expectedParts).Shall(Equal(GenericCountPositions))
+			})
+
 		}
-		// check the order as well
+
+		//check the keys in each body
+		for _, part := range node.Partitions {
+
+			if part.Props.PartitionType == BodyPartition && len(part.Essence) > 0 {
+				allISXD := true
+
+				pattern := []string{}
+				patternTally := true
+				for _, e := range part.Essence {
+					ess := nodeToKLV(doc, e)
+
+					if fullNameMask(ess.Key, 13, 15) != "060e2b34.01020105.0e090502.017f017f" {
+						allISXD = false
+						break
+					}
+					fullKey := fullNameMask(ess.Key)
+					if len(pattern) != 0 {
+						if pattern[0] == fullKey {
+							patternTally = false
+						} else if patternTally {
+							pattern = append(pattern, fullKey)
+						}
+					} else {
+						pattern = append(pattern, fullKey)
+					}
+
+				}
+
+				t.Test("Checking that the only ISXD essence keys are found in body partitions", func() bool {
+					return t.Expect(allISXD).Shall(BeTrue(), "Other essence keys found")
+				})
+
+				if allISXD {
+
+					breakPoint := 0
+					for i, e := range part.Essence {
+						ess := nodeToKLV(doc, e)
+
+						if fullNameMask(ess.Key) != pattern[i%len(pattern)] {
+							breakPoint = e.Key.Start
+							break
+						}
+
+					}
+
+					t.Test("Checking that the content package order are regular throughout the essence stream", func() bool {
+						return t.Expect(breakPoint).Shall(Equal(0), fmt.Sprintf("irregular key found at byte offset %v", breakPoint))
+					})
+				}
+			}
+
+		}
 	})
 	// check the static track has points to every xml file
-
-	// generic partitions should be ordered after the rest of the essence
+	// shall have same namespace etc - leave for the moment
+	//060e2b34.01010109.06010104.06100000
+	//060e2b34.01010102.06010106.01000000
 
 	// ISXD seqeunce elements - read 2067 to find out what these are
+	// Look at the key and just go parsing
 
 	// check for frame wrapping - reread 379
 
@@ -69,6 +146,7 @@ func validISXD(doc io.ReadSeeker, node *MXFNode, tc *TestContext) {
 	// no custom wtapping
 
 	// no other types only data is allowed
+	// throw a wobbly if that is nothing
 	// is the essencd xml? - skip for MXF
 
 	// check the essence descriptor is present in the files
@@ -79,6 +157,17 @@ func validISXD(doc io.ReadSeeker, node *MXFNode, tc *TestContext) {
 	// check each metadata for that key
 	// not sure how to handle groups yet
 	// Data Essence Coding ID  must be  060E2B34.04010105.0E090606.00000000
+}
+
+// fullNameMask mask the speciifed bytes in a key as 7f
+func fullNameMask(key []byte, maskBytes ...int) string {
+	mid := make([]byte, len(key))
+	copy(mid, key)
+
+	for _, i := range maskBytes {
+		mid[i] = 0x7f
+	}
+	return fullName(mid)
 }
 
 func mrxDescriptiveMD(node *MXFNode, tc *TestContext) {

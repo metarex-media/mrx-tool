@@ -2,6 +2,7 @@
 workflow:
   rules:
     - if: $CI_COMMIT_BRANCH =="main"
+    - if: $CI_COMMIT_BRANCH =="dev"
     - if: $CI_COMMIT_BRANCH =="rc"
 stages:
   - check

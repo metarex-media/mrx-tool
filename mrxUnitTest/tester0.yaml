@@ -207,6 +207,7 @@ partitions:
             grouplabel: []
           children: []
       essence: []
+      indextable: null
       props:
         partitioncount: 0
         partitiontype: header
@@ -1086,6 +1087,7 @@ partitions:
           properties:
             esssymbol: 060e2b34.01020105.0e090502.017f017f
           children: []
+      indextable: null
       props:
         partitioncount: 1
         partitiontype: body
@@ -1146,6 +1148,7 @@ partitions:
           properties:
             esssymbol: 060e2b34.01020101.0f020101.017f007f
           children: []
+      indextable: null
       props:
         partitioncount: 2
         partitiontype: body
@@ -1206,6 +1209,7 @@ partitions:
           properties:
             esssymbol: 060e2b34.01020101.0f020101.017f007f
           children: []
+      indextable: null
       props:
         partitioncount: 3
         partitiontype: body
@@ -1451,6 +1455,7 @@ partitions:
             grouplabel: []
           children: []
       essence: []
+      indextable: null
       props:
         partitioncount: 4
         partitiontype: footer
@@ -1499,6 +1504,7 @@ partitions:
         end: 29865
       headermetadata: []
       essence: []
+      indextable: null
       props:
         partitioncount: 5
         partitiontype: RIP

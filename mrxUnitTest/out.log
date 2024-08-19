@@ -34,6 +34,84 @@ Running Testing partition 5 tests:
 	    Checking the this partition pointer matches the actual byte offset of the file
             Pass
 Ran 2 tests: Passed:2 , Failed: 0
+Running Testing partition 6 tests:
+	    Checking the previous partition pointer is the correct byte position
+            Pass
+	    Checking the this partition pointer matches the actual byte offset of the file
+            Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Testing partition 7 tests:
+	    Checking the previous partition pointer is the correct byte position
+            Pass
+	    Checking the this partition pointer matches the actual byte offset of the file
+            Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Testing partition 8 tests:
+	    Checking the previous partition pointer is the correct byte position
+            Pass
+	    Checking the this partition pointer matches the actual byte offset of the file
+            Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Testing partition 9 tests:
+	    Checking the previous partition pointer is the correct byte position
+            Pass
+	    Checking the this partition pointer matches the actual byte offset of the file
+            Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Testing partition 10 tests:
+	    Checking the previous partition pointer is the correct byte position
+            Pass
+	    Checking the this partition pointer matches the actual byte offset of the file
+            Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Testing partition 11 tests:
+	    Checking the previous partition pointer is the correct byte position
+            Pass
+	    Checking the this partition pointer matches the actual byte offset of the file
+            Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Testing partition 12 tests:
+	    Checking the previous partition pointer is the correct byte position
+            Pass
+	    Checking the this partition pointer matches the actual byte offset of the file
+            Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Testing partition 13 tests:
+	    Checking the previous partition pointer is the correct byte position
+            Pass
+	    Checking the this partition pointer matches the actual byte offset of the file
+            Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Testing partition 14 tests:
+	    Checking the previous partition pointer is the correct byte position
+            Pass
+	    Checking the this partition pointer matches the actual byte offset of the file
+            Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Testing partition 15 tests:
+	    Checking the previous partition pointer is the correct byte position
+            Pass
+	    Checking the this partition pointer matches the actual byte offset of the file
+            Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Testing partition 16 tests:
+	    Checking the previous partition pointer is the correct byte position
+            Pass
+	    Checking the this partition pointer matches the actual byte offset of the file
+            Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Testing partition 17 tests:
+	    Checking the previous partition pointer is the correct byte position
+            Pass
+	    Checking the this partition pointer matches the actual byte offset of the file
+            Pass
+Ran 2 tests: Passed:2 , Failed: 0
+Running Testing partition 18 tests:
+	    Checking the previous partition pointer is the correct byte position
+            Pass
+	    Checking the this partition pointer matches the actual byte offset of the file
+            Pass
+Ran 2 tests: Passed:2 , Failed: 0
 Running Testing random index partition tests:
 	    Checking the partition positions in the file match those in the supplied random index pack
             Pass
@@ -44,41 +122,23 @@ Running Checking the descriptive metadata is present in the file in the header t
 	    Checking the descriptive metadata points to a Text based framework
             Pass
 	    Checking the text based framework points to a text based object set
-            Pass
+            Fail!
+                Expected
+                    <*mrxUnitTest.Node | 0x0>: nil
+                not to be nil
 	    Checking the descriptive metadata points to a Text based framework
             Pass
 	    Checking the text based framework points to a text based object set
-            Pass
-Ran 5 tests: Passed:5 , Failed: 0
+            Fail!
+                Expected
+                    <*mrxUnitTest.Node | 0x0>: nil
+                not to be nil
+Ran 5 tests: Passed:3 , Failed: 2
 Running Checking the descriptive metadata is present in the file in the footer tests:
 	    Checking the descriptive metadata is present in the file 
             Pass
-	    Checking the descriptive metadata points to a Text based framework
-            Pass
-	    Checking the text based framework points to a text based object set
-            Pass
-	    Checking the descriptive metadata points to a Text based framework
-            Pass
-	    Checking the text based framework points to a text based object set
-            Pass
-Ran 5 tests: Passed:5 , Failed: 0
-Running Checking the generic partition values at byte offset 4046 tests:
-	    Checking the value of the HeaderByteCount is set to zero
-            Pass
-	    Checking the value of the IndexByteCount is set to zero
-            Pass
-	    Checking the value of the IndexSID is set to zero
-            Pass
-Ran 3 tests: Passed:3 , Failed: 0
-Running Checking the generic partition values at byte offset 4226 tests:
-	    Checking the value of the HeaderByteCount is set to zero
-            Pass
-	    Checking the value of the IndexByteCount is set to zero
-            Pass
-	    Checking the value of the IndexSID is set to zero
-            Pass
-Ran 3 tests: Passed:3 , Failed: 0
-Running Checking the generic partition values at byte offset 4404 tests:
+Ran 1 tests: Passed:1 , Failed: 0
+Running Checking the generic partition values at byte offset 3179926 tests:
 	    Checking the value of the HeaderByteCount is set to zero
             Pass
 	    Checking the value of the IndexByteCount is set to zero
@@ -92,10 +152,40 @@ Running Validating file against ISXD specification tests:
 	    Checking that the static track points to a sequence
             Pass
 	    Checking that the static track sequence has as many sequence children as partitions
-            Fail!
-                Expected
-                    <int>: 2
-                to equal
-                    <int>: 3
-Ran 3 tests: Passed:2 , Failed: 1
+            Pass
+	    Checking that the generic partition positions match the expected positions at the end of the file
+            Pass
+	    Checking that the only ISXD essence keys are found in body partitions
+            Pass
+	    Checking that the content package frame partitions are correct
+            Pass
+	    Checking that the only ISXD essence keys are found in body partitions
+            Pass
+	    Checking that the content package frame partitions are correct
+            Pass
+	    Checking that the only ISXD essence keys are found in body partitions
+            Pass
+	    Checking that the content package frame partitions are correct
+            Pass
+	    Checking that the only ISXD essence keys are found in body partitions
+            Pass
+	    Checking that the content package frame partitions are correct
+            Pass
+	    Checking that the only ISXD essence keys are found in body partitions
+            Pass
+	    Checking that the content package frame partitions are correct
+            Pass
+	    Checking that the only ISXD essence keys are found in body partitions
+            Pass
+	    Checking that the content package frame partitions are correct
+            Pass
+	    Checking that the only ISXD essence keys are found in body partitions
+            Pass
+	    Checking that the content package frame partitions are correct
+            Pass
+	    Checking that the only ISXD essence keys are found in body partitions
+            Pass
+	    Checking that the content package frame partitions are correct
+            Pass
+Ran 20 tests: Passed:20 , Failed: 0
 Test Failed

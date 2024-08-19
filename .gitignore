@@ -1,6 +1,6 @@
 *.exe
 #**/*.yaml
-
+tmp/*
 user/*
 megalinter-reports/*
 
