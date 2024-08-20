@@ -3,181 +3,181 @@ package mrxUnitTest
 import (
 	"fmt"
 	"io"
-	"os"
 
 	"github.com/metarex-media/mrx-tool/klv"
 	mxf2go "github.com/metarex-media/mxf-to-go"
-	. "github.com/onsi/gomega"
+	//	. "github.com/onsi/gomega"
 )
 
-func validISXD(doc io.ReadSeeker, node *MXFNode, tc *TestContext) {
-	// set up comments for each test and check how it goes
-	// 	specObject - link to docs - title etc , clause
-	// digital cineams DCI .com have a look and see what they have
-	// list of named documents etc
-	// XML parser name space etc - skip those
-	tc.Header("Validating file against ISXD specification", func(t Test) {
-		// ISXDs are stand alone and this should be checked against the disney one for tests
+/*
+	func validISXD(doc io.ReadSeeker, node *MXFNode, tc *TestContext) {
+		// set up comments for each test and check how it goes
+		// 	specObject - link to docs - title etc , clause
+		// digital cineams DCI .com have a look and see what they have
+		// list of named documents etc
+		// XML parser name space etc - skip those
+		tc.Header("Validating file against ISXD specification", func(t Test) {
+			// ISXDs are stand alone and this should be checked against the disney one for tests
 
-		header := node.Partitions[0]
-		GenericCountPositions := make([]int, 0)
-		var footerPresent, RIPPresent bool
-		for i, part := range node.Partitions {
+			header := node.Partitions[0]
+			GenericCountPositions := make([]int, 0)
+			var footerPresent, RIPPresent bool
+			for i, part := range node.Partitions {
 
-			// check the essence in each partitoin?
-			switch part.Props.PartitionType {
-			case BodyPartition:
-			case GenericStreamPartition:
-				// extra check is counting the steamIDs
-				GenericCountPositions = append(GenericCountPositions, i)
-			case FooterPartition:
-				footerPresent = true
-			case RIPPartition:
-				RIPPresent = true
-			}
-		}
-
-		if len(GenericCountPositions) > 0 {
-			// ibly run if there's any generic essence
-			var staticTrack *Node
-			var isxdDesc *Node
-			for _, child := range header.HeaderMetadata {
-				staticTrack = child.FindSymbol("060e2b34.027f0101.0d010101.01013a00")
-				isxdDesc = child.FindSymbol("060e2b34.02530105.0e090502.00000000")
-				if staticTrack != nil {
-					break
+				// check the essence in each partitoin?
+				switch part.Props.PartitionType {
+				case BodyPartition:
+				case GenericStreamPartition:
+					// extra check is counting the steamIDs
+					GenericCountPositions = append(GenericCountPositions, i)
+				case FooterPartition:
+					footerPresent = true
+				case RIPPartition:
+					RIPPresent = true
 				}
 			}
 
-			t.Test("Checking that the isxd descriptor is present in the header metadata", func() bool {
-				return t.Expect(isxdDesc).ShallNot(BeNil())
-			})
-
-			// decode the group
-			isxdDecode, err := DecodeGroupNode(doc, isxdDesc, header.Props.Primer)
-			fmt.Println(isxdDecode, err)
-			t.Test("Checking that the isxd descriptor is present in the header metadata", func() bool {
-				return t.Expect(isxdDecode["DataEssenceCoding"]).Shall(Equal(mxf2go.TAUID{
-					Data1: 101591860,
-					Data2: 1025,
-					Data3: 261,
-					Data4: mxf2go.TUInt8Array8{14, 9, 6, 6, 0, 0, 0, 0},
-				}))
-			})
-
-			t.Test("Checking that a static track is present in the header metadata", func() bool {
-				return t.Expect(staticTrack).ToNot(BeNil())
-			})
-
-			sequence := staticTrack.FindSymbol("060e2b34.027f0101.0d010101.01010f00")
-			t.Test("Checking that the static track points to a sequence", func() bool {
-				return t.Expect(sequence).ToNot(BeNil())
-			})
-			t.Test("Checking that the static track sequence has as many sequence children as partitions", func() bool {
-				return t.Expect(len(sequence.Children)).Shall(Equal(len(GenericCountPositions)))
-			})
-
-			// calculate the positions here
-			//
-			// find footer and rip
-			endPos := len(node.Partitions)
-			if footerPresent {
-				endPos--
-			}
-			if RIPPresent {
-				endPos--
-			}
-
-			expectedParts := make([]int, len(GenericCountPositions))
-			for j := range expectedParts {
-				expectedParts[j] = endPos - len(expectedParts) + j
-			}
-			t.Test("Checking that the generic partition positions match the expected positions at the end of the file", func() bool {
-				return t.Expect(expectedParts).Shall(Equal(GenericCountPositions))
-			})
-
-		}
-
-		//check the keys in each body
-		for _, part := range node.Partitions {
-
-			if part.Props.PartitionType == BodyPartition && len(part.Essence) > 0 {
-				allISXD := true
-
-				pattern := []string{}
-				patternTally := true
-				for _, e := range part.Essence {
-					ess := nodeToKLV(doc, e)
-
-					if fullNameMask(ess.Key, 13, 15) != "060e2b34.01020105.0e090502.017f017f" {
-						allISXD = false
+			if len(GenericCountPositions) > 0 {
+				// ibly run if there's any generic essence
+				var staticTrack *Node
+				var isxdDesc *Node
+				for _, child := range header.HeaderMetadata {
+					staticTrack = child.FindSymbol("060e2b34.027f0101.0d010101.01013a00")
+					isxdDesc = child.FindSymbol("060e2b34.02530105.0e090502.00000000")
+					if staticTrack != nil {
 						break
 					}
-					fullKey := fullNameMask(ess.Key)
-					if len(pattern) != 0 {
-						if pattern[0] == fullKey {
-							patternTally = false
-						} else if patternTally {
-							pattern = append(pattern, fullKey)
-						}
-					} else {
-						pattern = append(pattern, fullKey)
-					}
-
 				}
 
-				t.Test("Checking that the only ISXD essence keys are found in body partitions", func() bool {
-					return t.Expect(allISXD).Shall(BeTrue(), "Other essence keys found")
+				t.Test("Checking that the isxd descriptor is present in the header metadata", func() bool {
+					return t.Expect(isxdDesc).ShallNot(BeNil())
 				})
 
-				if allISXD {
+				// decode the group
+				isxdDecode, err := DecodeGroupNode(doc, isxdDesc, header.Props.Primer)
+				fmt.Println(isxdDecode, err)
+				t.Test("Checking that the isxd descriptor is present in the header metadata", func() bool {
+					return t.Expect(isxdDecode["DataEssenceCoding"]).Shall(Equal(mxf2go.TAUID{
+						Data1: 101591860,
+						Data2: 1025,
+						Data3: 261,
+						Data4: mxf2go.TUInt8Array8{14, 9, 6, 6, 0, 0, 0, 0},
+					}))
+				})
 
-					breakPoint := 0
-					for i, e := range part.Essence {
+				t.Test("Checking that a static track is present in the header metadata", func() bool {
+					return t.Expect(staticTrack).ToNot(BeNil())
+				})
+
+				sequence := staticTrack.FindSymbol("060e2b34.027f0101.0d010101.01010f00")
+				t.Test("Checking that the static track points to a sequence", func() bool {
+					return t.Expect(sequence).ToNot(BeNil())
+				})
+				t.Test("Checking that the static track sequence has as many sequence children as partitions", func() bool {
+					return t.Expect(len(sequence.Children)).Shall(Equal(len(GenericCountPositions)))
+				})
+
+				// calculate the positions here
+				//
+				// find footer and rip
+				endPos := len(node.Partitions)
+				if footerPresent {
+					endPos--
+				}
+				if RIPPresent {
+					endPos--
+				}
+
+				expectedParts := make([]int, len(GenericCountPositions))
+				for j := range expectedParts {
+					expectedParts[j] = endPos - len(expectedParts) + j
+				}
+				t.Test("Checking that the generic partition positions match the expected positions at the end of the file", func() bool {
+					return t.Expect(expectedParts).Shall(Equal(GenericCountPositions))
+				})
+
+			}
+
+			//check the keys in each body
+			for _, part := range node.Partitions {
+
+				if part.Props.PartitionType == BodyPartition && len(part.Essence) > 0 {
+					allISXD := true
+
+					pattern := []string{}
+					patternTally := true
+					for _, e := range part.Essence {
 						ess := nodeToKLV(doc, e)
 
-						if fullNameMask(ess.Key) != pattern[i%len(pattern)] {
-							breakPoint = e.Key.Start
+						if fullNameMask(ess.Key, 13, 15) != "060e2b34.01020105.0e090502.017f017f" {
+							allISXD = false
 							break
+						}
+						fullKey := fullNameMask(ess.Key)
+						if len(pattern) != 0 {
+							if pattern[0] == fullKey {
+								patternTally = false
+							} else if patternTally {
+								pattern = append(pattern, fullKey)
+							}
+						} else {
+							pattern = append(pattern, fullKey)
 						}
 
 					}
 
-					t.Test("Checking that the content package order are regular throughout the essence stream", func() bool {
-						return t.Expect(breakPoint).Shall(Equal(0), fmt.Sprintf("irregular key found at byte offset %v", breakPoint))
+					t.Test("Checking that the only ISXD essence keys are found in body partitions", func() bool {
+						return t.Expect(allISXD).Shall(BeTrue(), "Other essence keys found")
 					})
+
+					if allISXD {
+
+						breakPoint := 0
+						for i, e := range part.Essence {
+							ess := nodeToKLV(doc, e)
+
+							if fullNameMask(ess.Key) != pattern[i%len(pattern)] {
+								breakPoint = e.Key.Start
+								break
+							}
+
+						}
+
+						t.Test("Checking that the content package order are regular throughout the essence stream", func() bool {
+							return t.Expect(breakPoint).Shall(Equal(0), fmt.Sprintf("irregular key found at byte offset %v", breakPoint))
+						})
+					}
 				}
+
 			}
+		})
+		// check the static track has points to every xml file
+		// shall have same namespace etc - leave for the moment
+		//060e2b34.01010109.06010104.06100000
+		//060e2b34.01010102.06010106.01000000
 
-		}
-	})
-	// check the static track has points to every xml file
-	// shall have same namespace etc - leave for the moment
-	//060e2b34.01010109.06010104.06100000
-	//060e2b34.01010102.06010106.01000000
+		// ISXD seqeunce elements - read 2067 to find out what these are
+		// Look at the key and just go parsing
 
-	// ISXD seqeunce elements - read 2067 to find out what these are
-	// Look at the key and just go parsing
+		// check for frame wrapping - reread 379
 
-	// check for frame wrapping - reread 379
+		// no clip wrapping
+		// no custom wtapping
 
-	// no clip wrapping
-	// no custom wtapping
+		// no other types only data is allowed
+		// throw a wobbly if that is nothing
+		// is the essencd xml? - skip for MXF
 
-	// no other types only data is allowed
-	// throw a wobbly if that is nothing
-	// is the essencd xml? - skip for MXF
+		// check the essence descriptor is present in the files
+		// 060e2b34.04010105.0e090607.01010103
 
-	// check the essence descriptor is present in the files
-	// 060e2b34.04010105.0e090607.01010103
-
-	// IXSD dataessenceDecriptor - suclass of hte generic data essence descriptor
-	// 060e2b34.01010101.01011502.00000000
-	// check each metadata for that key
-	// not sure how to handle groups yet
-	// Data Essence Coding ID  must be  060E2B34.04010105.0E090606.00000000
-}
-
+		// IXSD dataessenceDecriptor - suclass of hte generic data essence descriptor
+		// 060e2b34.01010101.01011502.00000000
+		// check each metadata for that key
+		// not sure how to handle groups yet
+		// Data Essence Coding ID  must be  060E2B34.04010105.0E090606.00000000
+	}
+*/
 func DecodeGroupNode(doc io.ReadSeeker, node *Node, primer map[string]string) (map[string]any, error) {
 	groupKLV := nodeToKLV(doc, node)
 
@@ -214,7 +214,7 @@ func DecodeGroup(group *klv.KLV, primer map[string]string) (map[string]any, erro
 			key = primer[key]
 		}
 		decodeF, ok := decoders.Group["urn:smpte:ul:"+key]
-		fmt.Println(ok, key, klength, group.Value[pos:pos+dec.keyLen])
+
 		if ok {
 
 			b, _ := decodeF.Decode(group.Value[pos+dec.keyLen+dec.lengthLen : pos+dec.keyLen+dec.lengthLen+length])
@@ -239,6 +239,7 @@ func fullNameMask(key []byte, maskBytes ...int) string {
 	return fullName(mid)
 }
 
+/*
 func mrxDescriptiveMD(node *MXFNode, tc *TestContext) {
 
 	//	fmt.Println(node.FindSymbols(mxf2go.LabelsRegister[mxf2go.DescriptiveMetadataTrack].UL))
@@ -274,14 +275,14 @@ func mrxDescriptiveMD(node *MXFNode, tc *TestContext) {
 					tester.segment.Test("Checking the descriptive next bit is present in the file ", func() bool {
 						return tester.Expect(resFramework).ToNot(BeNil())
 					})*/
-				//	resIds := p.FindSymbols(resFramework, mrx2go.MetarexID, mrx2go.ExtraID)
+//	resIds := p.FindSymbols(resFramework, mrx2go.MetarexID, mrx2go.ExtraID)
 
-				// check the shalls,
-				// then check the behaviour
-				//	tester.Expect(resTrack).ToNot(BeNil())
-				//	tester.Expect(len(resIds)).ToNot(BeNil())
-				//	tester.Expect(resFramework).
-
+// check the shalls,
+// then check the behaviour
+//	tester.Expect(resTrack).ToNot(BeNil())
+//	tester.Expect(len(resIds)).ToNot(BeNil())
+//	tester.Expect(resFramework).
+/*
 			})
 		}
 	}
@@ -334,12 +335,12 @@ func mrxEmbeddedTimedDocuments(doc io.ReadSeeker, node *MXFNode, tc *TestContext
 					7.1
 						- look for the descriptive metadata elements
 
-				*/
+*/
 
-				// desc seatch - get the footer - header if not found
-				// get the preface - URN for the preface
-				// search for the desriptive set - which is not currently included.
-
+// desc seatch - get the footer - header if not found
+// get the preface - URN for the preface
+// search for the desriptive set - which is not currently included.
+/*
 			})
 		}
 	}
@@ -376,8 +377,9 @@ func ASTTest(f io.ReadSeeker, fout io.Writer) error {
 
 
 		any node functions to include
-	*/
-	// run the partition tests
+*/
+// run the partition tests
+/*
 	fo, _ := os.Create("out.log")
 	// @TODO create a context for running tests
 	tc := NewTestContext(fo)
@@ -394,7 +396,9 @@ func ASTTest(f io.ReadSeeker, fout io.Writer) error {
 	return nil
 
 }
+*/
 
+/*
 func mrxPartLayout(stream io.ReadSeeker, node *MXFNode, tc *TestContext) {
 
 	parts := node.Partitions
@@ -445,7 +449,7 @@ func mrxPartLayout(stream io.ReadSeeker, node *MXFNode, tc *TestContext) {
 			})
 		}
 	}
-}
+}*/
 
 func nodeToKLV(stream io.ReadSeeker, node *Node) *klv.KLV {
 	stream.Seek(int64(node.Key.Start), 0)

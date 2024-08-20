@@ -176,7 +176,6 @@ func (l *layout) ripHandle(rip *klv.KLV) {
 // TestRandomIndexPack compares the index pack in the file with what the random index pack should be
 // changes in total byte count and SID of partitions are logged in the RIP
 func (c *CompleteTest) TestRandomIndexPack(actualRip, declaredRip []RIP) {
-	c.segment.Test("Checking the partition positions in the file match those in the supplied random index pack", func() bool {
-		return c.Expect(actualRip).To(Equal(declaredRip), "The generated index pack did not match the file index Pack")
-	})
+	c.segment.Test("Checking the partition positions in the file match those in the supplied random index pack", SpecDetails{},
+		c.Expect(actualRip).To(Equal(declaredRip), "The generated index pack did not match the file index Pack"))
 }

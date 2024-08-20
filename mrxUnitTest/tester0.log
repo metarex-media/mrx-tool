@@ -1,41 +1,43 @@
 Running testing mxf file structure tests:
-	    Checking that the generic partition positions match the expected positions at the end of the fileRDD-47:20185.4shall3
-            Pass
+	    RDD-47:2018,5.4,shall,3: Checking that the generic partition positions match the expected positions at the end of the file
+            Check 0 Pass
 Ran 1 tests: Passed:1 , Failed: 0
 Running testing header header partition at offset 0 tests:
-	    Checking that the isxd descriptor is present in the header metadataRDD-47:20189.2shall1
-            Pass
-	    Checking that the data essence coding filed is present in the isxd descriptorRDD-47:20189.3shall1
-            Pass
+	    RDD-47:2018,9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
+            Check 0 Pass
+	    RDD-47:2018,9.3,shall,1: Checking that the data essence coding filed is present in the isxd descriptor
+            Check 0 Pass
+            Check 1 Pass
 Ran 2 tests: Passed:2 , Failed: 0
 Running testing essence body partition at offset 2243 tests:
-	    Checking that the only ISXD essence keys are found in body partitionsRDD-47:20187.5shall1
-            Pass
-	    Checking that the content package order are regular throughout the essence streamRDD-47:20187.5shall1
-            Pass
+	    RDD-47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
+            Check 0 Pass
+	    RDD-47:2018,7.5,shall,1: Checking that the content package order are regular throughout the essence stream
+            Check 0 Pass
 Ran 2 tests: Passed:2 , Failed: 0
 Running testing essence body partition at offset 21103 tests:
-	    Checking that the only ISXD essence keys are found in body partitionsRDD-47:20187.5shall1
-            Fail!
+	    RDD-47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
+            Check 0Fail!
                 Other essence keys found
                 Expected
                     <bool>: false
                 to be true
 Ran 1 tests: Passed:0 , Failed: 1
 Running testing essence body partition at offset 21535 tests:
-	    Checking that the only ISXD essence keys are found in body partitionsRDD-47:20187.5shall1
-            Fail!
+	    RDD-47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
+            Check 0Fail!
                 Other essence keys found
                 Expected
                     <bool>: false
                 to be true
 Ran 1 tests: Passed:0 , Failed: 1
 Running testing header footer partition at offset 27541 tests:
-	    Checking that the isxd descriptor is present in the header metadataRDD-47:20189.2shall1
-            Pass
-	    Checking that the data essence coding filed is present in the isxd descriptorRDD-47:20189.3shall1
-            Pass
+	    RDD-47:2018,9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
+            Check 0 Pass
+	    RDD-47:2018,9.3,shall,1: Checking that the data essence coding filed is present in the isxd descriptor
+            Check 0 Pass
+            Check 1 Pass
 Ran 2 tests: Passed:2 , Failed: 0
-Running testing mxf file structure tests:
+Running extra mxf tests tests:
 Ran 0 tests: Passed:0 , Failed: 0
 Test Failed

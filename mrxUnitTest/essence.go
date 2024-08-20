@@ -128,10 +128,10 @@ func (c *CompleteTest) TestEssenceKeyFramePattern(pattern pattern, keys [][]byte
 		}
 	}
 
-	c.segment.Test("Checking the essence keys do not change order", func() bool {
-		return c.Expect(allMatch).To(BeTrue(),
-			fmt.Sprintf("The essence keys deviate from their original pattern of %s at the %v key", pattern.pattern, missPoint))
-	})
+	c.segment.Test("Checking the essence keys do not change order", SpecDetails{},
+		c.Expect(allMatch).To(BeTrue(),
+			fmt.Sprintf("The essence keys deviate from their original pattern of %s at the %v key", pattern.pattern, missPoint)),
+	)
 
 	// c.t.ExpectAllkeysPresent.To(BeTrue)
 	/*
@@ -198,10 +198,10 @@ func (c *CompleteTest) TestEssenceKeyLayouts(pattern pattern) {
 			}*/
 	}
 
-	c.segment.Test("Checking the metarex essence keys have the correct element number and count", func() bool {
-		return c.Expect(fail).To(BeFalse(),
-			errMessage)
-	})
+	c.segment.Test("Checking the metarex essence keys have the correct element number and count", SpecDetails{},
+		c.Expect(fail).To(BeFalse(),
+			errMessage),
+	)
 }
 
 // TestEssenceKeyPartitionType checks the essence keys are within the right partition.
@@ -240,10 +240,10 @@ func (c *CompleteTest) TestEssenceKeyPartitionType(pattern pattern, partition st
 		}
 	}
 
-	c.segment.Test("Checking the metarex essence keys are located in the correct partition types", func() bool {
-		return c.Expect(fail).To(BeFalse(),
-			errMessage)
-	})
+	c.segment.Test("Checking the metarex essence keys are located in the correct partition types", SpecDetails{},
+		c.Expect(fail).To(BeFalse(),
+			errMessage),
+	)
 
 }
 

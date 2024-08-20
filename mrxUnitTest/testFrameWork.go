@@ -70,8 +70,8 @@ func newTester(dest io.Writer, segmentHeader string) *CompleteTest {
 
 }
 
-func (c *CompleteTest) Test(message string, assert func() bool) {
-	c.segment.Test(message, assert)
+func (c *CompleteTest) Test(message string, specDetail SpecDetails, asserts ...bool) {
+	c.segment.Test(message, specDetail, asserts...)
 }
 
 func (c *CompleteTest) Result() {
@@ -144,6 +144,7 @@ type CompleteTest struct {
 }
 
 func (ct CompleteTest) Expect(actual interface{}, extra ...interface{}) Assertions {
+
 	return ct.gomegaExpect.Expect(actual, extra...)
 }
 
@@ -158,7 +159,24 @@ type Expecter interface {
 }
 
 type Tester interface {
-	Test(message string, assert func() bool)
+	Test(message string, specDetail SpecDetails, asserts ...bool)
+}
+
+// SpecDetails contains the information about the specification
+// that made the struct
+type SpecDetails struct {
+	DocName, Section, Command string
+	CommandCount              int
+}
+
+func NewSpec(docName, section, command string, commandCount int) SpecDetails {
+	// is there a parent required
+	return SpecDetails{DocName: docName, Section: section, Command: command, CommandCount: commandCount}
+}
+
+func (s SpecDetails) String() string {
+	// is there a parent required
+	return fmt.Sprintf("%s,%s,%s,%v", s.DocName, s.Section, s.Command, s.CommandCount)
 }
 
 // wrap the results for later
@@ -188,16 +206,28 @@ type segmentTest struct {
 }
 
 // Test runs the
-func (s *segmentTest) Test(message string, assert func() bool) {
+func (s *segmentTest) Test(message string, specDetail SpecDetails, asserts ...bool) {
+	// update to catch the test without trying the function approach.
+	// want multiple bits each conuting as a test
 	s.testCount++
 	gap := "    "
-	s.testBuffer.Write([]byte(fmt.Sprintf("	%s%v\n", gap, message)))
-	if assert() {
-		s.testBuffer.Write([]byte(fmt.Sprintf("        %sPass\n", gap)))
-	} else {
-		s.failCount++
-		s.testBuffer.Write([]byte(fmt.Sprintf("        %sFail!", gap)))
-		s.testBuffer.Write([]byte(fmt.Sprintf("%v\n", strings.ReplaceAll(<-s.errChannel, "\n", "\n            "+gap))))
+
+	s.testBuffer.Write([]byte(fmt.Sprintf("	%s%s: %v\n", gap, specDetail, message)))
+	for i, assert := range asserts {
+		if assert {
+			s.testBuffer.Write([]byte(fmt.Sprintf("        %sCheck %v Pass\n", gap, i)))
+		} else {
+			s.failCount++
+			s.testBuffer.Write([]byte(fmt.Sprintf("        %sCheck %vFail!", gap, i)))
+			select {
+			case err := <-s.errChannel:
+				//	s.testBuffer.Write([]byte(fmt.Sprintf("%v\n", strings.ReplaceAll(<-s.errChannel, "\n", "\n            "+gap))))
+				s.testBuffer.Write([]byte(fmt.Sprintf("%v\n", strings.ReplaceAll(err, "\n", "\n            "+gap))))
+			default:
+				panic("Gomega assertion not used for finding errors, aborting program, Must use syntax of t.Expect(val).Shall(BeNil())")
+			}
+
+		}
 	}
 }
 

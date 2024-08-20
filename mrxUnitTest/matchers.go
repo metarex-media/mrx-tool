@@ -28,11 +28,9 @@ type groupMatcher struct {
 // are used.
 func HeaderContainsGroup(tester Test, UL string, partition []byte) {
 
-	tester.Test("Checking if the partition contains the group "+UL,
-		func() bool {
-			return tester.Expect(partition).To(&groupMatcher{groupID: "060e2b34.027f0101.0d010201.01050100"},
-				"the group was not found")
-		},
+	tester.Test("Checking if the partition contains the group "+UL, SpecDetails{},
+		tester.Expect(partition).To(&groupMatcher{groupID: "060e2b34.027f0101.0d010201.01050100"},
+			"the group was not found"),
 	)
 }
 

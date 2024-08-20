@@ -20,27 +20,28 @@ func (i ISXD) TestHeader(doc io.ReadSeeker, header *PartitionNode) func(t Test) 
 	return func(t Test) {
 		var isxdDesc *Node
 		for _, child := range header.HeaderMetadata {
-			isxdDesc = child.FindSymbol("060e2b34.02530105.0e090502.00000000")
+			isxdDesc = child.FindUL("060e2b34.02530105.0e090502.00000000")
 			if isxdDesc != nil {
 				break
 			}
 		}
 		// rdd-47:2009/11.5.3/shall/4
-		t.Test("Checking that the isxd descriptor is present in the header metadata"+genSpec(i.DocName(), "9.2", "shall", 1), func() bool {
-			return t.Expect(isxdDesc).ShallNot(BeNil())
-		})
+		t.Test("Checking that the isxd descriptor is present in the header metadata", NewSpec(i.DocName(), "9.2", "shall", 1),
+			t.Expect(isxdDesc).ShallNot(BeNil()),
+		)
+
 		if isxdDesc != nil {
 			// decode the group
 			isxdDecode, err := DecodeGroupNode(doc, isxdDesc, header.Props.Primer)
-			fmt.Println(isxdDecode, err)
-			t.Test("Checking that the data essence coding filed is present in the isxd descriptor"+genSpec(i.DocName(), "9.3", "shall", 1), func() bool {
-				return t.Expect(isxdDecode["DataEssenceCoding"]).Shall(Equal(mxf2go.TAUID{
+
+			t.Test("Checking that the data essence coding filed is present in the isxd descriptor", NewSpec(i.DocName(), "9.3", "shall", 1),
+				t.Expect(err).Shall(BeNil()),
+				t.Expect(isxdDecode["DataEssenceCoding"]).Shall(Equal(mxf2go.TAUID{
 					Data1: 101591860,
 					Data2: 1025,
 					Data3: 261,
 					Data4: mxf2go.TUInt8Array8{14, 9, 6, 6, 0, 0, 0, 0},
-				}))
-			})
+				})))
 		}
 
 		// handle the static track sections of the path
@@ -59,26 +60,26 @@ func (i ISXD) TestHeader(doc io.ReadSeeker, header *PartitionNode) func(t Test) 
 			var staticTrack *Node
 
 			for _, child := range header.HeaderMetadata {
-				staticTrack = child.FindSymbol("060e2b34.027f0101.0d010101.01013a00")
+				staticTrack = child.FindUL("060e2b34.027f0101.0d010101.01013a00")
 				if staticTrack != nil {
 					break
 				}
 			}
 
-			t.Test("Checking that a static track is present in the header metadata "+genSpec(i.DocName(), "5.4", "shall", 1), func() bool {
-				return t.Expect(staticTrack).ToNot(BeNil())
-			})
+			t.Test("Checking that a static track is present in the header metadata ", NewSpec(i.DocName(), "5.4", "shall", 1),
+				t.Expect(staticTrack).ToNot(BeNil()),
+			)
 
 			if staticTrack != nil {
 
-				sequence := staticTrack.FindSymbol("060e2b34.027f0101.0d010101.01010f00")
-				t.Test("Checking that the static track points to a sequence"+genSpec(i.DocName(), "5.4", "shall", 2), func() bool {
-					return t.Expect(sequence).ToNot(BeNil())
-				})
+				sequence := staticTrack.FindUL("060e2b34.027f0101.0d010101.01010f00")
+				t.Test("Checking that the static track points to a sequence", NewSpec(i.DocName(), "5.4", "shall", 2),
+					t.Expect(sequence).ToNot(BeNil()),
+				)
 
-				t.Test("Checking that the static track sequence has as many sequence children as partitions"+genSpec(i.DocName(), "5.4", "shall", 2), func() bool {
-					return t.Expect(len(sequence.Children)).Shall(Equal(len(GenericCountPositions)))
-				})
+				t.Test("Checking that the static track sequence has as many sequence children as partitions", NewSpec(i.DocName(), "5.4", "shall", 2),
+					t.Expect(len(sequence.Children)).Shall(Equal(len(GenericCountPositions))),
+				)
 			}
 		}
 
@@ -116,9 +117,9 @@ func (i ISXD) TestEssence(doc io.ReadSeeker, header *PartitionNode) func(t Test)
 
 			}
 
-			t.Test("Checking that the only ISXD essence keys are found in body partitions"+genSpec(i.DocName(), "7.5", "shall", 1), func() bool {
-				return t.Expect(allISXD).Shall(BeTrue(), "Other essence keys found")
-			})
+			t.Test("Checking that the only ISXD essence keys are found in body partitions", NewSpec(i.DocName(), "7.5", "shall", 1),
+				t.Expect(allISXD).Shall(BeTrue(), "Other essence keys found"),
+			)
 
 			if allISXD {
 
@@ -133,12 +134,31 @@ func (i ISXD) TestEssence(doc io.ReadSeeker, header *PartitionNode) func(t Test)
 
 				}
 
-				t.Test("Checking that the content package order are regular throughout the essence stream"+genSpec(i.DocName(), "7.5", "shall", 1), func() bool {
-					return t.Expect(breakPoint).Shall(Equal(0), fmt.Sprintf("irregular key found at byte offset %v", breakPoint))
-				})
+				t.Test("Checking that the content package order are regular throughout the essence stream", NewSpec(i.DocName(), "7.5", "shall", 1),
+					t.Expect(breakPoint).Shall(Equal(0), fmt.Sprintf("irregular key found at byte offset %v", breakPoint)),
+				)
 			}
 		} else if header.Props.PartitionType == GenericStreamPartition {
 			// check it passes 2057 rules
+			// call 2057 properties?
+			// which is then a 410
+			headerKLV := nodeToKLV(doc, &Node{Key: header.Key, Length: header.Length, Value: header.Value})
+			mp := partitionExtract(headerKLV)
+
+			t.Test("Checking that the index byte count for the generic header is 0", NewSpec(i.DocName(), "7.5", "shall", 1),
+				t.Expect(mp.IndexByteCount).Shall(Equal(uint64(0)), "index byte offset not 0"),
+			)
+
+			t.Test("Checking that the index SID for the generic header is 0", NewSpec(i.DocName(), "7.5", "shall", 1),
+				t.Expect(mp.IndexSID).Shall(Equal(uint32(0)), "index SID not 0"),
+			)
+			// check for index table and header metadata being 0
+			// indexSID is set to 0
+			// the key has got to be the 410 key
+
+			// key matches value of
+			// 11 / 12 can be masked
+			//060e2b34.0101010c.0d010509.01000000
 		}
 	}
 }
@@ -181,8 +201,8 @@ func (i ISXD) TestStructure(doc io.ReadSeeker, mxf *MXFNode) func(t Test) {
 		for j := range expectedParts {
 			expectedParts[j] = endPos - len(expectedParts) + j
 		}
-		t.Test("Checking that the generic partition positions match the expected positions at the end of the file"+genSpec(i.DocName(), "5.4", "shall", 3), func() bool {
-			return t.Expect(expectedParts).Shall(Equal(GenericCountPositions))
-		})
+		t.Test("Checking that the generic partition positions match the expected positions at the end of the file", NewSpec(i.DocName(), "5.4", "shall", 3),
+			t.Expect(expectedParts).Shall(Equal(GenericCountPositions)),
+		)
 	}
 }

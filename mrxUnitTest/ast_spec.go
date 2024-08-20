@@ -46,11 +46,6 @@ testing header
 
 */
 
-func genSpec(docName, sections, command string, commandPosition int) string {
-	// is there a parent required
-	return fmt.Sprintf("%s%s%s%v", docName, sections, command, commandPosition)
-}
-
 // Specification are the test functions for testing an MXF file to
 // a specification
 type Specification interface {
@@ -85,6 +80,8 @@ func MRXTest(doc io.ReadSeeker, w io.Writer, specifications ...Specification) er
 	tc := NewTestContext(w)
 	defer tc.EndTest()
 
+	// load in default of 377 checker etc
+
 	tc.structureTest(doc, ast, specifications...)
 
 	for _, part := range ast.Partitions {
@@ -115,8 +112,7 @@ func (tc *TestContext) structureTest(doc io.ReadSeeker, mxf *MXFNode, specificat
 }
 
 func (tc *TestContext) extraTest(doc io.ReadSeeker, mxf *MXFNode, specifications ...Specification) {
-
-	tc.Header("testing mxf file structure", func(t Test) {
+	tc.Header("extra mxf tests", func(t Test) {
 		for _, spec := range specifications {
 			spec.TestExtra(doc, mxf)(t)
 		}
@@ -126,12 +122,9 @@ func (tc *TestContext) extraTest(doc io.ReadSeeker, mxf *MXFNode, specifications
 func (tc *TestContext) headerTest(doc io.ReadSeeker, header *PartitionNode, specifications ...Specification) {
 
 	tc.Header(fmt.Sprintf("testing header %s partition at offset %v", header.Props.PartitionType, header.Key.Start), func(t Test) {
-
 		for _, spec := range specifications {
-
 			spec.TestHeader(doc, header)(t)
 		}
-
 	})
 }
 

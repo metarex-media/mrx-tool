@@ -38,27 +38,9 @@ type PartitionNode struct {
 	Props              PartitionProperties
 }
 
-/*
-example expressoin whant [label:partition,symbol:footer]
-*/
-func (n *Node) Search(expr string) *Node {
-
-	// multiple search expressions in one string
-	/*
-		split the string to search for the first if found
-		search the children for the remaining nodes
-
-		repeat the sting break up each iteration.
-
-		or nest it as search params []string
-
-	*/
-	return nil
-}
-
-// FindSymbol returns the first Node with that symbol found in the
+// FindUL returns the first Node with that symbol found in the
 // Node Tree. Depth first search
-func (n *Node) FindSymbol(sym string) *Node {
+func (n *Node) FindUL(sym string) *Node {
 	if n == nil {
 		return nil
 	}
@@ -66,12 +48,12 @@ func (n *Node) FindSymbol(sym string) *Node {
 
 		if n != nil {
 			if n.Properties != nil {
-				if n.Properties.Symbol() == sym {
+				if n.Properties.UL() == sym {
 					return n
 				}
 
 				// check the childrens children
-				found := n.FindSymbol(sym)
+				found := n.FindUL(sym)
 				if found != nil {
 					return found
 				}
@@ -82,9 +64,9 @@ func (n *Node) FindSymbol(sym string) *Node {
 	return nil
 }
 
-// FindSymbol returns all the Nodes with the symbol(s) found in the
+// FindSymbol returns all the Nodes with the universal label(s) found in the
 // Node Tree.
-func (n *Node) FindSymbols(sym ...string) []*Node {
+func (n *Node) FindULs(sym ...string) []*Node {
 
 	if n == nil {
 		return nil
@@ -96,12 +78,12 @@ func (n *Node) FindSymbols(sym ...string) []*Node {
 
 		if n != nil {
 			if n.Properties != nil {
-				if slices.Contains(sym, n.Properties.Symbol()) {
+				if slices.Contains(sym, n.Properties.UL()) {
 					foundNodes = append(foundNodes, n)
 				}
 
 				// check the childrens children
-				found := n.FindSymbols(sym...)
+				found := n.FindULs(sym...)
 				if found != nil {
 					foundNodes = append(foundNodes, found...)
 				}
@@ -161,7 +143,7 @@ type Position struct {
 type MXFProperty interface {
 	// symbol returns the MXF UL associated with the node.
 	// if there is one
-	Symbol() string
+	UL() string
 	//ID returns the ID associated with the property
 	ID() string
 	// Returns the type of that node
@@ -170,7 +152,7 @@ type MXFProperty interface {
 }
 
 type EssenceProperties struct {
-	EssSymbol string
+	EssUL string
 }
 
 func (e EssenceProperties) ID() string {
@@ -186,14 +168,14 @@ func (e EssenceProperties) Label() []string {
 }
 
 // symbol returns the partition type
-func (e EssenceProperties) Symbol() string {
-	return e.EssSymbol
+func (e EssenceProperties) UL() string {
+	return e.EssUL
 }
 
 type GroupProperties struct {
-	UUID       mxf2go.TUUID
-	UL         string
-	GroupLabel []string
+	UUID           mxf2go.TUUID
+	UniversalLabel string
+	GroupLabel     []string
 }
 
 func (gp GroupProperties) ID() string {
@@ -204,8 +186,8 @@ func (gp GroupProperties) ID() string {
 	return fullUUID
 }
 
-func (gp GroupProperties) Symbol() string {
-	return gp.UL
+func (gp GroupProperties) UL() string {
+	return gp.UniversalLabel
 }
 
 func (gp GroupProperties) Label() []string {
@@ -414,7 +396,7 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int) (*MXFNode, error)
 						}
 
 						// assign the generic name as the key
-						flushNode.Properties = GroupProperties{UL: fullName(flush.Key)}
+						flushNode.Properties = GroupProperties{UniversalLabel: fullName(flush.Key)}
 						// find the groups first
 						pos := 0
 						for pos < len(flush.Value) {
@@ -548,7 +530,7 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int) (*MXFNode, error)
 					Key:        Position{Start: offset, End: offset + len(klvItem.Key)},
 					Length:     Position{Start: offset + len(klvItem.Key), End: offset + len(klvItem.Key) + len(klvItem.Length)},
 					Value:      Position{Start: offset + len(klvItem.Key) + len(klvItem.Length), End: offset + klvItem.TotalLength()},
-					Properties: EssenceProperties{EssSymbol: name},
+					Properties: EssenceProperties{EssUL: name},
 					Children:   make([]*Node, 0),
 				}
 
