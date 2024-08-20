@@ -20,9 +20,11 @@ func TestAST(t *testing.T) {
 		//	streamer, _ := os.Open(mrx)
 		f, _ := os.Open(mrx)
 		//	klvChan := make(chan *klv.KLV, 1000)
-		fout, _ := os.Create(fmt.Sprintf("tester%v.yaml", i))
+		//		fout, _ := os.Create(fmt.Sprintf("tester%v.yaml", i))
+		flog, _ := os.Create(fmt.Sprintf("tester%v.log", i))
 		// _, genErr := MakeAST(f, fout, klvChan, 10)
-		genErr := ASTTest(f, fout)
+		//	genErr := ASTTest(f, fout)
+		genErr := MRXTest(f, flog, ISXD{})
 		// expect the yaml generated to match the hash
 		// not have any computational diffrences
 

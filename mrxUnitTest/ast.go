@@ -13,7 +13,6 @@ import (
 	mxf2go "github.com/metarex-media/mxf-to-go"
 
 	"golang.org/x/sync/errgroup"
-	"gopkg.in/yaml.v3"
 )
 
 // Node is a object in the abstact syntax tree
@@ -284,7 +283,7 @@ type refAndChild struct {
 }
 
 // inlcude the logger? if there's any errors flush them - discard ifo for unkown keys fro the moment
-func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (*MXFNode, error) { // wg *sync.WaitGroup, buffer chan packet, errChan chan error) {
+func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int) (*MXFNode, error) { // wg *sync.WaitGroup, buffer chan packet, errChan chan error) {
 
 	// use errs to handle errors while runnig concurrently
 	errs, _ := errgroup.WithContext(context.Background())
@@ -570,9 +569,9 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 	// count of partitions
 	errs.Wait()
 
-	b, _ := yaml.Marshal(mxf)
-	dest.Write(b)
-	fmt.Println(mxf)
+	//b, _ := yaml.Marshal(mxf)
+	//dest.Write(b)
+	//fmt.Println(mxf)
 	// assign after the yaml to stop endless recursion
 	for _, p := range mxf.Partitions {
 		p.Parent = mxf
