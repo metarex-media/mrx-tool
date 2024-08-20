@@ -31,6 +31,7 @@ type MXFNode struct {
 }
 
 type PartitionNode struct {
+	Parent             *MXFNode
 	Key, Length, Value Position
 	HeaderMetadata     []*Node
 	Essence            []*Node
@@ -325,6 +326,7 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 
 				// add details from now
 				currentPartitionNode = &PartitionNode{
+
 					Key:            Position{Start: offset, End: offset + len(klvItem.Key)},
 					Length:         Position{Start: offset + len(klvItem.Key), End: offset + len(klvItem.Key) + len(klvItem.Length)},
 					Value:          Position{Start: offset + len(klvItem.Key) + len(klvItem.Length), End: offset + klvItem.TotalLength()},
@@ -571,6 +573,10 @@ func MakeAST(stream io.Reader, dest io.Writer, buffer chan *klv.KLV, size int) (
 	b, _ := yaml.Marshal(mxf)
 	dest.Write(b)
 	fmt.Println(mxf)
+	// assign after the yaml to stop endless recursion
+	for _, p := range mxf.Partitions {
+		p.Parent = mxf
+	}
 	return mxf, nil
 }
 

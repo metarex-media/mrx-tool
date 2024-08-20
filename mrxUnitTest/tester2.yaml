@@ -1,5 +1,6 @@
 partitions:
-    - key:
+    - parent: null
+      key:
         start: 0
         end: 16
       length:
@@ -454,7 +455,8 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
-    - key:
+    - parent: null
+      key:
         start: 16384
         end: 16400
       length:
@@ -3416,7 +3418,8 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
-    - key:
+    - parent: null
+      key:
         start: 412986
         end: 413002
       length:
@@ -3509,7 +3512,8 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
-    - key:
+    - parent: null
+      key:
         start: 415906
         end: 415922
       length:
@@ -6471,7 +6475,8 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
-    - key:
+    - parent: null
+      key:
         start: 814024
         end: 814040
       length:
@@ -6564,7 +6569,8 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
-    - key:
+    - parent: null
+      key:
         start: 816944
         end: 816960
       length:
@@ -9526,7 +9532,8 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
-    - key:
+    - parent: null
+      key:
         start: 1214633
         end: 1214649
       length:
@@ -9619,7 +9626,8 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
-    - key:
+    - parent: null
+      key:
         start: 1217553
         end: 1217569
       length:
@@ -12581,7 +12589,8 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
-    - key:
+    - parent: null
+      key:
         start: 1615042
         end: 1615058
       length:
@@ -12674,7 +12683,8 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
-    - key:
+    - parent: null
+      key:
         start: 1617962
         end: 1617978
       length:
@@ -15636,7 +15646,8 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
-    - key:
+    - parent: null
+      key:
         start: 2015753
         end: 2015769
       length:
@@ -15729,7 +15740,8 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
-    - key:
+    - parent: null
+      key:
         start: 2018673
         end: 2018689
       length:
@@ -18691,7 +18703,8 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
-    - key:
+    - parent: null
+      key:
         start: 2416773
         end: 2416789
       length:
@@ -18784,7 +18797,8 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
-    - key:
+    - parent: null
+      key:
         start: 2419693
         end: 2419709
       length:
@@ -21746,7 +21760,8 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
-    - key:
+    - parent: null
+      key:
         start: 2820711
         end: 2820727
       length:
@@ -21839,7 +21854,8 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
-    - key:
+    - parent: null
+      key:
         start: 2823631
         end: 2823647
       length:
@@ -24465,7 +24481,8 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
-    - key:
+    - parent: null
+      key:
         start: 3177314
         end: 3177330
       length:
@@ -24558,7 +24575,8 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
-    - key:
+    - parent: null
+      key:
         start: 3179926
         end: 3179942
       length:
@@ -24652,7 +24670,8 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
-    - key:
+    - parent: null
+      key:
         start: 3183692
         end: 3183708
       length:
@@ -24734,7 +24753,8 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
-    - key:
+    - parent: null
+      key:
         start: 3183832
         end: 3183848
       length:

@@ -348,11 +348,13 @@ func mrxEmbeddedTimedDocuments(doc io.ReadSeeker, node *MXFNode, tc *TestContext
 
 func ASTTest(f io.ReadSeeker, fout io.Writer) error {
 	klvChan := make(chan *klv.KLV, 1000)
+
 	ast, genErr := MakeAST(f, fout, klvChan, 10)
 
 	if genErr != nil {
 		return genErr
 	}
+
 	/*
 		once we make the AST we now have to use it.
 
@@ -380,6 +382,8 @@ func ASTTest(f io.ReadSeeker, fout io.Writer) error {
 	// @TODO create a context for running tests
 	tc := NewTestContext(fo)
 	defer tc.EndTest()
+	// fo2, _ := os.Create("out2.log")
+	// MRXTest(f, fo2, ast)
 
 	mrxPartLayout(f, ast, tc)
 	mrxDescriptiveMD(ast, tc)
