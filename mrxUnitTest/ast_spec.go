@@ -3,9 +3,23 @@ package mrxUnitTest
 import (
 	"fmt"
 	"io"
+	"os"
 
 	"github.com/metarex-media/mrx-tool/klv"
+	"gopkg.in/yaml.v3"
 )
+
+type demo struct {
+	partitions     []demoTest
+	essTests       []demoTest
+	structureTests []demoTest
+}
+
+type demoTest struct {
+	spec   SpecDetails
+	Test   func()
+	Marker string
+}
 
 /*
 
@@ -64,7 +78,38 @@ func MRXTest(doc io.ReadSeeker, w io.Writer, specifications ...Specification) er
 
 	klvChan := make(chan *klv.KLV, 1000)
 
-	ast, genErr := MakeAST(doc, klvChan, 10)
+	// get the specifications here
+	testspecs := []SpecTests{NewISXD()}
+
+	base := SpecTests{Node: make(map[string][]*func(doc io.ReadSeeker, isxdDesc *Node, primer map[string]string) func(t Test)),
+		Part: make(map[string][]*func(doc io.ReadSeeker, isxdDesc *PartitionNode, primer map[string]string) func(t Test)),
+		MXF:  make([]*func(), 0)}
+
+	for _, ts := range testspecs {
+		for key, n := range ts.Node {
+			out, ok := base.Node[key]
+			if !ok {
+				base.Node[key] = n
+			} else {
+				out = append(out, n...)
+				base.Node[key] = out
+			}
+
+		}
+
+		for key, n := range ts.Part {
+			out, ok := base.Part[key]
+			if !ok {
+				base.Part[key] = n
+			} else {
+				out = append(out, n...)
+				base.Part[key] = out
+			}
+
+		}
+	}
+
+	ast, genErr := MakeAST(doc, klvChan, 10, base)
 
 	if genErr != nil {
 		return genErr
@@ -81,25 +126,72 @@ func MRXTest(doc io.ReadSeeker, w io.Writer, specifications ...Specification) er
 	defer tc.EndTest()
 
 	// load in default of 377 checker etc
+	tc.Header("testing mxf file structure", func(t Test) {
+		for _, structure := range ast.Tests.tests {
+			str := *structure
+			str(doc, ast, nil)(t)
+		}
+	})
 
-	tc.structureTest(doc, ast, specifications...)
+	// 	tc.structureTest(doc, ast, specifications...)
 
 	for _, part := range ast.Partitions {
 
 		// check the essence in each partitoin?
 		switch part.Props.PartitionType {
 		case HeaderPartition, FooterPartition:
-			tc.headerTest(doc, part, specifications...)
+			tc.Header(fmt.Sprintf("testing header metadata at %s partition at offset %v", part.Props.PartitionType, part.Key.Start), func(t Test) {
+
+				for _, child := range part.HeaderMetadata {
+					childTests(doc, child, part.Props.Primer, t)
+				}
+			})
+
+			tc.Header(fmt.Sprintf("testing header stuff %s partition at offset %v", part.Props.PartitionType, part.Key.Start), func(t Test) {
+				for _, child := range part.Tests.tests {
+
+					childer := *child
+					childer(doc, part, part.Props.Primer)(t)
+					if !t.testPass() {
+						part.callBack()
+					}
+				}
+			})
+		//	tc.headerTest(doc, part, specifications...)
 		case BodyPartition, GenericStreamPartition:
-			tc.essTest(doc, part, specifications...)
+		//	tc.essTest(doc, part, specifications...)
 		case RIPPartition:
 			// not sure what happens here yet
 		}
-	}
 
-	tc.extraTest(doc, ast, specifications...)
+	}
+	fmt.Println(ast.Tests)
+	//	tc.extraTest(doc, ast, specifications...)
+
+	f, _ := os.Create("tester0.yaml")
+	b, _ := yaml.Marshal(ast)
+	f.Write(b)
 
 	return nil
+}
+
+func childTests(doc io.ReadSeeker, node *Node, primer map[string]string, t Test) {
+
+	if node == nil {
+		return
+	}
+
+	for _, tester := range node.Tests.tests {
+		test := *tester
+		test(doc, node, primer)(t)
+		if !t.testPass() {
+			node.callBack()
+		}
+	}
+
+	for _, child := range node.Children {
+		childTests(doc, child, primer, t)
+	}
 }
 
 func (tc *TestContext) structureTest(doc io.ReadSeeker, mxf *MXFNode, specifications ...Specification) {

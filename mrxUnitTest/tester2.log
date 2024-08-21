@@ -1,102 +1,32 @@
 Running testing mxf file structure tests:
-	    RDD-47:2018,5.4,shall,3: Checking that the generic partition positions match the expected positions at the end of the file
+Ran 0 tests: Passed:0 , Failed: 0
+Running testing header metadata at header partition at offset 0 tests:
+	    i.DocName(),9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
             Check 0 Pass
-Ran 1 tests: Passed:1 , Failed: 0
-Running testing header header partition at offset 0 tests:
-	    RDD-47:2018,9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
-            Check 0 Pass
-	    RDD-47:2018,9.3,shall,1: Checking that the data essence coding filed is present in the isxd descriptor
+	    i.DocName(),9.3,shall,1: Checking that the data essence coding filed is present in the isxd descriptor
             Check 0 Pass
             Check 1 Pass
-	    RDD-47:2018,5.4,shall,1: Checking that a static track is present in the header metadata 
+	    i.DocName(),9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
+            Check 0Fail!
+                Expected
+                    <int>: 5
+                to be nil
+Ran 3 tests: Passed:2 , Failed: 1
+Running testing header stuff header partition at offset 0 tests:
+	    i.DocName(),5.4,shall,1: Checking that a static track is present in the header metadata 
             Check 0 Pass
-	    RDD-47:2018,5.4,shall,2: Checking that the static track points to a sequence
+	    i.DocName(),5.4,shall,2: Checking that the static track points to a sequence
             Check 0 Pass
-	    RDD-47:2018,5.4,shall,2: Checking that the static track sequence has as many sequence children as partitions
+	    i.DocName(),5.4,shall,2: Checking that the static track sequence has as many sequence children as partitions
             Check 0 Pass
-Ran 5 tests: Passed:5 , Failed: 0
-Running testing essence body partition at offset 16384 tests:
-	    RDD-47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
-            Check 0 Pass
-	    RDD-47:2018,7.5,shall,1: Checking that the content package order are regular throughout the essence stream
-            Check 0 Pass
-Ran 2 tests: Passed:2 , Failed: 0
-Running testing essence body partition at offset 412986 tests:
+Ran 3 tests: Passed:3 , Failed: 0
+Running testing header metadata at footer partition at offset 3183692 tests:
 Ran 0 tests: Passed:0 , Failed: 0
-Running testing essence body partition at offset 415906 tests:
-	    RDD-47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
-            Check 0 Pass
-	    RDD-47:2018,7.5,shall,1: Checking that the content package order are regular throughout the essence stream
-            Check 0 Pass
-Ran 2 tests: Passed:2 , Failed: 0
-Running testing essence body partition at offset 814024 tests:
-Ran 0 tests: Passed:0 , Failed: 0
-Running testing essence body partition at offset 816944 tests:
-	    RDD-47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
-            Check 0 Pass
-	    RDD-47:2018,7.5,shall,1: Checking that the content package order are regular throughout the essence stream
-            Check 0 Pass
-Ran 2 tests: Passed:2 , Failed: 0
-Running testing essence body partition at offset 1214633 tests:
-Ran 0 tests: Passed:0 , Failed: 0
-Running testing essence body partition at offset 1217553 tests:
-	    RDD-47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
-            Check 0 Pass
-	    RDD-47:2018,7.5,shall,1: Checking that the content package order are regular throughout the essence stream
-            Check 0 Pass
-Ran 2 tests: Passed:2 , Failed: 0
-Running testing essence body partition at offset 1615042 tests:
-Ran 0 tests: Passed:0 , Failed: 0
-Running testing essence body partition at offset 1617962 tests:
-	    RDD-47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
-            Check 0 Pass
-	    RDD-47:2018,7.5,shall,1: Checking that the content package order are regular throughout the essence stream
-            Check 0 Pass
-Ran 2 tests: Passed:2 , Failed: 0
-Running testing essence body partition at offset 2015753 tests:
-Ran 0 tests: Passed:0 , Failed: 0
-Running testing essence body partition at offset 2018673 tests:
-	    RDD-47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
-            Check 0 Pass
-	    RDD-47:2018,7.5,shall,1: Checking that the content package order are regular throughout the essence stream
-            Check 0 Pass
-Ran 2 tests: Passed:2 , Failed: 0
-Running testing essence body partition at offset 2416773 tests:
-Ran 0 tests: Passed:0 , Failed: 0
-Running testing essence body partition at offset 2419693 tests:
-	    RDD-47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
-            Check 0 Pass
-	    RDD-47:2018,7.5,shall,1: Checking that the content package order are regular throughout the essence stream
-            Check 0 Pass
-Ran 2 tests: Passed:2 , Failed: 0
-Running testing essence body partition at offset 2820711 tests:
-Ran 0 tests: Passed:0 , Failed: 0
-Running testing essence body partition at offset 2823631 tests:
-	    RDD-47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
-            Check 0 Pass
-	    RDD-47:2018,7.5,shall,1: Checking that the content package order are regular throughout the essence stream
-            Check 0 Pass
-Ran 2 tests: Passed:2 , Failed: 0
-Running testing essence body partition at offset 3177314 tests:
-Ran 0 tests: Passed:0 , Failed: 0
-Running testing essence generic stream partition partition at offset 3179926 tests:
-	    RDD-47:2018,7.5,shall,1: Checking that the index byte count for the generic header is 0
-            Check 0 Pass
-	    RDD-47:2018,7.5,shall,1: Checking that the index SID for the generic header is 0
-            Check 0 Pass
-Ran 2 tests: Passed:2 , Failed: 0
-Running testing header footer partition at offset 3183692 tests:
-	    RDD-47:2018,9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
+Running testing header stuff footer partition at offset 3183692 tests:
+	    i.DocName(),5.4,shall,1: Checking that a static track is present in the header metadata 
             Check 0Fail!
                 Expected
                     <*mrxUnitTest.Node | 0x0>: nil
                 not to be nil
-	    RDD-47:2018,5.4,shall,1: Checking that a static track is present in the header metadata 
-            Check 0Fail!
-                Expected
-                    <*mrxUnitTest.Node | 0x0>: nil
-                not to be nil
-Ran 2 tests: Passed:0 , Failed: 2
-Running extra mxf tests tests:
-Ran 0 tests: Passed:0 , Failed: 0
+Ran 1 tests: Passed:0 , Failed: 1
 Test Failed

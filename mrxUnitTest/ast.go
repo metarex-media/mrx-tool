@@ -22,20 +22,53 @@ type Node struct {
 	Properties         MXFProperty
 	// talk through the children role with Bruce
 	// but keep as this
+	Tests    tests[Node]
 	Children []*Node
+}
+
+type Nodes interface {
+	Node | PartitionNode | MXFNode
+}
+
+type parent interface {
+	callBack() // a function that signal infected child
+}
+
+func (n *Node) callBack() {
+	n.Tests.TestPass = false
+	n.Tests.parent.callBack()
+
+}
+
+func (p *PartitionNode) callBack() {
+	p.Tests.TestPass = false
+	p.Tests.parent.callBack()
+	//	.callBack()
+}
+
+func (m *MXFNode) callBack() {
+	m.Tests.TestPass = false
+}
+
+type tests[N Nodes] struct {
+	parent   parent `yaml:"-"`
+	tests    []*func(doc io.ReadSeeker, header *N, primer map[string]string) func(t Test)
+	TestPass bool
 }
 
 type MXFNode struct {
 	Partitions []*PartitionNode
+	Tests      tests[MXFNode]
 }
 
 type PartitionNode struct {
-	Parent             *MXFNode
+	Parent             *MXFNode `yaml:"-"`
 	Key, Length, Value Position
 	HeaderMetadata     []*Node
 	Essence            []*Node
 	IndexTable         *Node
 	Props              PartitionProperties
+	Tests              tests[PartitionNode]
 }
 
 // FindUL returns the first Node with that symbol found in the
@@ -264,8 +297,14 @@ type refAndChild struct {
 	ref   [][]byte
 }
 
+type SpecTests struct {
+	Node map[string][]*func(doc io.ReadSeeker, isxdDesc *Node, primer map[string]string) func(t Test)
+	Part map[string][]*func(doc io.ReadSeeker, isxdDesc *PartitionNode, primer map[string]string) func(t Test)
+	MXF  []*func()
+}
+
 // inlcude the logger? if there's any errors flush them - discard ifo for unkown keys fro the moment
-func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int) (*MXFNode, error) { // wg *sync.WaitGroup, buffer chan packet, errChan chan error) {
+func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int, specs SpecTests) (*MXFNode, error) { // wg *sync.WaitGroup, buffer chan packet, errChan chan error) {
 
 	// use errs to handle errors while runnig concurrently
 	errs, _ := errgroup.WithContext(context.Background())
@@ -275,7 +314,7 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int) (*MXFNode, error)
 		return klv.StartKLVStream(stream, buffer, size)
 	})
 
-	mxf := &MXFNode{make([]*PartitionNode, 0)}
+	mxf := &MXFNode{Partitions: make([]*PartitionNode, 0), Tests: tests[MXFNode]{TestPass: true}}
 	var currentPartitionNode *PartitionNode
 	// /	var currentPartition int
 	var primer map[string]string
@@ -313,6 +352,8 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int) (*MXFNode, error)
 					Value:          Position{Start: offset + len(klvItem.Key) + len(klvItem.Length), End: offset + klvItem.TotalLength()},
 					HeaderMetadata: make([]*Node, 0),
 					Essence:        make([]*Node, 0),
+					Parent:         mxf,
+					Tests:          tests[PartitionNode]{TestPass: true, parent: mxf},
 				}
 
 				// create a reference map for every node that is found
@@ -329,6 +370,7 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int) (*MXFNode, error)
 				case 02:
 					// header
 					partProps.PartitionType = HeaderPartition
+					currentPartitionNode.Tests.tests = append(currentPartitionNode.Tests.tests, specs.Part[HeaderKey]...)
 				case 03:
 					// body
 					if klvItem.Key[14] == 17 {
@@ -339,6 +381,8 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int) (*MXFNode, error)
 				case 04:
 					// footer
 					partProps.PartitionType = FooterPartition
+					currentPartitionNode.Tests.tests = append(currentPartitionNode.Tests.tests, specs.Part[HeaderKey]...)
+
 				default:
 					// is nothing
 					partProps.PartitionType = "invalid"
@@ -364,6 +408,7 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int) (*MXFNode, error)
 						Key:    Position{Start: offset, End: offset + len(flush.Key)},
 						Length: Position{Start: offset + len(flush.Key), End: offset + len(flush.Key) + len(flush.Length)},
 						Value:  Position{Start: offset + len(flush.Key) + len(flush.Length), End: offset + flush.TotalLength()},
+						Tests:  tests[Node]{TestPass: true},
 					}
 
 					refMap[flushNode] = refAndChild{}
@@ -384,6 +429,7 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int) (*MXFNode, error)
 						// want to loop through them all?
 
 					} else {
+
 						decoders, ok := mxf2go.Groups["urn:smpte:ul:"+fullName(flush.Key)]
 
 						if !ok {
@@ -396,8 +442,16 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int) (*MXFNode, error)
 						}
 
 						// assign the generic name as the key
-						flushNode.Properties = GroupProperties{UniversalLabel: fullName(flush.Key)}
+						key := fullName(flush.Key)
+						flushNode.Properties = GroupProperties{UniversalLabel: key}
 						// find the groups first
+
+						if ok {
+							if nodeTests, ok := specs.Node[key]; ok {
+
+								flushNode.Tests = tests[Node]{tests: nodeTests}
+							}
+						}
 						pos := 0
 						for pos < len(flush.Value) {
 							key, klength := dec.keyFunc(flush.Value[pos : pos+dec.keyLen])
@@ -468,6 +522,10 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int) (*MXFNode, error)
 						mid := refMap[child]
 						mid.child = true
 						refMap[child] = mid
+						if child != nil {
+
+							child.Tests.parent = n
+						}
 						n.Children = append(n.Children, child)
 					}
 				}
@@ -476,6 +534,7 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int) (*MXFNode, error)
 				for n, refs := range refMap {
 
 					if !refs.child {
+						n.Tests.parent = currentPartitionNode
 						currentPartitionNode.HeaderMetadata = append(currentPartitionNode.HeaderMetadata, n)
 					}
 				}
@@ -496,6 +555,7 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int) (*MXFNode, error)
 						Key:    Position{Start: offset, End: offset + len(index.Key)},
 						Length: Position{Start: offset + len(index.Key), End: offset + len(index.Key) + len(index.Length)},
 						Value:  Position{Start: offset + len(index.Key) + len(index.Length), End: offset + index.TotalLength()},
+						Tests:  tests[Node]{TestPass: true},
 					}
 					offset += index.TotalLength()
 
@@ -532,6 +592,7 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int) (*MXFNode, error)
 					Value:      Position{Start: offset + len(klvItem.Key) + len(klvItem.Length), End: offset + klvItem.TotalLength()},
 					Properties: EssenceProperties{EssUL: name},
 					Children:   make([]*Node, 0),
+					Tests:      tests[Node]{TestPass: true, parent: currentPartitionNode},
 				}
 
 				currentPartitionNode.Essence = append(currentPartitionNode.Essence, essNode)

@@ -1,67 +1,51 @@
 Running testing mxf file structure tests:
-	    RDD-47:2018,5.4,shall,3: Checking that the generic partition positions match the expected positions at the end of the file
-            Check 0 Pass
-Ran 1 tests: Passed:1 , Failed: 0
-Running testing header header partition at offset 0 tests:
-	    RDD-47:2018,9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
-            Check 0 Pass
-	    RDD-47:2018,9.3,shall,1: Checking that the data essence coding filed is present in the isxd descriptor
-            Check 0 Pass
-            Check 1 Pass
-	    RDD-47:2018,5.4,shall,1: Checking that a static track is present in the header metadata 
-            Check 0 Pass
-	    RDD-47:2018,5.4,shall,2: Checking that the static track points to a sequence
-            Check 0 Pass
-	    RDD-47:2018,5.4,shall,2: Checking that the static track sequence has as many sequence children as partitions
-            Check 0Fail!
-                Expected
-                    <int>: 2
-                to equal
-                    <int>: 3
-Ran 5 tests: Passed:4 , Failed: 1
-Running testing essence body partition at offset 3510 tests:
-	    RDD-47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
-            Check 0Fail!
-                Other essence keys found
-                Expected
-                    <bool>: false
-                to be true
-Ran 1 tests: Passed:0 , Failed: 1
-Running testing essence generic stream partition partition at offset 4046 tests:
-	    RDD-47:2018,7.5,shall,1: Checking that the index byte count for the generic header is 0
-            Check 0 Pass
-	    RDD-47:2018,7.5,shall,1: Checking that the index SID for the generic header is 0
-            Check 0 Pass
-Ran 2 tests: Passed:2 , Failed: 0
-Running testing essence generic stream partition partition at offset 4226 tests:
-	    RDD-47:2018,7.5,shall,1: Checking that the index byte count for the generic header is 0
-            Check 0 Pass
-	    RDD-47:2018,7.5,shall,1: Checking that the index SID for the generic header is 0
-            Check 0 Pass
-Ran 2 tests: Passed:2 , Failed: 0
-Running testing essence generic stream partition partition at offset 4404 tests:
-	    RDD-47:2018,7.5,shall,1: Checking that the index byte count for the generic header is 0
-            Check 0 Pass
-	    RDD-47:2018,7.5,shall,1: Checking that the index SID for the generic header is 0
-            Check 0 Pass
-Ran 2 tests: Passed:2 , Failed: 0
-Running testing header footer partition at offset 6756 tests:
-	    RDD-47:2018,9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
-            Check 0 Pass
-	    RDD-47:2018,9.3,shall,1: Checking that the data essence coding filed is present in the isxd descriptor
-            Check 0 Pass
-            Check 1 Pass
-	    RDD-47:2018,5.4,shall,1: Checking that a static track is present in the header metadata 
-            Check 0 Pass
-	    RDD-47:2018,5.4,shall,2: Checking that the static track points to a sequence
-            Check 0 Pass
-	    RDD-47:2018,5.4,shall,2: Checking that the static track sequence has as many sequence children as partitions
-            Check 0Fail!
-                Expected
-                    <int>: 2
-                to equal
-                    <int>: 3
-Ran 5 tests: Passed:4 , Failed: 1
-Running extra mxf tests tests:
 Ran 0 tests: Passed:0 , Failed: 0
+Running testing header metadata at header partition at offset 0 tests:
+	    i.DocName(),9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
+            Check 0 Pass
+	    i.DocName(),9.3,shall,1: Checking that the data essence coding filed is present in the isxd descriptor
+            Check 0 Pass
+            Check 1 Pass
+	    i.DocName(),9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
+            Check 0Fail!
+                Expected
+                    <int>: 5
+                to be nil
+Ran 3 tests: Passed:2 , Failed: 1
+Running testing header stuff header partition at offset 0 tests:
+	    i.DocName(),5.4,shall,1: Checking that a static track is present in the header metadata 
+            Check 0 Pass
+	    i.DocName(),5.4,shall,2: Checking that the static track points to a sequence
+            Check 0 Pass
+	    i.DocName(),5.4,shall,2: Checking that the static track sequence has as many sequence children as partitions
+            Check 0Fail!
+                Expected
+                    <int>: 2
+                to equal
+                    <int>: 3
+Ran 3 tests: Passed:2 , Failed: 1
+Running testing header metadata at footer partition at offset 6756 tests:
+	    i.DocName(),9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
+            Check 0 Pass
+	    i.DocName(),9.3,shall,1: Checking that the data essence coding filed is present in the isxd descriptor
+            Check 0 Pass
+            Check 1 Pass
+	    i.DocName(),9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
+            Check 0Fail!
+                Expected
+                    <int>: 5
+                to be nil
+Ran 3 tests: Passed:2 , Failed: 1
+Running testing header stuff footer partition at offset 6756 tests:
+	    i.DocName(),5.4,shall,1: Checking that a static track is present in the header metadata 
+            Check 0 Pass
+	    i.DocName(),5.4,shall,2: Checking that the static track points to a sequence
+            Check 0 Pass
+	    i.DocName(),5.4,shall,2: Checking that the static track sequence has as many sequence children as partitions
+            Check 0Fail!
+                Expected
+                    <int>: 2
+                to equal
+                    <int>: 3
+Ran 3 tests: Passed:2 , Failed: 1
 Test Failed

@@ -151,6 +151,7 @@ func (ct CompleteTest) Expect(actual interface{}, extra ...interface{}) Assertio
 type Test interface {
 	Tester
 	Expecter
+	testPass() bool
 }
 
 // Expecter is a workaround to wrap the gomega/internal object
@@ -188,6 +189,15 @@ func (s *segmentTest) result() {
 
 }
 
+func (s *segmentTest) testPass() bool {
+
+	return s.prevRes
+}
+
+func (c *CompleteTest) testPass() bool {
+	return c.segment.prevRes
+}
+
 type segmentTest struct {
 	header string
 	// use the assertions to compare the error
@@ -203,6 +213,7 @@ type segmentTest struct {
 	// testPass bool
 	testBuffer bytes.Buffer
 	log        io.Writer
+	prevRes    bool
 }
 
 // Test runs the
@@ -211,12 +222,13 @@ func (s *segmentTest) Test(message string, specDetail SpecDetails, asserts ...bo
 	// want multiple bits each conuting as a test
 	s.testCount++
 	gap := "    "
-
+	s.prevRes = true
 	s.testBuffer.Write([]byte(fmt.Sprintf("	%s%s: %v\n", gap, specDetail, message)))
 	for i, assert := range asserts {
 		if assert {
 			s.testBuffer.Write([]byte(fmt.Sprintf("        %sCheck %v Pass\n", gap, i)))
 		} else {
+			s.prevRes = false
 			s.failCount++
 			s.testBuffer.Write([]byte(fmt.Sprintf("        %sCheck %vFail!", gap, i)))
 			select {
