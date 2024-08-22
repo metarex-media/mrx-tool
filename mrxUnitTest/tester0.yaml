@@ -18,7 +18,10 @@ partitions:
           value:
             start: 160
             end: 1356
-          properties: null
+          properties:
+            uuid: "00000000000000000000000000000000"
+            universallabel: 060e2b34.027f0101.0d010201.01050100
+            grouplabel: []
           tests:
             testpass: true
           children: []
@@ -37,7 +40,7 @@ partitions:
             grouplabel:
                 - d101ede4.40184792.8dea9349.875c2135
           tests:
-            testpass: false
+            testpass: true
           children:
             - key:
                 start: 1582
@@ -69,7 +72,7 @@ partitions:
                 universallabel: 060e2b34.027f0101.0d010101.01011800
                 grouplabel: []
               tests:
-                testpass: false
+                testpass: true
               children:
                 - key:
                     start: 2024
@@ -201,7 +204,7 @@ partitions:
                     universallabel: 060e2b34.027f0101.0d010101.01013700
                     grouplabel: []
                   tests:
-                    testpass: false
+                    testpass: true
                   children:
                     - key:
                         start: 3225
@@ -506,8 +509,10 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
+        essenceorder: []
       tests:
-        testpass: false
+        testpass: true
+      partitionpos: 0
     - key:
         start: 16384
         end: 16400
@@ -3950,8 +3955,11 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
+        essenceorder:
+            - 060e2b34.01020105.0e090502.01000101
       tests:
         testpass: true
+      partitionpos: 1
     - key:
         start: 412986
         end: 413002
@@ -4047,8 +4055,10 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
+        essenceorder: []
       tests:
-        testpass: true
+        testpass: false
+      partitionpos: 2
     - key:
         start: 415906
         end: 415922
@@ -7491,8 +7501,11 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
+        essenceorder:
+            - 060e2b34.01020105.0e090502.01000101
       tests:
         testpass: true
+      partitionpos: 3
     - key:
         start: 814024
         end: 814040
@@ -7588,8 +7601,10 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
+        essenceorder: []
       tests:
-        testpass: true
+        testpass: false
+      partitionpos: 4
     - key:
         start: 816944
         end: 816960
@@ -11032,8 +11047,11 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
+        essenceorder:
+            - 060e2b34.01020105.0e090502.01000101
       tests:
         testpass: true
+      partitionpos: 5
     - key:
         start: 1214633
         end: 1214649
@@ -11129,8 +11147,10 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
+        essenceorder: []
       tests:
-        testpass: true
+        testpass: false
+      partitionpos: 6
     - key:
         start: 1217553
         end: 1217569
@@ -14573,8 +14593,11 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
+        essenceorder:
+            - 060e2b34.01020105.0e090502.01000101
       tests:
         testpass: true
+      partitionpos: 7
     - key:
         start: 1615042
         end: 1615058
@@ -14670,8 +14693,10 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
+        essenceorder: []
       tests:
-        testpass: true
+        testpass: false
+      partitionpos: 8
     - key:
         start: 1617962
         end: 1617978
@@ -18114,8 +18139,11 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
+        essenceorder:
+            - 060e2b34.01020105.0e090502.01000101
       tests:
         testpass: true
+      partitionpos: 9
     - key:
         start: 2015753
         end: 2015769
@@ -18211,8 +18239,10 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
+        essenceorder: []
       tests:
-        testpass: true
+        testpass: false
+      partitionpos: 10
     - key:
         start: 2018673
         end: 2018689
@@ -21655,8 +21685,11 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
+        essenceorder:
+            - 060e2b34.01020105.0e090502.01000101
       tests:
         testpass: true
+      partitionpos: 11
     - key:
         start: 2416773
         end: 2416789
@@ -21752,8 +21785,10 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
+        essenceorder: []
       tests:
-        testpass: true
+        testpass: false
+      partitionpos: 12
     - key:
         start: 2419693
         end: 2419709
@@ -25196,8 +25231,11 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
+        essenceorder:
+            - 060e2b34.01020105.0e090502.01000101
       tests:
         testpass: true
+      partitionpos: 13
     - key:
         start: 2820711
         end: 2820727
@@ -25293,8 +25331,10 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
+        essenceorder: []
       tests:
-        testpass: true
+        testpass: false
+      partitionpos: 14
     - key:
         start: 2823631
         end: 2823647
@@ -28345,8 +28385,11 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
+        essenceorder:
+            - 060e2b34.01020105.0e090502.01000101
       tests:
         testpass: true
+      partitionpos: 15
     - key:
         start: 3177314
         end: 3177330
@@ -28442,8 +28485,10 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
+        essenceorder: []
       tests:
-        testpass: true
+        testpass: false
+      partitionpos: 16
     - key:
         start: 3179926
         end: 3179942
@@ -28472,7 +28517,7 @@ partitions:
       indextable: null
       props:
         partitioncount: 17
-        partitiontype: generic stream partition
+        partitiontype: genericstreampartition
         primer:
             3b0a: 060e2b34.01010105.01020210.02010000
             3b0b: 060e2b34.01010105.01020210.02020000
@@ -28540,8 +28585,11 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
+        essenceorder:
+            - 060e2b34.0101010c.0d010509.01000000
       tests:
         testpass: true
+      partitionpos: 17
     - key:
         start: 3183692
         end: 3183708
@@ -28624,8 +28672,10 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
+        essenceorder: []
       tests:
         testpass: false
+      partitionpos: 18
     - key:
         start: 3183832
         end: 3183848
@@ -28640,7 +28690,7 @@ partitions:
       indextable: null
       props:
         partitioncount: 19
-        partitiontype: RIP
+        partitiontype: rip
         primer:
             3b0a: 060e2b34.01010105.01020210.02010000
             3b0b: 060e2b34.01010105.01020210.02020000
@@ -28708,7 +28758,9 @@ partitions:
             fffd: 060e2b34.0101010d.04090202.00000000
             fffe: 060e2b34.0101010d.04060806.00000000
             ffff: 060e2b34.01010105.0e090400.00000000
+        essenceorder: []
       tests:
         testpass: true
+      partitionpos: 19
 tests:
     testpass: false

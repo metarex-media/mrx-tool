@@ -68,9 +68,9 @@ var (
 
 	HeaderPartition        = "header"
 	BodyPartition          = "body"
-	GenericStreamPartition = "generic stream partition"
+	GenericStreamPartition = "genericstreampartition"
 	FooterPartition        = "footer"
-	RIPPartition           = "RIP"
+	RIPPartition           = "rip"
 )
 
 func partitionExtract(partionKLV *klv.KLV) mxfPartition {

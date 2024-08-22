@@ -9,18 +9,6 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type demo struct {
-	partitions     []demoTest
-	essTests       []demoTest
-	structureTests []demoTest
-}
-
-type demoTest struct {
-	spec   SpecDetails
-	Test   func()
-	Marker string
-}
-
 /*
 
 test output looks like
@@ -83,7 +71,7 @@ func MRXTest(doc io.ReadSeeker, w io.Writer, specifications ...Specification) er
 
 	base := SpecTests{Node: make(map[string][]*func(doc io.ReadSeeker, isxdDesc *Node, primer map[string]string) func(t Test)),
 		Part: make(map[string][]*func(doc io.ReadSeeker, isxdDesc *PartitionNode, primer map[string]string) func(t Test)),
-		MXF:  make([]*func(), 0)}
+		MXF:  make([]*func(doc io.ReadSeeker, isxdDesc *MXFNode, primer map[string]string) func(t Test), 0)}
 
 	for _, ts := range testspecs {
 		for key, n := range ts.Node {
@@ -107,6 +95,8 @@ func MRXTest(doc io.ReadSeeker, w io.Writer, specifications ...Specification) er
 			}
 
 		}
+
+		base.MXF = append(base.MXF, ts.MXF...)
 	}
 
 	ast, genErr := MakeAST(doc, klvChan, 10, base)
@@ -159,13 +149,22 @@ func MRXTest(doc io.ReadSeeker, w io.Writer, specifications ...Specification) er
 			})
 		//	tc.headerTest(doc, part, specifications...)
 		case BodyPartition, GenericStreamPartition:
+			tc.Header(fmt.Sprintf("testing essence stuff %s partition at offset %v", part.Props.PartitionType, part.Key.Start), func(t Test) {
+				for _, tests := range part.Tests.tests {
+
+					test := *tests
+					test(doc, part, part.Props.Primer)(t)
+					if !t.testPass() {
+						part.callBack()
+					}
+				}
+			})
 		//	tc.essTest(doc, part, specifications...)
 		case RIPPartition:
 			// not sure what happens here yet
 		}
 
 	}
-	fmt.Println(ast.Tests)
 	//	tc.extraTest(doc, ast, specifications...)
 
 	f, _ := os.Create("tester0.yaml")
@@ -192,43 +191,6 @@ func childTests(doc io.ReadSeeker, node *Node, primer map[string]string, t Test)
 	for _, child := range node.Children {
 		childTests(doc, child, primer, t)
 	}
-}
-
-func (tc *TestContext) structureTest(doc io.ReadSeeker, mxf *MXFNode, specifications ...Specification) {
-
-	tc.Header("testing mxf file structure", func(t Test) {
-		for _, spec := range specifications {
-			spec.TestStructure(doc, mxf)(t)
-		}
-	})
-}
-
-func (tc *TestContext) extraTest(doc io.ReadSeeker, mxf *MXFNode, specifications ...Specification) {
-	tc.Header("extra mxf tests", func(t Test) {
-		for _, spec := range specifications {
-			spec.TestExtra(doc, mxf)(t)
-		}
-	})
-}
-
-func (tc *TestContext) headerTest(doc io.ReadSeeker, header *PartitionNode, specifications ...Specification) {
-
-	tc.Header(fmt.Sprintf("testing header %s partition at offset %v", header.Props.PartitionType, header.Key.Start), func(t Test) {
-		for _, spec := range specifications {
-			spec.TestHeader(doc, header)(t)
-		}
-	})
-}
-
-func (tc *TestContext) essTest(doc io.ReadSeeker, header *PartitionNode, specifications ...Specification) {
-
-	tc.Header(fmt.Sprintf("testing essence %s partition at offset %v", header.Props.PartitionType, header.Key.Start), func(t Test) {
-
-		for _, spec := range specifications {
-			spec.TestEssence(doc, header)(t)
-		}
-
-	})
 }
 
 // make the testContext a single body that holds the node?

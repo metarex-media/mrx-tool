@@ -24,7 +24,7 @@ func TestAST(t *testing.T) {
 		flog, _ := os.Create(fmt.Sprintf("tester%v.log", i))
 		// _, genErr := MakeAST(f, fout, klvChan, 10)
 		//	genErr := ASTTest(f, fout)
-		genErr := MRXTest(f, flog, ISXD{})
+		genErr := MRXTest(f, flog)
 		// expect the yaml generated to match the hash
 		// not have any computational diffrences
 

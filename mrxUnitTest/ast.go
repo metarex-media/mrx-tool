@@ -69,6 +69,7 @@ type PartitionNode struct {
 	IndexTable         *Node
 	Props              PartitionProperties
 	Tests              tests[PartitionNode]
+	PartitionPos       int
 }
 
 // FindUL returns the first Node with that symbol found in the
@@ -231,6 +232,7 @@ type PartitionProperties struct {
 	PartitionCount int // the count of the partition along the MXF
 	PartitionType  string
 	Primer         map[string]string
+	EssenceOrder   []string
 }
 
 func (p PartitionProperties) ID() string {
@@ -249,6 +251,147 @@ func (p PartitionProperties) Label() []string {
 func (p PartitionProperties) Symbol() string {
 	//fmt.Println(p.PartitionType)
 	return p.PartitionType
+}
+
+// Search follows SQL for finding things within a partition
+// e.g. select * from essence where UL <> 060e2b34.01020105.0e090502.017f017f
+//
+// The search command is not case sensitive
+func (p PartitionNode) Search(searchfield string) ([]*Node, error) {
+	//lowercase as ULs are lower case when searching
+	command := strings.Split(strings.ToLower(searchfield), " ")
+
+	if len(command) < 4 {
+		return nil, fmt.Errorf("malformed command of %s expected \"select * from field\" as a minimum command", searchfield)
+	}
+
+	if command[0] != "select" {
+		return nil, fmt.Errorf("first word not select")
+	}
+
+	// worry about this later
+	// if command[1] != "*"
+
+	var searchFields []*Node
+	switch command[3] {
+	case "essence":
+		searchFields = p.Essence
+	case "metadata":
+		searchFields = p.HeaderMetadata
+	default:
+		return nil, fmt.Errorf("invalid field of \"%s\"", command[3])
+	}
+
+	switch len(command) {
+	case 4:
+		return searchFields, nil
+	case 8:
+		// keep on trucking
+	default:
+		return nil, fmt.Errorf("malformed command of %s expected \"select * from field where x = y\" as a minimum command", searchfield)
+	}
+
+	out := make([]*Node, 0)
+	for _, search := range searchFields {
+		// search through the children as well
+		out = append(out, recurseSearch(search, command[5], command[6], command[7])...)
+	}
+	return out, nil
+}
+
+func recurseSearch(node *Node, field, equate, target string) []*Node {
+
+	if node == nil {
+		return nil
+	}
+	out := make([]*Node, 0)
+
+	// search through the children as well
+	var compareField string
+
+	switch field {
+	case "ul":
+
+		compareField = node.Properties.UL()
+	}
+
+	var pass bool
+	switch equate {
+	case "=":
+		pass = (compareField == target)
+	case "<>":
+		pass = (compareField != target)
+	}
+
+	if pass {
+		out = append(out, node)
+	}
+
+	for _, child := range node.Children {
+		out = append(out, recurseSearch(child, field, equate, target)...)
+	}
+
+	return out
+}
+
+// Search follows SQL for finding things within a partition
+// e.g. select * from essence where UL <> 060e2b34.01020105.0e090502.017f017f
+//
+// The search command is not case sensitive
+func (m MXFNode) Search(searchfield string) ([]*PartitionNode, error) {
+	//lowercase as ULs are lower case when searching
+	command := strings.Split(strings.ToLower(searchfield), " ")
+
+	if len(command) < 4 {
+		return nil, fmt.Errorf("malformed command of %s expected \"select * from field\" as a minimum command", searchfield)
+	}
+
+	if command[0] != "select" {
+		return nil, fmt.Errorf("first word not select")
+	}
+
+	// worry about this later
+	// if command[1] != "*"
+
+	var searchFields []*PartitionNode
+	switch command[3] {
+	case "partition", "partitions":
+		searchFields = m.Partitions
+	default:
+		return nil, fmt.Errorf("invalid field of \"%s\"", command[3])
+	}
+
+	switch len(command) {
+	case 4:
+		return searchFields, nil
+	case 8:
+		// keep on trucking
+	default:
+		return nil, fmt.Errorf("malformed command of %s expected \"select * from field where x = y\" as a minimum command", searchfield)
+	}
+
+	out := make([]*PartitionNode, 0)
+	for _, search := range searchFields {
+		var compareField string
+
+		switch command[5] {
+		case "type":
+			compareField = search.Props.PartitionType
+		}
+
+		var pass bool
+		switch command[6] {
+		case "=":
+			pass = (compareField == command[7])
+		case "<>":
+			pass = (compareField != command[7])
+		}
+
+		if pass {
+			out = append(out, search)
+		}
+	}
+	return out, nil
 }
 
 /*
@@ -300,7 +443,7 @@ type refAndChild struct {
 type SpecTests struct {
 	Node map[string][]*func(doc io.ReadSeeker, isxdDesc *Node, primer map[string]string) func(t Test)
 	Part map[string][]*func(doc io.ReadSeeker, isxdDesc *PartitionNode, primer map[string]string) func(t Test)
-	MXF  []*func()
+	MXF  []*func(doc io.ReadSeeker, isxdDesc *MXFNode, primer map[string]string) func(t Test)
 }
 
 // inlcude the logger? if there's any errors flush them - discard ifo for unkown keys fro the moment
@@ -314,7 +457,7 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int, specs SpecTests) 
 		return klv.StartKLVStream(stream, buffer, size)
 	})
 
-	mxf := &MXFNode{Partitions: make([]*PartitionNode, 0), Tests: tests[MXFNode]{TestPass: true}}
+	mxf := &MXFNode{Partitions: make([]*PartitionNode, 0), Tests: tests[MXFNode]{TestPass: true, tests: specs.MXF}}
 	var currentPartitionNode *PartitionNode
 	// /	var currentPartition int
 	var primer map[string]string
@@ -334,6 +477,7 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int, specs SpecTests) 
 		klvItem, klvOpen := <-buffer
 
 		offset := 0
+		var patternTally bool
 		// handle each klv packet
 		for klvOpen {
 
@@ -354,7 +498,9 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int, specs SpecTests) 
 					Essence:        make([]*Node, 0),
 					Parent:         mxf,
 					Tests:          tests[PartitionNode]{TestPass: true, parent: mxf},
+					PartitionPos:   len(mxf.Partitions),
 				}
+				patternTally = true
 
 				// create a reference map for every node that is found
 				refMap := make(map[*Node]refAndChild)
@@ -362,7 +508,7 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int, specs SpecTests) 
 				// test the previous partitions essence as the final step
 				// if len(contents.RipLayout) == 0 and the cache length !=0 emit an error that essence was found first
 
-				partProps := PartitionProperties{PartitionCount: len(mxf.Partitions)}
+				partProps := PartitionProperties{PartitionCount: len(mxf.Partitions), EssenceOrder: make([]string, 0)}
 
 				switch klvItem.Key[13] {
 				case 17:
@@ -375,8 +521,11 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int, specs SpecTests) 
 					// body
 					if klvItem.Key[14] == 17 {
 						partProps.PartitionType = GenericStreamPartition
+						currentPartitionNode.Tests.tests = append(currentPartitionNode.Tests.tests, specs.Part[GenericKey]...)
+
 					} else {
 						partProps.PartitionType = BodyPartition
+						currentPartitionNode.Tests.tests = append(currentPartitionNode.Tests.tests, specs.Part[EssenceKey]...)
 					}
 				case 04:
 					// footer
@@ -424,6 +573,7 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int, specs SpecTests) 
 							out := make(map[string]string)
 							primerUnpack(flush.Value, out)
 							primer = out
+							flushNode.Properties = GroupProperties{UniversalLabel: "060e2b34.027f0101.0d010201.01050100"}
 							currentPartitionNode.Props.Primer = primer
 						}
 						// want to loop through them all?
@@ -567,6 +717,16 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int, specs SpecTests) 
 				// check the name as it came
 				name := fullName(klvItem.Key)
 				_, ok := mxf2go.EssenceLookUp["urn:smpte:ul:"+name]
+
+				if len(currentPartitionNode.Props.EssenceOrder) != 0 {
+					if currentPartitionNode.Props.EssenceOrder[0] == name {
+						patternTally = false
+					} else if patternTally {
+						currentPartitionNode.Props.EssenceOrder = append(currentPartitionNode.Props.EssenceOrder, name)
+					}
+				} else {
+					currentPartitionNode.Props.EssenceOrder = append(currentPartitionNode.Props.EssenceOrder, name)
+				}
 
 				if !ok {
 					// check for a 7f masked version at the final byte
