@@ -67,7 +67,7 @@ func MRXTest(doc io.ReadSeeker, w io.Writer, specifications ...Specification) er
 	klvChan := make(chan *klv.KLV, 1000)
 
 	// get the specifications here
-	testspecs := []SpecTests{NewISXD()}
+	testspecs := []SpecTests{NewISXD(), NewGeneric()}
 
 	base := SpecTests{Node: make(map[string][]*func(doc io.ReadSeeker, isxdDesc *Node, primer map[string]string) func(t Test)),
 		Part: make(map[string][]*func(doc io.ReadSeeker, isxdDesc *PartitionNode, primer map[string]string) func(t Test)),

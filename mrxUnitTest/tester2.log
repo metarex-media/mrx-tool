@@ -4,7 +4,85 @@ Running testing mxf file structure tests:
             Check 1 Pass
             Check 2 Pass
             Check 3 Pass
-Ran 1 tests: Passed:1 , Failed: 0
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the header partion at byte offset 0
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the header partion at byte offset 0
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 16384
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 16384
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 412986
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 412986
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 415906
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 415906
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 814024
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 814024
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 816944
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 816944
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 1214633
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 1214633
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 1217553
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 1217553
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 1615042
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 1615042
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 1617962
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 1617962
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 2015753
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 2015753
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 2018673
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 2018673
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 2416773
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 2416773
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 2419693
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 2419693
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 2820711
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 2820711
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 2823631
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 2823631
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 3177314
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 3177314
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the genericstreampartition partion at byte offset 3179926
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the genericstreampartition partion at byte offset 3179926
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the footer partion at byte offset 3183692
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the footer partion at byte offset 3183692
+            Check 0 Pass
+	    ,,,3: Checking the partition positions in the file match those in the supplied random index pack
+            Check 0 Pass
+Ran 40 tests: Passed:40 , Failed: 0
 Running testing header metadata at header partition at offset 0 tests:
 	    i.DocName(),9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
             Check 0 Pass

@@ -4,7 +4,33 @@ Running testing mxf file structure tests:
             Check 1 Pass
             Check 2 Pass
             Check 3 Pass
-Ran 1 tests: Passed:1 , Failed: 0
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the header partion at byte offset 0
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the header partion at byte offset 0
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 3510
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 3510
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the genericstreampartition partion at byte offset 4046
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the genericstreampartition partion at byte offset 4046
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the genericstreampartition partion at byte offset 4226
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the genericstreampartition partion at byte offset 4226
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the genericstreampartition partion at byte offset 4404
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the genericstreampartition partion at byte offset 4404
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the footer partion at byte offset 6756
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the footer partion at byte offset 6756
+            Check 0 Pass
+	    ,,,3: Checking the partition positions in the file match those in the supplied random index pack
+            Check 0 Pass
+Ran 14 tests: Passed:14 , Failed: 0
 Running testing header metadata at header partition at offset 0 tests:
 	    i.DocName(),9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
             Check 0 Pass

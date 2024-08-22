@@ -293,16 +293,20 @@ func (p PartitionNode) Search(searchfield string) ([]*Node, error) {
 
 	out := make([]*Node, 0)
 	for _, search := range searchFields {
+		founds, err := recurseSearch(search, command[5], command[6], command[7])
+		if err != nil {
+			return nil, err
+		}
 		// search through the children as well
-		out = append(out, recurseSearch(search, command[5], command[6], command[7])...)
+		out = append(out, founds...)
 	}
 	return out, nil
 }
 
-func recurseSearch(node *Node, field, equate, target string) []*Node {
+func recurseSearch(node *Node, field, equate, target string) ([]*Node, error) {
 
 	if node == nil {
-		return nil
+		return nil, nil
 	}
 	out := make([]*Node, 0)
 
@@ -313,6 +317,8 @@ func recurseSearch(node *Node, field, equate, target string) []*Node {
 	case "ul":
 
 		compareField = node.Properties.UL()
+	default:
+		return nil, fmt.Errorf("unknown field \"%v\"", field)
 	}
 
 	var pass bool
@@ -321,6 +327,8 @@ func recurseSearch(node *Node, field, equate, target string) []*Node {
 		pass = (compareField == target)
 	case "<>":
 		pass = (compareField != target)
+	default:
+		return nil, fmt.Errorf("unknown comparison operator \"%v\"", equate)
 	}
 
 	if pass {
@@ -328,10 +336,15 @@ func recurseSearch(node *Node, field, equate, target string) []*Node {
 	}
 
 	for _, child := range node.Children {
-		out = append(out, recurseSearch(child, field, equate, target)...)
+		founds, err := recurseSearch(child, field, equate, target)
+		if err != nil {
+			return nil, err
+		}
+		// search through the children as well
+		out = append(out, founds...)
 	}
 
-	return out
+	return out, nil
 }
 
 // Search follows SQL for finding things within a partition
@@ -377,6 +390,8 @@ func (m MXFNode) Search(searchfield string) ([]*PartitionNode, error) {
 		switch command[5] {
 		case "type":
 			compareField = search.Props.PartitionType
+		default:
+			return nil, fmt.Errorf("unknown field \"%v\"", command[5])
 		}
 
 		var pass bool
@@ -385,6 +400,9 @@ func (m MXFNode) Search(searchfield string) ([]*PartitionNode, error) {
 			pass = (compareField == command[7])
 		case "<>":
 			pass = (compareField != command[7])
+		default:
+			return nil, fmt.Errorf("unknown comparison operator \"%v\"", command[6])
+
 		}
 
 		if pass {

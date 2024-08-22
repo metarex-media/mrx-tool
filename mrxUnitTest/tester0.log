@@ -4,7 +4,46 @@ Running testing mxf file structure tests:
             Check 1 Pass
             Check 2 Pass
             Check 3 Pass
-Ran 1 tests: Passed:1 , Failed: 0
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the header partion at byte offset 0
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the header partion at byte offset 0
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 2243
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 2243
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 21103
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 21103
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 21535
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 21535
+            Check 0 Pass
+	    ,,,3: Checking the previous partition pointer is the correct byte position for the footer partion at byte offset 27541
+            Check 0 Pass
+	    ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the footer partion at byte offset 27541
+            Check 0 Pass
+	    ,,,3: Checking the partition positions in the file match those in the supplied random index pack
+            Check 0Fail!
+                The generated index pack did not match the file index Pack
+                Expected
+                    <[]mrxUnitTest.RIP | len:5, cap:8>: [
+                        {sid: 0, byteOffset: 0},
+                        {sid: 2, byteOffset: 2243},
+                        {sid: 2, byteOffset: 21103},
+                        {sid: 2, byteOffset: 21535},
+                        {sid: 0, byteOffset: 27541},
+                    ]
+                to equal
+                    <[]mrxUnitTest.RIP | len:5, cap:8>: [
+                        {sid: 0, byteOffset: 0},
+                        {sid: 1, byteOffset: 2243},
+                        {sid: 1, byteOffset: 21103},
+                        {sid: 2, byteOffset: 21535},
+                        {sid: 0, byteOffset: 27541},
+                    ]
+Ran 12 tests: Passed:11 , Failed: 1
 Running testing header metadata at header partition at offset 0 tests:
 	    i.DocName(),9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
             Check 0 Pass
