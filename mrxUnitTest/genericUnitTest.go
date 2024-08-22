@@ -8,16 +8,16 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func NewGeneric() SpecTests {
+func NewGeneric() Specifications {
 
 	ts := mrxPartLayout
-	return SpecTests{
-		MXF: []*func(doc io.ReadSeeker, isxdDesc *MXFNode, primer map[string]string) func(t Test){&ts},
+	return Specifications{
+		MXF: []*func(doc io.ReadSeeker, isxdDesc *MXFNode) func(t Test){&ts},
 	}
 
 }
 
-func mrxPartLayout(stream io.ReadSeeker, node *MXFNode, primer map[string]string) func(t Test) {
+func mrxPartLayout(stream io.ReadSeeker, node *MXFNode) func(t Test) {
 
 	parts := node.Partitions
 

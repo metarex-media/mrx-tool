@@ -48,30 +48,16 @@ testing header
 
 */
 
-// Specification are the test functions for testing an MXF file to
-// a specification
-type Specification interface {
-	// Test the header partition for metadata etc
-	TestHeader(doc io.ReadSeeker, header *PartitionNode) func(t Test)
-	// TestEssence for testing the essence within a partition
-	TestEssence(doc io.ReadSeeker, header *PartitionNode) func(t Test)
-	// test the overall structure of the mxf file
-	TestStructure(doc io.ReadSeeker, mxf *MXFNode) func(t Test)
-	// TestExtra is for any test cases not covered by, header, essence or structure tests
-	TestExtra(doc io.ReadSeeker, mxf *MXFNode) func(t Test)
-	// TestMarker() - something the test has to find in order to run
-}
-
-func MRXTest(doc io.ReadSeeker, w io.Writer, specifications ...Specification) error {
+func MRXTest(doc io.ReadSeeker, w io.Writer) error {
 
 	klvChan := make(chan *klv.KLV, 1000)
 
 	// get the specifications here
-	testspecs := []SpecTests{NewISXD(), NewGeneric()}
+	testspecs := []Specifications{NewISXD(), NewGeneric()}
 
-	base := SpecTests{Node: make(map[string][]*func(doc io.ReadSeeker, isxdDesc *Node, primer map[string]string) func(t Test)),
-		Part: make(map[string][]*func(doc io.ReadSeeker, isxdDesc *PartitionNode, primer map[string]string) func(t Test)),
-		MXF:  make([]*func(doc io.ReadSeeker, isxdDesc *MXFNode, primer map[string]string) func(t Test), 0)}
+	base := Specifications{Node: make(map[string][]*func(doc io.ReadSeeker, isxdDesc *Node, primer map[string]string) func(t Test)),
+		Part: make(map[string][]*func(doc io.ReadSeeker, isxdDesc *PartitionNode) func(t Test)),
+		MXF:  make([]*func(doc io.ReadSeeker, isxdDesc *MXFNode) func(t Test), 0)}
 
 	for _, ts := range testspecs {
 		for key, n := range ts.Node {
@@ -119,7 +105,7 @@ func MRXTest(doc io.ReadSeeker, w io.Writer, specifications ...Specification) er
 	tc.Header("testing mxf file structure", func(t Test) {
 		for _, structure := range ast.Tests.tests {
 			str := *structure
-			str(doc, ast, nil)(t)
+			str(doc, ast)(t)
 		}
 	})
 
@@ -133,7 +119,7 @@ func MRXTest(doc io.ReadSeeker, w io.Writer, specifications ...Specification) er
 			tc.Header(fmt.Sprintf("testing header metadata at %s partition at offset %v", part.Props.PartitionType, part.Key.Start), func(t Test) {
 
 				for _, child := range part.HeaderMetadata {
-					childTests(doc, child, part.Props.Primer, t)
+					testChildNodes(doc, child, part.Props.Primer, t)
 				}
 			})
 
@@ -141,7 +127,7 @@ func MRXTest(doc io.ReadSeeker, w io.Writer, specifications ...Specification) er
 				for _, child := range part.Tests.tests {
 
 					childer := *child
-					childer(doc, part, part.Props.Primer)(t)
+					childer(doc, part)(t)
 					if !t.testPass() {
 						part.callBack()
 					}
@@ -153,7 +139,7 @@ func MRXTest(doc io.ReadSeeker, w io.Writer, specifications ...Specification) er
 				for _, tests := range part.Tests.tests {
 
 					test := *tests
-					test(doc, part, part.Props.Primer)(t)
+					test(doc, part)(t)
 					if !t.testPass() {
 						part.callBack()
 					}
@@ -174,13 +160,13 @@ func MRXTest(doc io.ReadSeeker, w io.Writer, specifications ...Specification) er
 	return nil
 }
 
-func childTests(doc io.ReadSeeker, node *Node, primer map[string]string, t Test) {
+func testChildNodes(doc io.ReadSeeker, node *Node, primer map[string]string, t Test) {
 
 	if node == nil {
 		return
 	}
 
-	for _, tester := range node.Tests.tests {
+	for _, tester := range node.Tests.testsWithPrimer {
 		test := *tester
 		test(doc, node, primer)(t)
 		if !t.testPass() {
@@ -189,7 +175,7 @@ func childTests(doc io.ReadSeeker, node *Node, primer map[string]string, t Test)
 	}
 
 	for _, child := range node.Children {
-		childTests(doc, child, primer, t)
+		testChildNodes(doc, child, primer, t)
 	}
 }
 

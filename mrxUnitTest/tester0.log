@@ -1,5 +1,5 @@
 Running testing mxf file structure tests:
-	    i.DocName(),5.4,shall,3: Checking that the generic partition positions match the expected positions at the end of the file
+	    RDD47:2018,5.4,shall,3: Checking that the generic partition positions match the expected positions at the end of the file
             Check 0 Pass
             Check 1 Pass
             Check 2 Pass
@@ -45,23 +45,23 @@ Running testing mxf file structure tests:
                     ]
 Ran 12 tests: Passed:11 , Failed: 1
 Running testing header metadata at header partition at offset 0 tests:
-	    i.DocName(),9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
+	    RDD47:2018,9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
             Check 0 Pass
-	    i.DocName(),9.3,shall,1: Checking that the data essence coding filed is present in the isxd descriptor
+	    RDD47:2018,9.3,shall,1: Checking that the data essence coding filed is present in the isxd descriptor
             Check 0 Pass
             Check 1 Pass
 Ran 2 tests: Passed:2 , Failed: 0
 Running testing header stuff header partition at offset 0 tests:
-	    i.DocName(),5.4,shall,1: Checking there is no error getting the generic partition streams
+	    RDD47:2018,5.4,shall,1: Checking there is no error getting the generic partition streams
             Check 0 Pass
 Ran 1 tests: Passed:1 , Failed: 0
 Running testing essence stuff body partition at offset 2243 tests:
-	    i.DocName(),7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
+	    RDD47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
             Check 0 Pass
             Check 1 Pass
 Ran 1 tests: Passed:1 , Failed: 0
 Running testing essence stuff body partition at offset 21103 tests:
-	    i.DocName(),7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
+	    RDD47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
             Check 0 Pass
             Check 1Fail!
                 1 other essence keys found
@@ -69,11 +69,11 @@ Running testing essence stuff body partition at offset 21103 tests:
                     <int>: 1
                 to equal
                     <int>: 0
-	    i.DocName(),7.5,shall,1: Checking that the content package order are regular throughout the essence stream
+	    RDD47:2018,7.5,shall,1: Checking that the content package order are regular throughout the essence stream
             Check 0 Pass
 Ran 2 tests: Passed:1 , Failed: 1
 Running testing essence stuff body partition at offset 21535 tests:
-	    i.DocName(),7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
+	    RDD47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
             Check 0 Pass
             Check 1Fail!
                 1 other essence keys found
@@ -81,18 +81,18 @@ Running testing essence stuff body partition at offset 21535 tests:
                     <int>: 1
                 to equal
                     <int>: 0
-	    i.DocName(),7.5,shall,1: Checking that the content package order are regular throughout the essence stream
+	    RDD47:2018,7.5,shall,1: Checking that the content package order are regular throughout the essence stream
             Check 0 Pass
 Ran 2 tests: Passed:1 , Failed: 1
 Running testing header metadata at footer partition at offset 27541 tests:
-	    i.DocName(),9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
+	    RDD47:2018,9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
             Check 0 Pass
-	    i.DocName(),9.3,shall,1: Checking that the data essence coding filed is present in the isxd descriptor
+	    RDD47:2018,9.3,shall,1: Checking that the data essence coding filed is present in the isxd descriptor
             Check 0 Pass
             Check 1 Pass
 Ran 2 tests: Passed:2 , Failed: 0
 Running testing header stuff footer partition at offset 27541 tests:
-	    i.DocName(),5.4,shall,1: Checking there is no error getting the generic partition streams
+	    RDD47:2018,5.4,shall,1: Checking there is no error getting the generic partition streams
             Check 0 Pass
 Ran 1 tests: Passed:1 , Failed: 0
 Test Failed

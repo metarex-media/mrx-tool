@@ -51,9 +51,10 @@ func (m *MXFNode) callBack() {
 }
 
 type tests[N Nodes] struct {
-	parent   parent `yaml:"-"`
-	tests    []*func(doc io.ReadSeeker, header *N, primer map[string]string) func(t Test)
-	TestPass bool
+	parent          parent `yaml:"-"`
+	tests           []*func(doc io.ReadSeeker, header *N) func(t Test)
+	testsWithPrimer []*func(doc io.ReadSeeker, header *N, primer map[string]string) func(t Test)
+	TestPass        bool
 }
 
 type MXFNode struct {
@@ -458,14 +459,17 @@ type refAndChild struct {
 	ref   [][]byte
 }
 
-type SpecTests struct {
+type Specifications struct {
+	// node specifications for groups, map is UL node test
 	Node map[string][]*func(doc io.ReadSeeker, isxdDesc *Node, primer map[string]string) func(t Test)
-	Part map[string][]*func(doc io.ReadSeeker, isxdDesc *PartitionNode, primer map[string]string) func(t Test)
-	MXF  []*func(doc io.ReadSeeker, isxdDesc *MXFNode, primer map[string]string) func(t Test)
+	// test aprtitions the partition tyoe is the map key
+	Part map[string][]*func(doc io.ReadSeeker, isxdDesc *PartitionNode) func(t Test)
+	// array of mxf structual tests
+	MXF  []*func(doc io.ReadSeeker, isxdDesc *MXFNode) func(t Test)
 }
 
 // inlcude the logger? if there's any errors flush them - discard ifo for unkown keys fro the moment
-func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int, specs SpecTests) (*MXFNode, error) { // wg *sync.WaitGroup, buffer chan packet, errChan chan error) {
+func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int, specs Specifications) (*MXFNode, error) { // wg *sync.WaitGroup, buffer chan packet, errChan chan error) {
 
 	// use errs to handle errors while runnig concurrently
 	errs, _ := errgroup.WithContext(context.Background())
@@ -617,7 +621,7 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int, specs SpecTests) 
 						if ok {
 							if nodeTests, ok := specs.Node[key]; ok {
 
-								flushNode.Tests = tests[Node]{tests: nodeTests}
+								flushNode.Tests = tests[Node]{testsWithPrimer: nodeTests}
 							}
 						}
 						pos := 0
