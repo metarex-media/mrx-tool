@@ -145,7 +145,7 @@ func MRXTest(doc io.ReadSeeker, w io.Writer) error {
 					childer := *child
 					childer(doc, part)(t)
 					if !t.testPass() {
-						part.callBack()
+						part.FlagFail()
 					}
 				}
 			})
@@ -163,7 +163,7 @@ func MRXTest(doc io.ReadSeeker, w io.Writer) error {
 					test := *tests
 					test(doc, part)(t)
 					if !t.testPass() {
-						part.callBack()
+						part.FlagFail()
 					}
 				}
 			})
@@ -176,22 +176,29 @@ func MRXTest(doc io.ReadSeeker, w io.Writer) error {
 	//	tc.extraTest(doc, ast, specifications...)
 
 	if len(skips.Node) > 0 {
-		skipString := "The following tests for the ULs were not run\n"
+		skip := map[string][]string{"Skipped tests for the following  ULs": make([]string, len(skips.Node))}
+		i := 0
 		for k := range skips.Node {
-			skipString += fmt.Sprintf("    - %s\n", k)
+			skip["Skipped tests for the following  ULs"][i] = k
+			i++
 		}
-		_, err := w.Write([]byte(skipString))
+
+		skipBytes, _ := yaml.Marshal(skip)
+		_, err := w.Write(skipBytes)
 		if err != nil {
 			return err
 		}
 	}
 
 	if len(skips.Part) > 0 {
-		skipString := "Skipped tests for the following partitions\n"
+		skip := map[string][]string{"Skipped tests for the following partitions": make([]string, len(skips.Part))}
+		i := 0
 		for k := range skips.Part {
-			skipString += fmt.Sprintf("    - %s\n", k)
+			skip["Skipped tests for the following partitions"][i] = k
+			i++
 		}
-		_, err := w.Write([]byte(skipString))
+		skipBytes, _ := yaml.Marshal(skip)
+		_, err := w.Write(skipBytes)
 		if err != nil {
 			return err
 		}
@@ -202,6 +209,11 @@ func MRXTest(doc io.ReadSeeker, w io.Writer) error {
 	f.Write(b)
 
 	return nil
+}
+
+type skipped struct {
+	Field  string
+	Missed []string
 }
 
 func testChildNodes(doc io.ReadSeeker, node *Node, primer map[string]string, t Test, skips Specifications) {
@@ -215,7 +227,7 @@ func testChildNodes(doc io.ReadSeeker, node *Node, primer map[string]string, t T
 		test := *tester
 		test(doc, node, primer)(t)
 		if !t.testPass() {
-			node.callBack()
+			node.FlagFail()
 		}
 	}
 

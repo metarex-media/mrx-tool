@@ -26,47 +26,64 @@ type Node struct {
 	Children []*Node
 }
 
+// Nodes are the different nodes in the Abstract syntax tree
 type Nodes interface {
 	Node | PartitionNode | MXFNode
 }
 
-type parent interface {
-	callBack() // a function that signal infected child
+// Parent is for declaring the parent of a node
+// without out giving full control of that Node.
+type Parent interface {
+	FlagFail() // a function that recursively calls the parents when a test is failed
 }
 
-func (n *Node) callBack() {
+// Flag fail sets the test pass to fail
+// then calls the same on its parent.
+func (n *Node) FlagFail() {
 
 	n.Tests.TestStatus.Pass = false
-	n.Tests.parent.callBack()
+	n.Tests.parent.FlagFail()
 
 }
 
-func (p *PartitionNode) callBack() {
+// Flag fail sets the test pass to fail
+// then calls the same on its parent.
+func (p *PartitionNode) FlagFail() {
 	p.Tests.TestStatus.Pass = false
-	p.Tests.parent.callBack()
+	p.Tests.parent.FlagFail()
 	//	.callBack()
 }
 
-func (m *MXFNode) callBack() {
+// Flag fail sets the test pass to fail
+func (m *MXFNode) FlagFail() {
 	m.Tests.TestStatus.Pass = false
 }
 
+// tests are the tests to be run on a node
+// and the results of the test
 type tests[N Nodes] struct {
-	parent          parent `yaml:"-"`
+	parent          Parent `yaml:"-"`
 	tests           []*func(doc io.ReadSeeker, header *N) func(t Test)
 	testsWithPrimer []*func(doc io.ReadSeeker, header *N, primer map[string]string) func(t Test)
 	TestStatus      testStatus
 }
 
+// test status is a simple wrapper of the test outcome
 type testStatus struct {
 	Pass bool
 }
 
+// MXFNode is the parent node of the MXF file.
+// it contains its partitions as children
+// and the list of tests to run on the node.
 type MXFNode struct {
 	Partitions []*PartitionNode
 	Tests      tests[MXFNode]
 }
 
+// PartitionNode is the node for every MXF partition/
+// It contains the different types of content as different arrays
+// of nodes.
 type PartitionNode struct {
 	Parent             *MXFNode `yaml:"-"`
 	Key, Length, Value Position
@@ -417,47 +434,6 @@ func (m MXFNode) Search(searchfield string) ([]*PartitionNode, error) {
 	}
 	return out, nil
 }
-
-/*
-have to be more explicit than the go AST
-implement types of node?
-
-Parition Node
-Group Node
-Essence Node - these can all be taken away with the properties
-			 - handle properties of type group property, essence etc. Can still be filtered out as
-			   yaml, but handled anyonmously inside. Allows people to put their own properties in
-
-
-*/
-
-// Add a search feature in
-// search by property? Properties map[comparable]any? Less type assertion more searching
-// would omit properties?
-
-/*
-
-search the map as well based on UUID?
-
-If i want to find types of group X or only essence.
-
-Everything has a depth so when its printed?
-
-
-Wnat to replicate that nested view of  XML reg - which is where the anys come in
-// do not parse everything, especially for large objects.
-
-*/
-
-/*
-workflow
-
-Include a control Node - these can be anything, include a search function and the Node as a list?
-This contains detail shared across the file for MRX files
-
-new parsing, each partition is a parent
-
-*/
 
 type refAndChild struct {
 	child bool
@@ -1002,4 +978,82 @@ func getId(ref any) []byte {
 	}
 
 	return UID
+}
+
+// DecodeGroupNode converts a node to a klv then
+// calls decode group
+func DecodeGroupNode(doc io.ReadSeeker, node *Node, primer map[string]string) (map[string]any, error) {
+	groupKLV := nodeToKLV(doc, node)
+
+	return DecodeGroup(groupKLV, primer)
+}
+
+// DecodeGroup decodes a group KLV into a map[string]any
+// where the key is the ul of the field and the any is the decoded value.
+func DecodeGroup(group *klv.KLV, primer map[string]string) (map[string]any, error) {
+	dec, skip := decodeBuilder(group.Key[5])
+
+	if skip {
+		return nil, fmt.Errorf("unable to decode essence, unknown decode method byte %0x", group.Key[5])
+	}
+
+	decoders, ok := mxf2go.Groups["urn:smpte:ul:"+fullName(group.Key)]
+
+	if !ok {
+		decoders, ok = mxf2go.Groups["urn:smpte:ul:"+fullNameMask(group.Key, 5)]
+	}
+	if !ok {
+		decoders, ok = mxf2go.Groups["urn:smpte:ul:"+fullNameMask(group.Key, 5, 13)]
+	}
+
+	if !ok {
+		return nil, fmt.Errorf("no group for the key %s was found", fullName(group.Key))
+	}
+
+	output := make(map[string]any)
+	pos := 0
+
+	for pos < len(group.Value) {
+		key, klength := dec.keyFunc(group.Value[pos : pos+dec.keyLen])
+		length, lenlength := dec.lengthFunc(group.Value[pos+dec.keyLen : pos+dec.keyLen+dec.lengthLen])
+		if klength != 16 {
+			key = primer[key]
+		}
+		decodeF, ok := decoders.Group["urn:smpte:ul:"+key]
+
+		if ok {
+
+			b, _ := decodeF.Decode(group.Value[pos+dec.keyLen+dec.lengthLen : pos+dec.keyLen+dec.lengthLen+length])
+
+			output[decodeF.UL] = b
+		}
+
+		pos += klength + length + lenlength
+	}
+
+	return output, nil
+}
+
+// fullNameMask mask the specified bytes in a key as 7f
+func fullNameMask(key []byte, maskBytes ...int) string {
+	mid := make([]byte, len(key))
+	copy(mid, key)
+
+	for _, i := range maskBytes {
+		mid[i] = 0x7f
+	}
+	return fullName(mid)
+}
+
+// nodeToKLV converts a node to a KLV object
+func nodeToKLV(stream io.ReadSeeker, node *Node) *klv.KLV {
+	stream.Seek(int64(node.Key.Start), 0)
+	key := make([]byte, node.Key.End-node.Key.Start)
+	leng := make([]byte, node.Length.End-node.Length.Start)
+	val := make([]byte, node.Value.End-node.Value.Start)
+	stream.Read(key)
+	stream.Read(leng)
+	stream.Read(val)
+
+	return &klv.KLV{Key: key, Length: leng, Value: val}
 }
