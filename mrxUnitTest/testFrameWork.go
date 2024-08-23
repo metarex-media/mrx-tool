@@ -33,7 +33,7 @@ func (tc *TestContext) EndTest() {
 func (s *TestContext) Header(message string, tests func(t Test)) {
 
 	var log bytes.Buffer
-	seg := &segmentTest{header: message, errChannel: make(chan string, 5), testBuffer: log, log: s.w}
+	seg := &segmentTest{header: message, errChannel: make(chan string, 5), testBuffer: log, log: s.w, prevRes: true}
 
 	ct := &CompleteTest{
 		segment: seg,
@@ -189,11 +189,6 @@ func (s *segmentTest) result() {
 
 }
 
-func (s *segmentTest) testPass() bool {
-
-	return s.prevRes
-}
-
 func (c *CompleteTest) testPass() bool {
 	return c.segment.prevRes
 }
@@ -228,6 +223,7 @@ func (s *segmentTest) Test(message string, specDetail SpecDetails, asserts ...bo
 		if assert {
 			s.testBuffer.Write([]byte(fmt.Sprintf("        %sCheck %v Pass\n", gap, i)))
 		} else {
+
 			s.prevRes = false
 			s.failCount++
 			s.testBuffer.Write([]byte(fmt.Sprintf("        %sCheck %vFail!", gap, i)))

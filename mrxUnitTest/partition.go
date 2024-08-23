@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	"github.com/metarex-media/mrx-tool/klv"
-	. "github.com/onsi/gomega"
 )
 
+// fullname returns a slice of 16 bytes as a the universal label format
 func fullName(namebytes []byte) string {
 
 	if len(namebytes) != 16 {
@@ -18,28 +18,6 @@ func fullName(namebytes []byte) string {
 		namebytes[0], namebytes[1], namebytes[2], namebytes[3], namebytes[4], namebytes[5], namebytes[6], namebytes[7],
 		namebytes[8], namebytes[9], namebytes[10], namebytes[11], namebytes[12], namebytes[13], namebytes[14], namebytes[15])
 }
-
-// partition name generates the name string removing the variable bits
-func partitionName(namebytes []byte) string {
-
-	if len(namebytes) != 16 {
-		return ""
-	}
-
-	// "060e2b34.020501  .0d010201.0103  00"
-	return fmt.Sprintf("%02x%02x%02x%02x.%02x%02x%02x  .%02x%02x%02x%02x.%02x    %02x",
-		namebytes[0], namebytes[1], namebytes[2], namebytes[3], namebytes[4], namebytes[5], namebytes[6],
-		namebytes[8], namebytes[9], namebytes[10], namebytes[11], namebytes[12], namebytes[15])
-}
-
-// Test is a demo tes of how to log each individual test to be used
-// these are exported so godocs can read it
-/*func Test(tester *internal.Gomega, seg *segmentTest, totalByte, ThisPartition int) {
-	seg.Test("Checking the this partition pointer matches the actual byte offset of the file", func() bool {
-		return tester.Expect(totalByte).To(Equal(ThisPartition),
-			fmt.Sprintf("The byte offset %v, did not match the this partition value %v", totalByte, ThisPartition))
-	})
-} */
 
 type mxfPartition struct {
 	Signature         string // Must be, hex: 06 0E 2B 34
@@ -142,40 +120,8 @@ func partitionExtract(partionKLV *klv.KLV) mxfPartition {
 	return partPack
 }
 
+// RIP is the random index position struct
 type RIP struct {
 	sid        uint32
 	byteOffset uint64
-}
-
-func (l *layout) ripHandle(rip *klv.KLV) {
-
-	// check the positions it gives with the logged positions
-	length, _ := klv.BerDecode(rip.Length)
-
-	ripLength := length - 4
-
-	var gotRip []RIP
-
-	for i := 0; i < ripLength; i += 12 {
-		gotRip = append(gotRip, RIP{sid: order.Uint32(rip.Value[i : i+4]), byteOffset: order.Uint64(rip.Value[i+4 : i+12])})
-	}
-
-	//	testing.T
-	// GinkgoWriter
-	// var t *testing.T
-	//	defer GinkgoRecover()
-	// RegisterFailHandler(Fail)
-
-	tester := newTester(l.testLog, "Random Index Pack Tests")
-	defer tester.Result()
-	// res.Expect()
-	tester.TestRandomIndexPack(l.Rip, gotRip)
-
-}
-
-// TestRandomIndexPack compares the index pack in the file with what the random index pack should be
-// changes in total byte count and SID of partitions are logged in the RIP
-func (c *CompleteTest) TestRandomIndexPack(actualRip, declaredRip []RIP) {
-	c.segment.Test("Checking the partition positions in the file match those in the supplied random index pack", SpecDetails{},
-		c.Expect(actualRip).To(Equal(declaredRip), "The generated index pack did not match the file index Pack"))
 }

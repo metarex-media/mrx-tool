@@ -95,4 +95,8 @@ Running testing header stuff footer partition at offset 27541 tests:
 	    RDD47:2018,5.4,shall,1: Checking there is no error getting the generic partition streams
             Check 0 Pass
 Ran 1 tests: Passed:1 , Failed: 0
+The following tests for the ULs were not run
+    - A skipped UL
+Skipped tests for the following partitions
+    - generickey
 Test Failed

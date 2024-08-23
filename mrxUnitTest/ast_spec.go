@@ -64,6 +64,7 @@ func MRXTest(doc io.ReadSeeker, w io.Writer) error {
 			out, ok := base.Node[key]
 			if !ok {
 				base.Node[key] = n
+
 			} else {
 				out = append(out, n...)
 				base.Node[key] = out
@@ -83,6 +84,18 @@ func MRXTest(doc io.ReadSeeker, w io.Writer) error {
 		}
 
 		base.MXF = append(base.MXF, ts.MXF...)
+	}
+
+	skips := Specifications{Node: make(map[string][]*func(doc io.ReadSeeker, isxdDesc *Node, primer map[string]string) func(t Test)),
+		Part: make(map[string][]*func(doc io.ReadSeeker, isxdDesc *PartitionNode) func(t Test)),
+	}
+
+	for k, v := range base.Node {
+		skips.Node[k] = v
+	}
+
+	for k, v := range base.Part {
+		skips.Part[k] = v
 	}
 
 	ast, genErr := MakeAST(doc, klvChan, 10, base)
@@ -116,10 +129,13 @@ func MRXTest(doc io.ReadSeeker, w io.Writer) error {
 		// check the essence in each partitoin?
 		switch part.Props.PartitionType {
 		case HeaderPartition, FooterPartition:
+			// delete the map key for tests of this type
+			delete(skips.Part, HeaderKey)
+
 			tc.Header(fmt.Sprintf("testing header metadata at %s partition at offset %v", part.Props.PartitionType, part.Key.Start), func(t Test) {
 
 				for _, child := range part.HeaderMetadata {
-					testChildNodes(doc, child, part.Props.Primer, t)
+					testChildNodes(doc, child, part.Props.Primer, t, skips)
 				}
 			})
 
@@ -135,6 +151,12 @@ func MRXTest(doc io.ReadSeeker, w io.Writer) error {
 			})
 		//	tc.headerTest(doc, part, specifications...)
 		case BodyPartition, GenericStreamPartition:
+			if part.Props.PartitionType == BodyPartition {
+				delete(skips.Part, EssenceKey)
+			} else {
+				delete(skips.Part, GenericKey)
+			}
+
 			tc.Header(fmt.Sprintf("testing essence stuff %s partition at offset %v", part.Props.PartitionType, part.Key.Start), func(t Test) {
 				for _, tests := range part.Tests.tests {
 
@@ -153,6 +175,28 @@ func MRXTest(doc io.ReadSeeker, w io.Writer) error {
 	}
 	//	tc.extraTest(doc, ast, specifications...)
 
+	if len(skips.Node) > 0 {
+		skipString := "The following tests for the ULs were not run\n"
+		for k := range skips.Node {
+			skipString += fmt.Sprintf("    - %s\n", k)
+		}
+		_, err := w.Write([]byte(skipString))
+		if err != nil {
+			return err
+		}
+	}
+
+	if len(skips.Part) > 0 {
+		skipString := "Skipped tests for the following partitions\n"
+		for k := range skips.Part {
+			skipString += fmt.Sprintf("    - %s\n", k)
+		}
+		_, err := w.Write([]byte(skipString))
+		if err != nil {
+			return err
+		}
+	}
+
 	f, _ := os.Create("tester0.yaml")
 	b, _ := yaml.Marshal(ast)
 	f.Write(b)
@@ -160,13 +204,14 @@ func MRXTest(doc io.ReadSeeker, w io.Writer) error {
 	return nil
 }
 
-func testChildNodes(doc io.ReadSeeker, node *Node, primer map[string]string, t Test) {
+func testChildNodes(doc io.ReadSeeker, node *Node, primer map[string]string, t Test, skips Specifications) {
 
 	if node == nil {
 		return
 	}
 
 	for _, tester := range node.Tests.testsWithPrimer {
+		delete(skips.Node, node.Properties.UL())
 		test := *tester
 		test(doc, node, primer)(t)
 		if !t.testPass() {
@@ -175,7 +220,7 @@ func testChildNodes(doc io.ReadSeeker, node *Node, primer map[string]string, t T
 	}
 
 	for _, child := range node.Children {
-		testChildNodes(doc, child, primer, t)
+		testChildNodes(doc, child, primer, t, skips)
 	}
 }
 

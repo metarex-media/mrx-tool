@@ -12,7 +12,8 @@ func NewGeneric() Specifications {
 
 	ts := mrxPartLayout
 	return Specifications{
-		MXF: []*func(doc io.ReadSeeker, isxdDesc *MXFNode) func(t Test){&ts},
+		MXF:  []*func(doc io.ReadSeeker, isxdDesc *MXFNode) func(t Test){&ts},
+		Node: map[string][]*func(doc io.ReadSeeker, isxdDesc *Node, primer map[string]string) func(t Test){"A skipped UL": {}},
 	}
 
 }

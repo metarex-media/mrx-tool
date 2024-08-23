@@ -35,26 +35,31 @@ type parent interface {
 }
 
 func (n *Node) callBack() {
-	n.Tests.TestPass = false
+
+	n.Tests.TestStatus.Pass = false
 	n.Tests.parent.callBack()
 
 }
 
 func (p *PartitionNode) callBack() {
-	p.Tests.TestPass = false
+	p.Tests.TestStatus.Pass = false
 	p.Tests.parent.callBack()
 	//	.callBack()
 }
 
 func (m *MXFNode) callBack() {
-	m.Tests.TestPass = false
+	m.Tests.TestStatus.Pass = false
 }
 
 type tests[N Nodes] struct {
 	parent          parent `yaml:"-"`
 	tests           []*func(doc io.ReadSeeker, header *N) func(t Test)
 	testsWithPrimer []*func(doc io.ReadSeeker, header *N, primer map[string]string) func(t Test)
-	TestPass        bool
+	TestStatus      testStatus
+}
+
+type testStatus struct {
+	Pass bool
 }
 
 type MXFNode struct {
@@ -465,7 +470,7 @@ type Specifications struct {
 	// test aprtitions the partition tyoe is the map key
 	Part map[string][]*func(doc io.ReadSeeker, isxdDesc *PartitionNode) func(t Test)
 	// array of mxf structual tests
-	MXF  []*func(doc io.ReadSeeker, isxdDesc *MXFNode) func(t Test)
+	MXF []*func(doc io.ReadSeeker, isxdDesc *MXFNode) func(t Test)
 }
 
 // inlcude the logger? if there's any errors flush them - discard ifo for unkown keys fro the moment
@@ -479,7 +484,7 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int, specs Specificati
 		return klv.StartKLVStream(stream, buffer, size)
 	})
 
-	mxf := &MXFNode{Partitions: make([]*PartitionNode, 0), Tests: tests[MXFNode]{TestPass: true, tests: specs.MXF}}
+	mxf := &MXFNode{Partitions: make([]*PartitionNode, 0), Tests: tests[MXFNode]{TestStatus: testStatus{true}, tests: specs.MXF}}
 	var currentPartitionNode *PartitionNode
 	// /	var currentPartition int
 	var primer map[string]string
@@ -505,181 +510,65 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int, specs Specificati
 
 			// check if it is a partition key
 			// if not its presumed to be essence
-			if partitionName(klvItem.Key) == "060e2b34.020501  .0d010201.01    00" {
+
+			if fullNameMask(klvItem.Key, 7, 13, 14) == "060e2b34.0205017f.0d010201.017f7f00" {
 				if currentPartitionNode != nil {
 					mxf.Partitions = append(mxf.Partitions, currentPartitionNode)
 				}
 
-				// add details from now
-				currentPartitionNode = &PartitionNode{
-
-					Key:            Position{Start: offset, End: offset + len(klvItem.Key)},
-					Length:         Position{Start: offset + len(klvItem.Key), End: offset + len(klvItem.Key) + len(klvItem.Length)},
-					Value:          Position{Start: offset + len(klvItem.Key) + len(klvItem.Length), End: offset + klvItem.TotalLength()},
-					HeaderMetadata: make([]*Node, 0),
-					Essence:        make([]*Node, 0),
-					Parent:         mxf,
-					Tests:          tests[PartitionNode]{TestPass: true, parent: mxf},
-					PartitionPos:   len(mxf.Partitions),
-				}
-				patternTally = true
+				// extract the partition
+				currentPartitionNode = extractPartition(klvItem, mxf, &patternTally, primer, specs, offset)
 
 				// create a reference map for every node that is found
 				refMap := make(map[*Node]refAndChild)
 				offset += klvItem.TotalLength()
-				// test the previous partitions essence as the final step
-				// if len(contents.RipLayout) == 0 and the cache length !=0 emit an error that essence was found first
-
-				partProps := PartitionProperties{PartitionCount: len(mxf.Partitions), EssenceOrder: make([]string, 0)}
-
-				switch klvItem.Key[13] {
-				case 17:
-					partProps.PartitionType = RIPPartition
-				case 02:
-					// header
-					partProps.PartitionType = HeaderPartition
-					currentPartitionNode.Tests.tests = append(currentPartitionNode.Tests.tests, specs.Part[HeaderKey]...)
-				case 03:
-					// body
-					if klvItem.Key[14] == 17 {
-						partProps.PartitionType = GenericStreamPartition
-						currentPartitionNode.Tests.tests = append(currentPartitionNode.Tests.tests, specs.Part[GenericKey]...)
-
-					} else {
-						partProps.PartitionType = BodyPartition
-						currentPartitionNode.Tests.tests = append(currentPartitionNode.Tests.tests, specs.Part[EssenceKey]...)
-					}
-				case 04:
-					// footer
-					partProps.PartitionType = FooterPartition
-					currentPartitionNode.Tests.tests = append(currentPartitionNode.Tests.tests, specs.Part[HeaderKey]...)
-
-				default:
-					// is nothing
-					partProps.PartitionType = "invalid"
-
-				}
-				// primer will get updated because of pointer magic
-				partProps.Primer = primer
-				currentPartitionNode.Props = partProps
 
 				partitionLayout := partitionExtract(klvItem)
 
 				metaByteCount := 0
 				idMap := make(map[string]*Node) // assign the ids of the map
 				for metaByteCount < int(partitionLayout.HeaderByteCount) {
-					flush, open := <-buffer
+					metadata, open := <-buffer
 
 					if !open {
 						return fmt.Errorf("error when using klv data klv stream interrupted")
 					}
 					// decode the essence here
 
-					flushNode := &Node{
-						Key:    Position{Start: offset, End: offset + len(flush.Key)},
-						Length: Position{Start: offset + len(flush.Key), End: offset + len(flush.Key) + len(flush.Length)},
-						Value:  Position{Start: offset + len(flush.Key) + len(flush.Length), End: offset + flush.TotalLength()},
-						Tests:  tests[Node]{TestPass: true},
+					mdNode := &Node{
+						Key:    Position{Start: offset, End: offset + len(metadata.Key)},
+						Length: Position{Start: offset + len(metadata.Key), End: offset + len(metadata.Key) + len(metadata.Length)},
+						Value:  Position{Start: offset + len(metadata.Key) + len(metadata.Length), End: offset + metadata.TotalLength()},
+						Tests:  tests[Node]{TestStatus: testStatus{true}},
 					}
 
-					refMap[flushNode] = refAndChild{}
+					refMap[mdNode] = refAndChild{}
 
 					// @TODO include KLV fill packets
-					dec, skip := decodeBuilder(flush.Key[5])
+					_, skip := decodeBuilder(metadata.Key[5])
 
 					if skip {
 
 						//unpack the primer
 
-						if fullNameMask(flush.Key, 5) == "060e2b34.027f0101.0d010201.01050100" {
+						if fullNameMask(metadata.Key, 5) == "060e2b34.027f0101.0d010201.01050100" {
 							out := make(map[string]string)
-							primerUnpack(flush.Value, out)
+							primerUnpack(metadata.Value, out)
 							primer = out
-							flushNode.Properties = GroupProperties{UniversalLabel: "060e2b34.027f0101.0d010201.01050100"}
+							mdNode.Properties = GroupProperties{UniversalLabel: "060e2b34.027f0101.0d010201.01050100"}
 							currentPartitionNode.Props.Primer = primer
 						}
 						// want to loop through them all?
 
 					} else {
-
-						decoders, ok := mxf2go.Groups["urn:smpte:ul:"+fullName(flush.Key)]
-
-						if !ok {
-							flush.Key[5] = 0x7f
-							decoders, ok = mxf2go.Groups["urn:smpte:ul:"+fullName(flush.Key)]
-						}
-						if !ok {
-							flush.Key[13] = 0x7f
-							decoders, ok = mxf2go.Groups["urn:smpte:ul:"+fullName(flush.Key)]
-						}
-
-						// assign the generic name as the key
-						key := fullName(flush.Key)
-						flushNode.Properties = GroupProperties{UniversalLabel: key}
-						// find the groups first
-
-						if ok {
-							if nodeTests, ok := specs.Node[key]; ok {
-
-								flushNode.Tests = tests[Node]{testsWithPrimer: nodeTests}
-							}
-						}
-						pos := 0
-						for pos < len(flush.Value) {
-							key, klength := dec.keyFunc(flush.Value[pos : pos+dec.keyLen])
-							length, lenlength := dec.lengthFunc(flush.Value[pos+dec.keyLen : pos+dec.keyLen+dec.lengthLen])
-							if klength != 16 {
-								key = primer[key]
-							}
-
-							// @TODO inlude the key for other AUIDs and ObjectIDs as part of the process
-							switch key {
-							case "060e2b34.01010101.01011502.00000000":
-								out, _ := mxf2go.DecodeTUUID(flush.Value[pos+dec.keyLen+dec.lengthLen : pos+dec.keyLen+dec.lengthLen+length])
-								mid := flushNode.Properties.(GroupProperties)
-								mid.UUID = out.(mxf2go.TUUID)
-								flushNode.Properties = mid
-								UUID := out.(mxf2go.TUUID)
-								idMap[string(UUID[:])] = flushNode
-
-							default:
-
-								if ok {
-									// check the decoder for the field
-									decodeF, ok := decoders.Group["urn:smpte:ul:"+key]
-
-									if ok {
-
-										b, _ := decodeF.Decode(flush.Value[pos+dec.keyLen+dec.lengthLen : pos+dec.keyLen+dec.lengthLen+length])
-										strongRefs := ReferenceExtract(b, strongRef)
-										if len(strongRefs) > 0 {
-											mid := refMap[flushNode]
-											mid.ref = append(mid.ref, strongRefs...)
-											refMap[flushNode] = mid
-										} else {
-											weakRefs := ReferenceExtract(b, weakRef)
-											if len(weakRefs) != 0 {
-												outString := make([]string, len(weakRefs))
-												for i, wr := range weakRefs {
-													outString[i] = fullName(wr)
-												}
-
-												mid := flushNode.Properties.(GroupProperties)
-												mid.GroupLabel = outString
-												flushNode.Properties = mid
-											}
-										}
-									}
-								}
-							}
-							pos += klength + length + lenlength
-						}
+						// extract the metadata form the klv
+						metadataNodeExtraction(metadata, mdNode, refMap, idMap, primer, specs)
 
 						// "urn:smpte:ul:060e2b34.01010101.01011502.00000000"
 					}
 
-					offset += flush.TotalLength()
-					metaByteCount += flush.TotalLength()
+					offset += metadata.TotalLength()
+					metaByteCount += metadata.TotalLength()
 
 					// currentNode.Children = append(currentNode.Children, flushNode)
 
@@ -721,13 +610,13 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int, specs Specificati
 					index, open := <-buffer
 
 					if !open {
-						return fmt.Errorf("error parsing stream channel unexpectedly closed.")
+						return fmt.Errorf("error parsing stream channel unexpectedly closed")
 					}
 					currentPartitionNode.IndexTable = &Node{
 						Key:    Position{Start: offset, End: offset + len(index.Key)},
 						Length: Position{Start: offset + len(index.Key), End: offset + len(index.Key) + len(index.Length)},
 						Value:  Position{Start: offset + len(index.Key) + len(index.Length), End: offset + index.TotalLength()},
-						Tests:  tests[Node]{TestPass: true},
+						Tests:  tests[Node]{TestStatus: testStatus{true}, parent: currentPartitionNode},
 					}
 					offset += index.TotalLength()
 
@@ -736,46 +625,8 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int, specs Specificati
 
 				//	currentPartitionNode.HeaderMetadata = append(currentPartitionNode.HeaderMetadata, currentPartitionNode)
 			} else {
-				// check the name as it came
-				name := fullName(klvItem.Key)
-				_, ok := mxf2go.EssenceLookUp["urn:smpte:ul:"+name]
-
-				if len(currentPartitionNode.Props.EssenceOrder) != 0 {
-					if currentPartitionNode.Props.EssenceOrder[0] == name {
-						patternTally = false
-					} else if patternTally {
-						currentPartitionNode.Props.EssenceOrder = append(currentPartitionNode.Props.EssenceOrder, name)
-					}
-				} else {
-					currentPartitionNode.Props.EssenceOrder = append(currentPartitionNode.Props.EssenceOrder, name)
-				}
-
-				if !ok {
-					// check for a 7f masked version at the final byte
-					klvItem.Key[15] = 0x7f
-					_, ok = mxf2go.EssenceLookUp["urn:smpte:ul:"+fullName(klvItem.Key)]
-					if !ok {
-						// check for a 7f masked version at the final byte and the 14th byte
-						klvItem.Key[13] = 0x7f
-						_, ok = mxf2go.EssenceLookUp["urn:smpte:ul:"+fullName(klvItem.Key)]
-						if ok {
-							name = fullName(klvItem.Key)
-						}
-					} else {
-						name = fullName(klvItem.Key)
-					}
-				}
-
-				// the output symbol is the name of the key
-
-				essNode := &Node{
-					Key:        Position{Start: offset, End: offset + len(klvItem.Key)},
-					Length:     Position{Start: offset + len(klvItem.Key), End: offset + len(klvItem.Key) + len(klvItem.Length)},
-					Value:      Position{Start: offset + len(klvItem.Key) + len(klvItem.Length), End: offset + klvItem.TotalLength()},
-					Properties: EssenceProperties{EssUL: name},
-					Children:   make([]*Node, 0),
-					Tests:      tests[Node]{TestPass: true, parent: currentPartitionNode},
-				}
+				// extract the essence
+				essNode := extractEssenceNode(klvItem, currentPartitionNode, offset, &patternTally)
 
 				currentPartitionNode.Essence = append(currentPartitionNode.Essence, essNode)
 				offset += klvItem.TotalLength()
@@ -804,6 +655,186 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int, specs Specificati
 	return mxf, nil
 }
 
+// extract the essence as a Node
+func extractEssenceNode(klvItem *klv.KLV, currentPartitionNode *PartitionNode, offset int, patternTally *bool) *Node {
+	name := fullName(klvItem.Key)
+	_, ok := mxf2go.EssenceLookUp["urn:smpte:ul:"+name]
+
+	if len(currentPartitionNode.Props.EssenceOrder) != 0 {
+		if currentPartitionNode.Props.EssenceOrder[0] == name {
+			*patternTally = false
+		} else if *patternTally {
+			currentPartitionNode.Props.EssenceOrder = append(currentPartitionNode.Props.EssenceOrder, name)
+		}
+	} else {
+		currentPartitionNode.Props.EssenceOrder = append(currentPartitionNode.Props.EssenceOrder, name)
+	}
+
+	if !ok {
+		// check for a 7f masked version at the final byte
+		klvItem.Key[15] = 0x7f
+		_, ok = mxf2go.EssenceLookUp["urn:smpte:ul:"+fullName(klvItem.Key)]
+		if !ok {
+			// check for a 7f masked version at the final byte and the 14th byte
+			klvItem.Key[13] = 0x7f
+			_, ok = mxf2go.EssenceLookUp["urn:smpte:ul:"+fullName(klvItem.Key)]
+			if ok {
+				name = fullName(klvItem.Key)
+			}
+		} else {
+			name = fullName(klvItem.Key)
+		}
+	}
+
+	// the output symbol is the name of the key
+
+	return &Node{
+		Key:        Position{Start: offset, End: offset + len(klvItem.Key)},
+		Length:     Position{Start: offset + len(klvItem.Key), End: offset + len(klvItem.Key) + len(klvItem.Length)},
+		Value:      Position{Start: offset + len(klvItem.Key) + len(klvItem.Length), End: offset + klvItem.TotalLength()},
+		Properties: EssenceProperties{EssUL: name},
+		Children:   make([]*Node, 0),
+		Tests:      tests[Node]{TestStatus: testStatus{true}, parent: currentPartitionNode},
+	}
+
+}
+
+func extractPartition(klvItem *klv.KLV, mxf *MXFNode, patternTally *bool, primer map[string]string, specs Specifications, offset int) *PartitionNode {
+	partition := &PartitionNode{
+
+		Key:            Position{Start: offset, End: offset + len(klvItem.Key)},
+		Length:         Position{Start: offset + len(klvItem.Key), End: offset + len(klvItem.Key) + len(klvItem.Length)},
+		Value:          Position{Start: offset + len(klvItem.Key) + len(klvItem.Length), End: offset + klvItem.TotalLength()},
+		HeaderMetadata: make([]*Node, 0),
+		Essence:        make([]*Node, 0),
+		Parent:         mxf,
+		Tests:          tests[PartitionNode]{TestStatus: testStatus{true}, parent: mxf},
+		PartitionPos:   len(mxf.Partitions),
+	}
+	*patternTally = true
+
+	// create a reference map for every node that is found
+
+	// test the previous partitions essence as the final step
+	// if len(contents.RipLayout) == 0 and the cache length !=0 emit an error that essence was found first
+
+	partProps := PartitionProperties{PartitionCount: len(mxf.Partitions), EssenceOrder: make([]string, 0)}
+
+	switch klvItem.Key[13] {
+	case 17:
+		partProps.PartitionType = RIPPartition
+	case 02:
+		// header
+		partProps.PartitionType = HeaderPartition
+		partition.Tests.tests = append(partition.Tests.tests, specs.Part[HeaderKey]...)
+	case 03:
+		// body
+		if klvItem.Key[14] == 17 {
+			partProps.PartitionType = GenericStreamPartition
+			partition.Tests.tests = append(partition.Tests.tests, specs.Part[GenericKey]...)
+
+		} else {
+			partProps.PartitionType = BodyPartition
+			partition.Tests.tests = append(partition.Tests.tests, specs.Part[EssenceKey]...)
+		}
+	case 04:
+		// footer
+		partProps.PartitionType = FooterPartition
+		partition.Tests.tests = append(partition.Tests.tests, specs.Part[HeaderKey]...)
+
+	default:
+		// is nothing
+		partProps.PartitionType = "invalid"
+
+	}
+	// primer will get updated because of pointer magic
+	partProps.Primer = primer
+	partition.Props = partProps
+
+	return partition
+}
+
+func metadataNodeExtraction(metadata *klv.KLV, mdNode *Node, refMap map[*Node]refAndChild, idMap map[string]*Node, primer map[string]string, specs Specifications) {
+
+	dec, _ := decodeBuilder(metadata.Key[5])
+
+	decoders, ok := mxf2go.Groups["urn:smpte:ul:"+fullName(metadata.Key)]
+
+	if !ok {
+		metadata.Key[5] = 0x7f
+		decoders, ok = mxf2go.Groups["urn:smpte:ul:"+fullName(metadata.Key)]
+	}
+	if !ok {
+		metadata.Key[13] = 0x7f
+		decoders, ok = mxf2go.Groups["urn:smpte:ul:"+fullName(metadata.Key)]
+	}
+
+	// assign the generic name as the key
+	key := fullName(metadata.Key)
+	mdNode.Properties = GroupProperties{UniversalLabel: key}
+	// find the groups first
+
+	if ok {
+		if nodeTests, ok := specs.Node[key]; ok {
+
+			mdNode.Tests = tests[Node]{testsWithPrimer: nodeTests, TestStatus: testStatus{true}}
+		}
+	}
+	pos := 0
+	for pos < len(metadata.Value) {
+		key, klength := dec.keyFunc(metadata.Value[pos : pos+dec.keyLen])
+		length, lenlength := dec.lengthFunc(metadata.Value[pos+dec.keyLen : pos+dec.keyLen+dec.lengthLen])
+		if klength != 16 {
+			key = primer[key]
+		}
+
+		// @TODO inlude the key for other AUIDs and ObjectIDs as part of the process
+		switch key {
+		// the instance ID key
+		case "060e2b34.01010101.01011502.00000000":
+			out, _ := mxf2go.DecodeTUUID(metadata.Value[pos+dec.keyLen+dec.lengthLen : pos+dec.keyLen+dec.lengthLen+length])
+			mid := mdNode.Properties.(GroupProperties)
+			mid.UUID = out.(mxf2go.TUUID)
+			mdNode.Properties = mid
+			UUID := out.(mxf2go.TUUID)
+			idMap[string(UUID[:])] = mdNode
+
+		default:
+
+			if ok {
+				// check the decoder for the field
+				decodeF, ok := decoders.Group["urn:smpte:ul:"+key]
+
+				if ok {
+
+					b, _ := decodeF.Decode(metadata.Value[pos+dec.keyLen+dec.lengthLen : pos+dec.keyLen+dec.lengthLen+length])
+					strongRefs := ReferenceExtract(b, strongRef)
+					if len(strongRefs) > 0 {
+						mid := refMap[mdNode]
+						mid.ref = append(mid.ref, strongRefs...)
+						refMap[mdNode] = mid
+					} else {
+						weakRefs := ReferenceExtract(b, weakRef)
+						if len(weakRefs) != 0 {
+							outString := make([]string, len(weakRefs))
+							for i, wr := range weakRefs {
+								outString[i] = fullName(wr)
+							}
+
+							mid := mdNode.Properties.(GroupProperties)
+							mid.GroupLabel = outString
+							mdNode.Properties = mid
+						}
+					}
+				}
+			}
+		}
+		pos += klength + length + lenlength
+	}
+
+	// "urn:smpte:ul:060e2b34.01010101.01011502.00000000"
+
+}
 func primerUnpack(input []byte, shorthand map[string]string) {
 
 	order := binary.BigEndian
