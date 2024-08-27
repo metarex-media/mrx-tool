@@ -77,6 +77,9 @@ type MrxEncodeOptions struct {
 	// ConfigOverwrite overwrites any fields in the base configuration
 	// of the mrx file. e.g from previous manifests
 	ConfigOverWrite manifest.Configuration
+	// is the manifest file to be used
+	// default is to include it
+	DisableManifest bool
 }
 
 // Encode writes the data to an mrx file, default options are used if MrxEncodeOptions is nil
@@ -126,6 +129,11 @@ func (mw *MrxWriter) Encode(w io.Writer, encodeOptions *MrxEncodeOptions) error 
 	// generate the UMDID for this mrx file
 	mw.uMIDFinish(len(containerKeys))
 
+	if !encodeOptions.DisableManifest {
+		// trim the manifest off to prevent errors occuring
+		cleanStream.manifest = true
+	}
+
 	// metadata set up
 	headerMeta := mw.metaData(cleanStream)
 
@@ -149,18 +157,21 @@ func (mw *MrxWriter) Encode(w io.Writer, encodeOptions *MrxEncodeOptions) error 
 	if err != nil {
 		return err
 	}
-	// write the manifest and update the position
-	err = writePartition(w, filePosition, headerName(genericStream, false, false), 0, []byte{}, containerKeys)
-	if err != nil {
-		return err
-	}
 
-	_, err = w.Write(manifestBytes)
-	if err != nil {
-		return fmt.Errorf("error writing manifest %v", err)
-	}
+	if !encodeOptions.DisableManifest {
+		// write the manifest and update the position
+		err = writePartition(w, filePosition, headerName(genericStream, false, false), 0, []byte{}, containerKeys)
+		if err != nil {
+			return err
+		}
 
-	filePosition.totalByteCount += len(manifestBytes)
+		_, err = w.Write(manifestBytes)
+		if err != nil {
+			return fmt.Errorf("error writing manifest %v", err)
+		}
+
+		filePosition.totalByteCount += len(manifestBytes)
+	}
 
 	// check or essence extraction error handling
 	// set the SID back to  0 at the end, then write the footer
@@ -198,7 +209,8 @@ type mrxLayout struct {
 	// reorder flags is framewrapped data is declared after clip wrapped
 	// so that the config can be reorderd when it is saved as part of the mxf file
 	// for roundtripping
-	reorder bool
+	reorder  bool
+	manifest bool
 }
 
 // stream clean goes through the esesnce

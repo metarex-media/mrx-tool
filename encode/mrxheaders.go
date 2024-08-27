@@ -135,7 +135,14 @@ func (fi *frameInformation) sourcePackageTimeline(primer *mxf2go.Primer, umid mx
 	// if no tracks are present then this won't be used
 	sid := uint32(2)
 
-	for _, str := range stream.dataStreams {
+	streams := make([]channelProperties, len(stream.dataStreams))
+
+	copy(streams, stream.dataStreams)
+	if stream.manifest {
+		streams = append(streams, channelProperties{})
+	}
+
+	for _, str := range streams {
 
 		if str.clocked && !head {
 			//
