@@ -1,7 +1,3 @@
-Skipped UL tests:
-    - A skipped UL
-Skipped partitions tests:
-    - generickey
 testpass: false
 tests:
     - header: testing mxf file structure
@@ -14,47 +10,47 @@ tests:
             - pass: true
             - pass: true
         - message: |
-            ,,,3: Checking the previous partition pointer is the correct byte position for the header partion at byte offset 0
+            ST277-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the header partion at byte offset 0
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the header partion at byte offset 0
+            ST277-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the header partion at byte offset 0
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 2243
+            ST277-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 2243
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 2243
+            ST277-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 2243
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 21103
+            ST277-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 21103
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 21103
+            ST277-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 21103
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 21535
+            ST277-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 21535
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 21535
+            ST277-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 21535
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the previous partition pointer is the correct byte position for the footer partion at byte offset 27541
+            ST277-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the footer partion at byte offset 27541
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the footer partion at byte offset 27541
+            ST277-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the footer partion at byte offset 27541
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the partition positions in the file match those in the supplied random index pack
+            ST277-1:2019,12.2,shall,1: Checking the partition positions in the file match those in the supplied random index pack
           checks:
             - pass: false
               errorMessage: |-
@@ -76,9 +72,9 @@ tests:
                         {sid: 0, byteOffset: 27541},
                     ]
       pass: false
-      passcount: 0
-      failcount: 0
-    - header: testing header metadata at header partition at offset 0
+      passcount: 14
+      failcount: 1
+    - header: testing header metadata of a header partition at offset 0
       tests:
         - message: |
             RDD47:2018,9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
@@ -89,29 +85,29 @@ tests:
           checks:
             - pass: true
             - pass: true
-      pass: false
-      passcount: 0
+      pass: true
+      passcount: 3
       failcount: 0
-    - header: testing header stuff header partition at offset 0
+    - header: testing header properties of a header partition at offset 0
       tests:
         - message: |
             RDD47:2018,5.4,shall,1: Checking there is no error getting the generic partition streams
           checks:
             - pass: true
-      pass: false
-      passcount: 0
+      pass: true
+      passcount: 1
       failcount: 0
-    - header: testing essence stuff body partition at offset 2243
+    - header: testing essence properties at body partition at offset 2243
       tests:
         - message: |
             RDD47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
           checks:
             - pass: true
             - pass: true
-      pass: false
-      passcount: 0
+      pass: true
+      passcount: 2
       failcount: 0
-    - header: testing essence stuff body partition at offset 21103
+    - header: testing essence properties at body partition at offset 21103
       tests:
         - message: |
             RDD47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
@@ -129,9 +125,9 @@ tests:
           checks:
             - pass: true
       pass: false
-      passcount: 0
-      failcount: 0
-    - header: testing essence stuff body partition at offset 21535
+      passcount: 2
+      failcount: 1
+    - header: testing essence properties at body partition at offset 21535
       tests:
         - message: |
             RDD47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
@@ -149,9 +145,9 @@ tests:
           checks:
             - pass: true
       pass: false
-      passcount: 0
-      failcount: 0
-    - header: testing header metadata at footer partition at offset 27541
+      passcount: 2
+      failcount: 1
+    - header: testing header metadata of a footer partition at offset 27541
       tests:
         - message: |
             RDD47:2018,9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
@@ -162,15 +158,18 @@ tests:
           checks:
             - pass: true
             - pass: true
-      pass: false
-      passcount: 0
+      pass: true
+      passcount: 3
       failcount: 0
-    - header: testing header stuff footer partition at offset 27541
+    - header: testing header properties of a footer partition at offset 27541
       tests:
         - message: |
             RDD47:2018,5.4,shall,1: Checking there is no error getting the generic partition streams
           checks:
             - pass: true
-      pass: false
-      passcount: 0
+      pass: true
+      passcount: 1
       failcount: 0
+skippedTests:
+    - testkey: generickey
+      desc: a skipped partition test

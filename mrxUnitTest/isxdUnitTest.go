@@ -93,7 +93,7 @@ func GenericCount(doc io.ReadSeeker, header *PartitionNode) func(t Test) {
 			// ibly run if there's any generic essence
 			// update to a partitionsearch
 			staticTracks, err := header.Search("select * from metadata where UL = 060e2b34.027f0101.0d010101.01013a00")
-			t.Test("Checking that a single static track is present in the header metadata ", NewSpec(ISXDDoc, "5.4", "shall", 1),
+			t.Test("Checking that a single static track is present in the header metadata", NewSpec(ISXDDoc, "5.4", "shall", 1),
 				t.Expect(err).To(BeNil()),
 				t.Expect(len(staticTracks)).Shall(Equal(1)),
 			)

@@ -5,7 +5,6 @@ import (
 	"io"
 
 	"github.com/metarex-media/mrx-tool/klv"
-	"gopkg.in/yaml.v3"
 )
 
 func MRXTest(doc io.ReadSeeker, w io.Writer, testspecs ...Specifications) error {
@@ -56,14 +55,14 @@ func MRXTest(doc io.ReadSeeker, w io.Writer, testspecs ...Specifications) error 
 				// delete the map key for tests of this type
 				delete(skips.Part, HeaderKey)
 
-				tc.Header(fmt.Sprintf("testing header metadata at %s partition at offset %v", part.Props.PartitionType, part.Key.Start), func(t Test) {
+				tc.Header(fmt.Sprintf("testing header metadata of a %s partition at offset %v", part.Props.PartitionType, part.Key.Start), func(t Test) {
 
 					for _, child := range part.HeaderMetadata {
 						testChildNodes(doc, child, part.Props.Primer, t, skips)
 					}
 				})
 
-				tc.Header(fmt.Sprintf("testing header stuff %s partition at offset %v", part.Props.PartitionType, part.Key.Start), func(t Test) {
+				tc.Header(fmt.Sprintf("testing header properties of a %s partition at offset %v", part.Props.PartitionType, part.Key.Start), func(t Test) {
 					for _, child := range part.Tests.tests {
 
 						childer := *child
@@ -83,7 +82,7 @@ func MRXTest(doc io.ReadSeeker, w io.Writer, testspecs ...Specifications) error 
 				delete(skips.Part, GenericKey)
 			}
 
-			tc.Header(fmt.Sprintf("testing essence stuff %s partition at offset %v", part.Props.PartitionType, part.Key.Start), func(t Test) {
+			tc.Header(fmt.Sprintf("testing essence properties at %s partition at offset %v", part.Props.PartitionType, part.Key.Start), func(t Test) {
 				for _, tests := range part.Tests.tests {
 
 					test := *tests
@@ -102,32 +101,16 @@ func MRXTest(doc io.ReadSeeker, w io.Writer, testspecs ...Specifications) error 
 
 	// check for any left over keys in
 	if len(skips.Node) > 0 {
-		skip := map[string][]string{"Skipped UL tests": make([]string, len(skips.Node))}
-		i := 0
 		for k := range skips.Node {
-			skip["Skipped UL tests"][i] = k
-			i++
-		}
-
-		skipBytes, _ := yaml.Marshal(skip)
-		_, err := w.Write(skipBytes)
-		if err != nil {
-			return err
+			tc.RegisterSkippedTest(k, "a skipped node test")
 		}
 	}
 
 	if len(skips.Part) > 0 {
-		skip := map[string][]string{"Skipped partitions tests": make([]string, len(skips.Part))}
-		i := 0
 		for k := range skips.Part {
-			skip["Skipped partitions tests"][i] = k
-			i++
+			tc.RegisterSkippedTest(k, "a skipped partition test")
 		}
-		skipBytes, _ := yaml.Marshal(skip)
-		_, err := w.Write(skipBytes)
-		if err != nil {
-			return err
-		}
+
 	}
 
 	return nil

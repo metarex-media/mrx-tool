@@ -25,13 +25,23 @@ type TestContext struct {
 	report     Report
 }
 
+func (tc *TestContext) RegisterSkippedTest(key, desc string) {
+	tc.report.SkippedTests = append(tc.report.SkippedTests, skippedTest{TestKey: key, Desc: desc})
+}
+
 // Report is the report structure of the
 // MXF test report
 type Report struct {
 	// Did the overall test pass
 	TestPass bool
 	// the tests and their results
-	Tests []TestSection
+	Tests        []TestSection
+	SkippedTests []skippedTest `yaml:"skippedTests,omitempty"`
+}
+
+type skippedTest struct {
+	TestKey string
+	Desc    string
 }
 
 type TestSection struct {
@@ -71,7 +81,7 @@ func (tc *TestContext) EndTest() {
 // Header must be called to run the tests
 func (s *TestContext) Header(message string, tests func(t Test)) {
 
-	seg := &segmentTest{errChannel: make(chan string, 5), testPass: true, testReport: TestSection{Header: message, Tests: make([]TestResult, 0)}}
+	seg := &segmentTest{errChannel: make(chan string, 5), testPass: true, testReport: TestSection{Header: message, Tests: make([]TestResult, 0), Pass: true}}
 	ct := &CompleteTest{
 		segment: seg,
 	}
@@ -110,7 +120,10 @@ func (s *segmentTest) test(message string, specDetail SpecDetails, asserts ...bo
 		if assert {
 			te.Checks[i] = check{Pass: true}
 			//	s.testBuffer.Write([]byte(fmt.Sprintf("        %sCheck %v Pass\n", gap, i)))
+			s.testReport.PassCount++
 		} else {
+			s.testReport.FailCount++
+			s.testReport.Pass = false
 
 			s.testPass = false
 			s.failCount++

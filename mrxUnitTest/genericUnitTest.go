@@ -12,11 +12,12 @@ func NewGeneric() Specifications {
 
 	ts := mrxPartLayout
 	return Specifications{
-		MXF:  []*func(doc io.ReadSeeker, isxdDesc *MXFNode) func(t Test){&ts},
-		Node: map[string][]*func(doc io.ReadSeeker, isxdDesc *Node, primer map[string]string) func(t Test){"A skipped UL": {}},
+		MXF: []*func(doc io.ReadSeeker, isxdDesc *MXFNode) func(t Test){&ts},
 	}
 
 }
+
+const ST377Doc = "ST277-1:2019"
 
 func mrxPartLayout(stream io.ReadSeeker, node *MXFNode) func(t Test) {
 
@@ -39,13 +40,13 @@ func mrxPartLayout(stream io.ReadSeeker, node *MXFNode) func(t Test) {
 
 				// fmt.Println(pt, node)
 				t.Test(fmt.Sprintf("Checking the previous partition pointer is the correct byte position for the %v partion at byte offset %v", part.Props.PartitionType, part.Key.Start),
-					NewSpec("", "", "", 3),
+					NewSpec(ST377Doc, "7.1", "Table5", 7),
 					t.Expect(actualPrevPosition).To(Equal(mp.PreviousPartition),
 						fmt.Sprintf("The previous partition at %v, did not match the declared previous partition value %v", actualPrevPosition, mp.PreviousPartition)),
 				)
 
 				t.Test(fmt.Sprintf("Checking the this partition pointer matches the actual byte offset of the file for the %v partion at byte offset %v", part.Props.PartitionType, part.Key.Start),
-					NewSpec("", "", "", 3),
+					NewSpec(ST377Doc, "7.1", "Table5", 8),
 					t.Expect(uint64(part.Key.Start)).To(Equal(mp.ThisPartition),
 						fmt.Sprintf("The byte offset %v, did not match the this partition value %v", part.Key.Start, mp.ThisPartition)))
 
@@ -59,7 +60,7 @@ func mrxPartLayout(stream io.ReadSeeker, node *MXFNode) func(t Test) {
 					gotRip = append(gotRip, RIP{sid: order.Uint32(pklv.Value[i : i+4]), byteOffset: order.Uint64(pklv.Value[i+4 : i+12])})
 				}
 
-				t.Test("Checking the partition positions in the file match those in the supplied random index pack", NewSpec("", "", "", 3),
+				t.Test("Checking the partition positions in the file match those in the supplied random index pack", NewSpec(ST377Doc, "12.2", "shall", 1),
 					t.Expect(gotRip).To(Equal(partitions), "The generated index pack did not match the file index Pack"))
 
 			}

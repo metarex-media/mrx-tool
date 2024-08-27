@@ -1,5 +1,3 @@
-Skipped UL tests:
-    - A skipped UL
 testpass: false
 tests:
     - header: testing mxf file structure
@@ -12,61 +10,61 @@ tests:
             - pass: true
             - pass: true
         - message: |
-            ,,,3: Checking the previous partition pointer is the correct byte position for the header partion at byte offset 0
+            ST277-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the header partion at byte offset 0
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the header partion at byte offset 0
+            ST277-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the header partion at byte offset 0
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 3510
+            ST277-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 3510
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 3510
+            ST277-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 3510
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the previous partition pointer is the correct byte position for the genericstreampartition partion at byte offset 4046
+            ST277-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the genericstreampartition partion at byte offset 4046
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the genericstreampartition partion at byte offset 4046
+            ST277-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the genericstreampartition partion at byte offset 4046
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the previous partition pointer is the correct byte position for the genericstreampartition partion at byte offset 4226
+            ST277-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the genericstreampartition partion at byte offset 4226
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the genericstreampartition partion at byte offset 4226
+            ST277-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the genericstreampartition partion at byte offset 4226
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the previous partition pointer is the correct byte position for the genericstreampartition partion at byte offset 4404
+            ST277-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the genericstreampartition partion at byte offset 4404
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the genericstreampartition partion at byte offset 4404
+            ST277-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the genericstreampartition partion at byte offset 4404
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the previous partition pointer is the correct byte position for the footer partion at byte offset 6756
+            ST277-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the footer partion at byte offset 6756
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the footer partion at byte offset 6756
+            ST277-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the footer partion at byte offset 6756
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the partition positions in the file match those in the supplied random index pack
+            ST277-1:2019,12.2,shall,1: Checking the partition positions in the file match those in the supplied random index pack
           checks:
             - pass: true
-      pass: false
-      passcount: 0
+      pass: true
+      passcount: 17
       failcount: 0
-    - header: testing header metadata at header partition at offset 0
+    - header: testing header metadata of a header partition at offset 0
       tests:
         - message: |
             RDD47:2018,9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
@@ -77,16 +75,17 @@ tests:
           checks:
             - pass: true
             - pass: true
-      pass: false
-      passcount: 0
+      pass: true
+      passcount: 3
       failcount: 0
-    - header: testing header stuff header partition at offset 0
+    - header: testing header properties of a header partition at offset 0
       tests:
         - message: |
             RDD47:2018,5.4,shall,1: Checking there is no error getting the generic partition streams
           checks:
             - pass: true
-        - message: "RDD47:2018,5.4,shall,1: Checking that a single static track is present in the header metadata \n"
+        - message: |
+            RDD47:2018,5.4,shall,1: Checking that a single static track is present in the header metadata
           checks:
             - pass: true
             - pass: true
@@ -108,9 +107,9 @@ tests:
                 to equal
                     <int>: 3
       pass: false
-      passcount: 0
-      failcount: 0
-    - header: testing essence stuff body partition at offset 3510
+      passcount: 5
+      failcount: 1
+    - header: testing essence properties at body partition at offset 3510
       tests:
         - message: |
             RDD47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
@@ -128,9 +127,9 @@ tests:
           checks:
             - pass: true
       pass: false
-      passcount: 0
-      failcount: 0
-    - header: testing essence stuff genericstreampartition partition at offset 4046
+      passcount: 2
+      failcount: 1
+    - header: testing essence properties at genericstreampartition partition at offset 4046
       tests:
         - message: |
             RDD47:2018,7.5,shall,1: Checking that the index byte count for the generic header is 0
@@ -160,9 +159,9 @@ tests:
                 to equal
                     <int>: 0
       pass: false
-      passcount: 0
-      failcount: 0
-    - header: testing essence stuff genericstreampartition partition at offset 4226
+      passcount: 5
+      failcount: 1
+    - header: testing essence properties at genericstreampartition partition at offset 4226
       tests:
         - message: |
             RDD47:2018,7.5,shall,1: Checking that the index byte count for the generic header is 0
@@ -192,9 +191,9 @@ tests:
                 to equal
                     <int>: 0
       pass: false
-      passcount: 0
-      failcount: 0
-    - header: testing essence stuff genericstreampartition partition at offset 4404
+      passcount: 5
+      failcount: 1
+    - header: testing essence properties at genericstreampartition partition at offset 4404
       tests:
         - message: |
             RDD47:2018,7.5,shall,1: Checking that the index byte count for the generic header is 0
@@ -224,9 +223,9 @@ tests:
                 to equal
                     <int>: 0
       pass: false
-      passcount: 0
-      failcount: 0
-    - header: testing header metadata at footer partition at offset 6756
+      passcount: 5
+      failcount: 1
+    - header: testing header metadata of a footer partition at offset 6756
       tests:
         - message: |
             RDD47:2018,9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
@@ -237,16 +236,17 @@ tests:
           checks:
             - pass: true
             - pass: true
-      pass: false
-      passcount: 0
+      pass: true
+      passcount: 3
       failcount: 0
-    - header: testing header stuff footer partition at offset 6756
+    - header: testing header properties of a footer partition at offset 6756
       tests:
         - message: |
             RDD47:2018,5.4,shall,1: Checking there is no error getting the generic partition streams
           checks:
             - pass: true
-        - message: "RDD47:2018,5.4,shall,1: Checking that a single static track is present in the header metadata \n"
+        - message: |
+            RDD47:2018,5.4,shall,1: Checking that a single static track is present in the header metadata
           checks:
             - pass: true
             - pass: true
@@ -268,5 +268,5 @@ tests:
                 to equal
                     <int>: 3
       pass: false
-      passcount: 0
-      failcount: 0
+      passcount: 5
+      failcount: 1
