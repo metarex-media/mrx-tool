@@ -110,7 +110,7 @@ func (s *segmentTest) test(message string, specDetail SpecDetails, asserts ...bo
 	// update to catch the test without trying the function approach.
 	// want multiple bits each conuting as a test
 	s.testCount++
-	//gap := "    "
+	// gap := "    "
 	s.testPass = true
 	// s.testBuffer.Write([]byte(fmt.Sprintf("	%s%s: %v\n", gap, specDetail, message)))
 

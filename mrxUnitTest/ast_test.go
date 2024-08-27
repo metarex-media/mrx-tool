@@ -84,6 +84,9 @@ func TestMakeDemoFiles(t *testing.T) {
 		// _, genErr := MakeAST(f, fout, klvChan, 10)
 		//	genErr := ASTTest(f, fout)
 		genErr := MRXTest(fread, flog)
+		flog.Seek(0, 0)
+		fgraw, _ := os.Create(fmt.Sprintf("%v.png", fileName))
+		DrawGraph(flog, fgraw)
 
 		// run the test as if it was being run  by encode, checking each step of the process.
 		Convey("generating a file for testing", t, func() {

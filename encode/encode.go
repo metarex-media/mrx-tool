@@ -749,12 +749,19 @@ func (mw *MrxWriter) metaData(stream mrxLayout) []byte {
 		Data3: 257,
 		Data4: mxf2go.TUInt8Array8{01, 03, 02, 01, 0x10, 00, 00, 00}}
 	GotData := mxf2go.TAUIDSet{}
+
+	gotAll := false
 	for _, s := range stream.dataStreams {
-		if s.clocked && !slices.Contains(GotData, dataEss) {
+		switch {
+		case s.clocked && !slices.Contains(GotData, dataEss):
 			GotData = append(GotData, dataEss)
-		} else if !slices.Contains(GotData, descTrack) {
+		case !slices.Contains(GotData, descTrack):
 			GotData = append(GotData, descTrack)
-		} else if len(GotData) == 2 {
+		case len(GotData) == 2:
+			gotAll = true
+		}
+
+		if gotAll {
 			break
 		}
 	}
