@@ -1,7 +1,5 @@
-Skipped tests for the following  ULs:
+Skipped UL tests:
     - A skipped UL
-Skipped tests for the following partitions:
-    - generickey
 testpass: false
 tests:
     - header: testing mxf file structure
@@ -22,59 +20,33 @@ tests:
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 2243
+            ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 3047
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 2243
+            ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 3047
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 21103
+            ,,,3: Checking the previous partition pointer is the correct byte position for the genericstreampartition partion at byte offset 29141
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 21103
+            ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the genericstreampartition partion at byte offset 29141
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 21535
+            ,,,3: Checking the previous partition pointer is the correct byte position for the footer partion at byte offset 31761
           checks:
             - pass: true
         - message: |
-            ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 21535
-          checks:
-            - pass: true
-        - message: |
-            ,,,3: Checking the previous partition pointer is the correct byte position for the footer partion at byte offset 27541
-          checks:
-            - pass: true
-        - message: |
-            ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the footer partion at byte offset 27541
+            ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the footer partion at byte offset 31761
           checks:
             - pass: true
         - message: |
             ,,,3: Checking the partition positions in the file match those in the supplied random index pack
           checks:
-            - pass: false
-              errorMessage: |-
-                The generated index pack did not match the file index Pack
-                Expected
-                    <[]mrxUnitTest.RIP | len:5, cap:8>: [
-                        {sid: 0, byteOffset: 0},
-                        {sid: 2, byteOffset: 2243},
-                        {sid: 2, byteOffset: 21103},
-                        {sid: 2, byteOffset: 21535},
-                        {sid: 0, byteOffset: 27541},
-                    ]
-                to equal
-                    <[]mrxUnitTest.RIP | len:5, cap:8>: [
-                        {sid: 0, byteOffset: 0},
-                        {sid: 1, byteOffset: 2243},
-                        {sid: 1, byteOffset: 21103},
-                        {sid: 2, byteOffset: 21535},
-                        {sid: 0, byteOffset: 27541},
-                    ]
+            - pass: true
       pass: false
       passcount: 0
       failcount: 0
@@ -98,10 +70,26 @@ tests:
             RDD47:2018,5.4,shall,1: Checking there is no error getting the generic partition streams
           checks:
             - pass: true
+        - message: "RDD47:2018,5.4,shall,1: Checking that a single static track is present in the header metadata \n"
+          checks:
+            - pass: true
+            - pass: true
+        - message: |
+            RDD47:2018,5.4,shall,1: Checking that the static track is not nil
+          checks:
+            - pass: true
+        - message: |
+            RDD47:2018,5.4,shall,2: Checking that the static track points to a sequence
+          checks:
+            - pass: true
+        - message: |
+            RDD47:2018,5.4,shall,2: Checking that the static track sequence has as many sequence children as partitions
+          checks:
+            - pass: true
       pass: false
       passcount: 0
       failcount: 0
-    - header: testing essence stuff body partition at offset 2243
+    - header: testing essence stuff body partition at offset 3047
       tests:
         - message: |
             RDD47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
@@ -111,10 +99,26 @@ tests:
       pass: false
       passcount: 0
       failcount: 0
-    - header: testing essence stuff body partition at offset 21103
+    - header: testing essence stuff genericstreampartition partition at offset 29141
       tests:
         - message: |
-            RDD47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
+            RDD47:2018,7.5,shall,1: Checking that the index byte count for the generic header is 0
+          checks:
+            - pass: true
+        - message: |
+            RDD47:2018,7.5,shall,1: Checking that the header metadata byte count for the generic header is 0
+          checks:
+            - pass: true
+        - message: |
+            RDD47:2018,7.5,shall,1: Checking that the index SID for the generic header is 0
+          checks:
+            - pass: true
+        - message: |
+            RDD47:2018,7.5,shall,1: checking the partition key meets the expected value of 060e2b34.02050101.0d010201.01031100
+          checks:
+            - pass: true
+        - message: |
+            RDD47:2018,7.5,shall,1: checking the essence keys all have the value of 060e2b34.0101010c.0d010509.01000000
           checks:
             - pass: true
             - pass: false
@@ -124,34 +128,10 @@ tests:
                     <int>: 1
                 to equal
                     <int>: 0
-        - message: |
-            RDD47:2018,7.5,shall,1: Checking that the content package order are regular throughout the essence stream
-          checks:
-            - pass: true
       pass: false
       passcount: 0
       failcount: 0
-    - header: testing essence stuff body partition at offset 21535
-      tests:
-        - message: |
-            RDD47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
-          checks:
-            - pass: true
-            - pass: false
-              errorMessage: |-
-                1 other essence keys found
-                Expected
-                    <int>: 1
-                to equal
-                    <int>: 0
-        - message: |
-            RDD47:2018,7.5,shall,1: Checking that the content package order are regular throughout the essence stream
-          checks:
-            - pass: true
-      pass: false
-      passcount: 0
-      failcount: 0
-    - header: testing header metadata at footer partition at offset 27541
+    - header: testing header metadata at footer partition at offset 31761
       tests:
         - message: |
             RDD47:2018,9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
@@ -165,10 +145,26 @@ tests:
       pass: false
       passcount: 0
       failcount: 0
-    - header: testing header stuff footer partition at offset 27541
+    - header: testing header stuff footer partition at offset 31761
       tests:
         - message: |
             RDD47:2018,5.4,shall,1: Checking there is no error getting the generic partition streams
+          checks:
+            - pass: true
+        - message: "RDD47:2018,5.4,shall,1: Checking that a single static track is present in the header metadata \n"
+          checks:
+            - pass: true
+            - pass: true
+        - message: |
+            RDD47:2018,5.4,shall,1: Checking that the static track is not nil
+          checks:
+            - pass: true
+        - message: |
+            RDD47:2018,5.4,shall,2: Checking that the static track points to a sequence
+          checks:
+            - pass: true
+        - message: |
+            RDD47:2018,5.4,shall,2: Checking that the static track sequence has as many sequence children as partitions
           checks:
             - pass: true
       pass: false

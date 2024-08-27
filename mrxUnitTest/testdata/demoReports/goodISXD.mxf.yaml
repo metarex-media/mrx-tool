@@ -1,0 +1,102 @@
+Skipped UL tests:
+    - A skipped UL
+Skipped partitions tests:
+    - generickey
+testpass: true
+tests:
+    - header: testing mxf file structure
+      tests:
+        - message: |
+            RDD47:2018,5.4,shall,3: Checking that the generic partition positions match the expected positions at the end of the file
+          checks:
+            - pass: true
+            - pass: true
+            - pass: true
+            - pass: true
+        - message: |
+            ,,,3: Checking the previous partition pointer is the correct byte position for the header partion at byte offset 0
+          checks:
+            - pass: true
+        - message: |
+            ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the header partion at byte offset 0
+          checks:
+            - pass: true
+        - message: |
+            ,,,3: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 2524
+          checks:
+            - pass: true
+        - message: |
+            ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 2524
+          checks:
+            - pass: true
+        - message: |
+            ,,,3: Checking the previous partition pointer is the correct byte position for the footer partion at byte offset 35854
+          checks:
+            - pass: true
+        - message: |
+            ,,,3: Checking the this partition pointer matches the actual byte offset of the file for the footer partion at byte offset 35854
+          checks:
+            - pass: true
+        - message: |
+            ,,,3: Checking the partition positions in the file match those in the supplied random index pack
+          checks:
+            - pass: true
+      pass: false
+      passcount: 0
+      failcount: 0
+    - header: testing header metadata at header partition at offset 0
+      tests:
+        - message: |
+            RDD47:2018,9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
+          checks:
+            - pass: true
+        - message: |
+            RDD47:2018,9.3,shall,1: Checking that the data essence coding filed is present in the isxd descriptor
+          checks:
+            - pass: true
+            - pass: true
+      pass: false
+      passcount: 0
+      failcount: 0
+    - header: testing header stuff header partition at offset 0
+      tests:
+        - message: |
+            RDD47:2018,5.4,shall,1: Checking there is no error getting the generic partition streams
+          checks:
+            - pass: true
+      pass: false
+      passcount: 0
+      failcount: 0
+    - header: testing essence stuff body partition at offset 2524
+      tests:
+        - message: |
+            RDD47:2018,7.5,shall,1: Checking that the only ISXD essence keys are found in body partitions
+          checks:
+            - pass: true
+            - pass: true
+      pass: false
+      passcount: 0
+      failcount: 0
+    - header: testing header metadata at footer partition at offset 35854
+      tests:
+        - message: |
+            RDD47:2018,9.2,shall,1: Checking that the isxd descriptor is present in the header metadata
+          checks:
+            - pass: true
+        - message: |
+            RDD47:2018,9.3,shall,1: Checking that the data essence coding filed is present in the isxd descriptor
+          checks:
+            - pass: true
+            - pass: true
+      pass: false
+      passcount: 0
+      failcount: 0
+    - header: testing header stuff footer partition at offset 35854
+      tests:
+        - message: |
+            RDD47:2018,5.4,shall,1: Checking there is no error getting the generic partition streams
+          checks:
+            - pass: true
+      pass: false
+      passcount: 0
+      failcount: 0

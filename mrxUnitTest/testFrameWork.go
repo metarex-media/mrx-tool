@@ -58,11 +58,12 @@ type check struct {
 func (tc *TestContext) EndTest() {
 	if tc.globalPass {
 		tc.report.TestPass = true
-		return
 	}
 
 	y, _ := yaml.Marshal(tc.report)
 	tc.w.Write(y)
+
+	// write the yaml and hanlde the error
 }
 
 // Header is a wrapper for the tests,
@@ -147,6 +148,7 @@ type CompleteTest struct {
 	// tester       Tester
 }
 
+// Expect calls the gomega expect assertion
 func (ct CompleteTest) Expect(actual interface{}, extra ...interface{}) Assertions {
 
 	return ct.gomegaExpect.Expect(actual, extra...)
