@@ -2,6 +2,7 @@ package mrxUnitTest
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"testing"
 
@@ -17,17 +18,17 @@ func TestAST(t *testing.T) {
 	mrxFiles := []string{"../testdata/rexy_sunbathe_mrx.mxf", "./testdata/all.mxf", "../tmp/ISXD.mxf"}
 	// hashes := []string{"4ebf90df1fd10d3cba689f2a313d6c1dc04b23353139ce9441c54d583679b5d6", "e9aa941ee55166c81171f9da12f4b0fcd03b20bbb4dc38fa3b1586ff8e3f4537"}
 
-	for i, mrx := range mrxFiles {
+	for _, mrx := range mrxFiles {
 		//	var resultsBuffer bytes.Buffer
 		// fmt.Println(i)
 		//	streamer, _ := os.Open(mrx)
 		f, _ := os.Open(mrx)
 		//	klvChan := make(chan *klv.KLV, 1000)
 		//		fout, _ := os.Create(fmt.Sprintf("tester%v.yaml", i))
-		flog, _ := os.Create(fmt.Sprintf("tester%v.yaml", i))
+		//	flog, _ := os.Create(fmt.Sprintf("tester%v.yaml", i))
 		// _, genErr := MakeAST(f, fout, klvChan, 10)
 		//	genErr := ASTTest(f, fout)
-		genErr := MRXTest(f, flog)
+		genErr := MRXTest(f, io.Discard)
 		// expect the yaml generated to match the hash
 		// not have any computational diffrences
 
