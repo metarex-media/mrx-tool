@@ -1,6 +1,7 @@
 package mrxUnitTest
 
 import (
+	"crypto/sha256"
 	"fmt"
 	"io"
 	"os"
@@ -8,50 +9,58 @@ import (
 
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/metarex-media/mrx-tool/encode"
+	"github.com/metarex-media/mrx-tool/klv"
 	"github.com/metarex-media/mrx-tool/manifest"
 	. "github.com/smartystreets/goconvey/convey"
+	"gopkg.in/yaml.v3"
 )
 
 func TestAST(t *testing.T) {
 
-	// run two different test files with and without index tables
-	mrxFiles := []string{"../testdata/rexy_sunbathe_mrx.mxf", "./testdata/all.mxf", "../tmp/ISXD.mxf"}
-	// hashes := []string{"4ebf90df1fd10d3cba689f2a313d6c1dc04b23353139ce9441c54d583679b5d6", "e9aa941ee55166c81171f9da12f4b0fcd03b20bbb4dc38fa3b1586ff8e3f4537"}
+	mxfToTest := []string{"./testdata/demoReports/goodISXD.mxf",
+		"./testdata/demoReports/veryBadISXD.mxf", "./testdata/demoReports/badISXD.mxf"}
+	for _, mxf := range mxfToTest {
 
-	for _, mrx := range mrxFiles {
-		//	var resultsBuffer bytes.Buffer
-		// fmt.Println(i)
-		//	streamer, _ := os.Open(mrx)
-		f, _ := os.Open(mrx)
-		//	klvChan := make(chan *klv.KLV, 1000)
-		//		fout, _ := os.Create(fmt.Sprintf("tester%v.yaml", i))
-		//	flog, _ := os.Create(fmt.Sprintf("tester%v.yaml", i))
-		// _, genErr := MakeAST(f, fout, klvChan, 10)
-		//	genErr := ASTTest(f, fout)
-		genErr := MRXTest(f, io.Discard)
-		// expect the yaml generated to match the hash
-		// not have any computational diffrences
+		doc, docErr := os.Open(mxf)
 
-		// htest := sha256.New()
-		// htest.Write(resultsBuffer.Bytes())
-		Convey("Checking that the generated yaml of a file matches the expected hash", t, func() {
-			Convey(fmt.Sprintf("using a %s as the file to read and extract the data", mrx), func() {
-				Convey("No error is returned and the hashes start matching", func() {
+		klvChan := make(chan *klv.KLV, 1000)
+
+		// generate the AST, assigning the tests
+		ast, genErr := MakeAST(doc, klvChan, 10, Specifications{
+			Node: make(map[string][]*func(doc io.ReadSeeker, isxdDesc *Node, primer map[string]string) func(t Test)),
+			Part: make(map[string][]*func(doc io.ReadSeeker, isxdDesc *PartitionNode) func(t Test)),
+			MXF:  make([]*func(doc io.ReadSeeker, isxdDesc *MXFNode) func(t Test), 0),
+		})
+
+		astBytes, yamErr := yaml.Marshal(ast)
+		expecBytes, expecErr := os.ReadFile(fmt.Sprintf("%v-ast.yaml", mxf))
+		htest := sha256.New()
+		htest.Write(astBytes)
+		hnormal := sha256.New()
+		hnormal.Write(expecBytes)
+
+		Convey("generating a file for testing", t, func() {
+			Convey("checking the file is encoded without error and the data is not corrupted", func() {
+				Convey("No error is returned for the encoding", func() {
+
+					So(docErr, ShouldBeNil)
 					So(genErr, ShouldBeNil)
-					// So(fmt.Sprintf("%x", htest.Sum(nil)), ShouldResemble, hashes[i])
+					So(yamErr, ShouldBeNil)
+					So(expecErr, ShouldBeNil)
+					So(fmt.Sprintf("%x", htest.Sum(nil)), ShouldResemble, fmt.Sprintf("%x", hnormal.Sum(nil)))
 				})
 			})
 		})
 
 	}
-
 }
 
 // TestMakeDemoFiles
+// these are example files for testing ISXD
 func TestMakeDemoFiles(t *testing.T) {
 	// loop through functions that generate lrge data streams to be saved
 	testFuncs := []func() (manifest.Configuration, []encode.SingleStream, [][]string, string){
-		goodISXD, getAll, getEmbed,
+		goodISXD, veryBadISXD, badISXD,
 	}
 
 	for _, tf := range testFuncs {
@@ -71,13 +80,20 @@ func TestMakeDemoFiles(t *testing.T) {
 
 			}
 		}()
-		f, createErr := os.Create(fileName)
+
+		f := io.Discard
+		var createErr error
+		// only make new files if there aren't any saved locally
+		if _, err := os.Open(fileName); err != nil {
+			f, createErr = os.Create(fileName)
+
+		}
+
 		opts := &encode.MrxEncodeOptions{ManifestHistoryCount: 0}
 		if fileName == "./testdata/demoReports/goodISXD.mxf" {
 			opts.DisableManifest = true
 		}
 		err := encode.EncodeMultipleDataStreams(f, streams, demoConfig, opts)
-		f.Close()
 
 		fread, _ := os.Open(fileName)
 
@@ -124,7 +140,14 @@ func goodISXD() (demoConfig manifest.Configuration, streams []encode.SingleStrea
 	return
 }
 
-func getAll() (demoConfig manifest.Configuration, streams []encode.SingleStream, data [][]string, mess string) {
+/*
+verybadISXD because:
+
+  - it has multiple keys that aren't ISXD in a framewrapped stream
+  - it has embedded data in generic partitions that have different essence keys
+  - it has the mrx manifest as a generic partition as well
+*/
+func veryBadISXD() (demoConfig manifest.Configuration, streams []encode.SingleStream, data [][]string, mess string) {
 	demoConfig = manifest.Configuration{Version: "pre alpha",
 		Default: manifest.StreamProperties{StreamType: "some data to track", FrameRate: "24/1"},
 	}
@@ -151,7 +174,11 @@ func getAll() (demoConfig manifest.Configuration, streams []encode.SingleStream,
 	return
 }
 
-func getEmbed() (demoConfig manifest.Configuration, streams []encode.SingleStream, data [][]string, mess string) {
+/*
+badISXD because it has a MRX manifest that is not part of the isxd spec.
+*/
+func badISXD() (demoConfig manifest.Configuration, streams []encode.SingleStream, data [][]string, mess string) {
+
 	demoConfig = manifest.Configuration{Version: "pre alpha",
 		Default: manifest.StreamProperties{StreamType: "some data to track", FrameRate: "24/1"},
 	}

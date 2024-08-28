@@ -44,6 +44,7 @@ func TestHandler(t *testing.T) {
 		})
 	}
 
+	// ensure the added tests are actually added
 	tc := NewTestContext(io.Discard)
 	skippedTests := []skippedTest{
 		{TestKey: "Test Key for a partition", Desc: "partition test"},
@@ -67,12 +68,7 @@ func TestHandler(t *testing.T) {
 	// tc.RegisterSkippedTest()
 	/*
 
-		steps registering a test
-
-		check the skips worked
-
 		run the header then handle the test functions and make sure they call correctly. - write directly to the buffer so we can process the result
-
 		check anything else
 
 	*/
