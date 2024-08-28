@@ -36,7 +36,7 @@ clog:
   env:
     dbToken: DB_ROACH
     awsAccess: AWS_ACCESS_KEY_ID
-    awsSecret: AWS_SECRET_ACCESS_KEY
+    awsSecret: AWS_ACCESS_KEY
     gitLabAccessToken: GLAT
     gitHubAccessToken: GHAT
     gitHubGistToken: GHGIST

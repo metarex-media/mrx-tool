@@ -205,7 +205,7 @@ type MXFProperty interface {
 	// symbol returns the MXF UL associated with the node.
 	// if there is one
 	UL() string
-	//ID returns the ID associated with the property
+	// ID returns the ID associated with the property
 	ID() string
 	// Returns the type of that node
 	// e.g. essence, partition or the group type like Descriptivemetadata
@@ -290,7 +290,7 @@ func (p PartitionProperties) Label() []string {
 
 // UL returns the UL of the partition
 func (p PartitionProperties) Symbol() string {
-	//fmt.Println(p.PartitionType)
+	// fmt.Println(p.PartitionType)
 	return p.PartitionType
 }
 
@@ -299,7 +299,7 @@ func (p PartitionProperties) Symbol() string {
 //
 // The search command is not case sensitive
 func (p PartitionNode) Search(searchfield string) ([]*Node, error) {
-	//lowercase as ULs are lower case when searching
+	// lowercase as ULs are lower case when searching
 	command := strings.Split(strings.ToLower(searchfield), " ")
 
 	if len(command) < 4 {
@@ -393,7 +393,7 @@ func recurseSearch(node *Node, field, equate, target string) ([]*Node, error) {
 //
 // The search command is not case sensitive
 func (m MXFNode) Search(searchfield string) ([]*PartitionNode, error) {
-	//lowercase as ULs are lower case when searching
+	// lowercase as ULs are lower case when searching
 	command := strings.Split(strings.ToLower(searchfield), " ")
 
 	if len(command) < 4 {
@@ -546,7 +546,7 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int, specs Specificati
 
 					if skip {
 
-						//unpack the primer
+						// unpack the primer
 
 						if fullNameMask(metadata.Key, 5) == "060e2b34.027f0101.0d010201.01050100" {
 							out := make(map[string]string)
@@ -656,7 +656,7 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int, specs Specificati
 		return nil, err
 	}
 
-	//b, _ := yaml.Marshal(mxf)
+	// b, _ := yaml.Marshal(mxf)
 	//dest.Write(b)
 	//fmt.Println(mxf)
 	// assign after the yaml to stop endless recursion
@@ -854,7 +854,7 @@ func primerUnpack(input []byte, shorthand map[string]string) {
 
 	offset := 8
 	for i := uint32(0); i < count; i++ {
-		//fmt.Printf("%x: %v\n", input[offset:offset+2], fullName(input[offset+2:offset+18]))
+		// fmt.Printf("%x: %v\n", input[offset:offset+2], fullName(input[offset+2:offset+18]))
 		short := fmt.Sprintf("%04x", input[offset:offset+2])
 		shorthand[short] = fullName(input[offset+2 : offset+18])
 		offset += int(length)
@@ -988,7 +988,7 @@ func ReferenceExtract(field any, reftype Ref) [][]byte {
 
 			for i := 0; i < arrLen; i++ {
 
-				//id, _ := yaml.Marshal(arr.Index(i).Interface())
+				// id, _ := yaml.Marshal(arr.Index(i).Interface())
 
 				arrField := arr.Index(i).Interface()
 				//	_, ok := idmap[strid]

@@ -36,7 +36,7 @@ func ISXDSpecifications() Specifications {
 	return Specifications{
 		Node: map[string][]*func(doc io.ReadSeeker, isxdDesc *Node, primer map[string]string) func(t Test){
 			mxf2go.GISXDUL[13:]: {&nt},
-			//060e2b34.02530101.0d010101.01013b00
+			// 060e2b34.02530101.0d010101.01013b00
 		},
 		Part: map[string][]*func(doc io.ReadSeeker, isxdDesc *PartitionNode) func(t Test){
 			HeaderKey:  {&gc},
@@ -177,7 +177,7 @@ func testGenericPartition(doc io.ReadSeeker, header *PartitionNode) func(t Test)
 		// 060e2b34.0101010c.0d010509.01000000 as the value is not used in the registers (yet?)
 		gpEssKey := "060e2b34.0101010c.0d010509.01000000"
 		invalidKeys, err := header.Search("select * from essence where ul <> " + gpEssKey)
-		//09.01 - 1001 -little endin & 01 - makrer bit
+		// 09.01 - 1001 -little endin & 01 - makrer bit
 		// can be shown as this but is not in the essence
 		// 060e2b34.0101010c.0d01057f.7f000000
 
