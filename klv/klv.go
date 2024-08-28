@@ -138,7 +138,7 @@ func (s *streamer) bridger(positionPoint *int, bridgeSize int) ([]byte, error) {
 			s.streamOpen = streamOpen
 			if !streamOpen {
 				if remain != 0 {
-					return bridged, fmt.Errorf("Buffer stream unexpectantly closed, was expecting at least %v more bytes", remain)
+					return bridged, fmt.Errorf("Buffer stream unexpectedly closed, was expecting at least %v more bytes", remain)
 				}
 
 				return bridged, nil

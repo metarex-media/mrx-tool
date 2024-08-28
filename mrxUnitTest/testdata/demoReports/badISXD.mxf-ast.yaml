@@ -1,0 +1,1572 @@
+partitions:
+    - key:
+        start: 0
+        end: 16
+      length:
+        start: 16
+        end: 20
+      value:
+        start: 20
+        end: 124
+      headermetadata:
+        - key:
+            start: 124
+            end: 140
+          length:
+            start: 140
+            end: 144
+          value:
+            start: 144
+            end: 908
+          properties:
+            uuid: "00000000000000000000000000000000"
+            universallabel: 060e2b34.027f0101.0d010201.01050100
+            grouplabel: []
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 908
+            end: 924
+          length:
+            start: 924
+            end: 926
+          value:
+            start: 926
+            end: 1088
+          properties:
+            uuid: 8628e43c1b3949d996efd8f2cbc3648b
+            universallabel: 060e2b34.027f0101.0d010101.01012f00
+            grouplabel: []
+          tests:
+            teststatus:
+                pass: true
+          children:
+            - key:
+                start: 1088
+                end: 1104
+              length:
+                start: 1104
+                end: 1105
+              value:
+                start: 1105
+                end: 1169
+              properties:
+                uuid: 803306f92b8a48279b17925853098865
+                universallabel: 060e2b34.027f0101.0d010101.01011800
+                grouplabel: []
+              tests:
+                teststatus:
+                    pass: true
+              children:
+                - key:
+                    start: 1169
+                    end: 1185
+                  length:
+                    start: 1185
+                    end: 1186
+                  value:
+                    start: 1186
+                    end: 1294
+                  properties:
+                    uuid: aaae83f80b6a499db7a5ffa4033b97fc
+                    universallabel: 060e2b34.027f0101.0d010101.01013600
+                    grouplabel: []
+                  tests:
+                    teststatus:
+                        pass: true
+                  children:
+                    - key:
+                        start: 1294
+                        end: 1310
+                      length:
+                        start: 1310
+                        end: 1311
+                      value:
+                        start: 1311
+                        end: 1391
+                      properties:
+                        uuid: 0103a1f241ba4e7eab3b3060e06c47b8
+                        universallabel: 060e2b34.027f0101.0d010101.01013b00
+                        grouplabel: []
+                      tests:
+                        teststatus:
+                            pass: true
+                      children:
+                        - key:
+                            start: 1391
+                            end: 1407
+                          length:
+                            start: 1407
+                            end: 1408
+                          value:
+                            start: 1408
+                            end: 1476
+                          properties:
+                            uuid: c08ed43c4e3c419da482dc09c7909ccd
+                            universallabel: 060e2b34.027f0101.0d010101.01010f00
+                            grouplabel:
+                                - 060e2b34.04010101.01030202.03000000
+                          tests:
+                            teststatus:
+                                pass: true
+                          children:
+                            - key:
+                                start: 1476
+                                end: 1492
+                              length:
+                                start: 1492
+                                end: 1493
+                              value:
+                                start: 1493
+                                end: 1589
+                              properties:
+                                uuid: 3e2d9da3ed174061bd939d2566dbdb88
+                                universallabel: 060e2b34.027f0101.0d010101.01011100
+                                grouplabel:
+                                    - 060e2b34.04010101.01030202.03000000
+                              tests:
+                                teststatus:
+                                    pass: true
+                              children: []
+                - key:
+                    start: 1851
+                    end: 1867
+                  length:
+                    start: 1867
+                    end: 1869
+                  value:
+                    start: 1869
+                    end: 2013
+                  properties:
+                    uuid: 9df4274ad7d3410eb8de510ed5c75b26
+                    universallabel: 060e2b34.027f0101.0d010101.01013700
+                    grouplabel: []
+                  tests:
+                    teststatus:
+                        pass: true
+                  children:
+                    - key:
+                        start: 2013
+                        end: 2029
+                      length:
+                        start: 2029
+                        end: 2030
+                      value:
+                        start: 2030
+                        end: 2110
+                      properties:
+                        uuid: a43e0c6ad05b49329222d2ca0a013d60
+                        universallabel: 060e2b34.027f0101.0d010101.01013b00
+                        grouplabel: []
+                      tests:
+                        teststatus:
+                            pass: true
+                      children:
+                        - key:
+                            start: 2110
+                            end: 2126
+                          length:
+                            start: 2126
+                            end: 2127
+                          value:
+                            start: 2127
+                            end: 2195
+                          properties:
+                            uuid: b5c8223ab70f467daac527e151d1da2b
+                            universallabel: 060e2b34.027f0101.0d010101.01010f00
+                            grouplabel:
+                                - 060e2b34.04010101.01030202.03000000
+                          tests:
+                            teststatus:
+                                pass: true
+                          children:
+                            - key:
+                                start: 2195
+                                end: 2211
+                              length:
+                                start: 2211
+                                end: 2212
+                              value:
+                                start: 2212
+                                end: 2308
+                              properties:
+                                uuid: fedd09a09a124c388a0f8b8351e4b2fd
+                                universallabel: 060e2b34.027f0101.0d010101.01011100
+                                grouplabel:
+                                    - 060e2b34.04010101.01030202.03000000
+                              tests:
+                                teststatus:
+                                    pass: true
+                              children: []
+                    - key:
+                        start: 2567
+                        end: 2583
+                      length:
+                        start: 2583
+                        end: 2584
+                      value:
+                        start: 2584
+                        end: 2640
+                      properties:
+                        uuid: 9078a2b71f274e4da31e92b359308bef
+                        universallabel: 060e2b34.027f0101.0d010101.01013a00
+                        grouplabel: []
+                      tests:
+                        teststatus:
+                            pass: true
+                      children:
+                        - key:
+                            start: 2640
+                            end: 2656
+                          length:
+                            start: 2656
+                            end: 2657
+                          value:
+                            start: 2657
+                            end: 2725
+                          properties:
+                            uuid: e7d30bd4cfbb475789e3a4a6d43ff15c
+                            universallabel: 060e2b34.027f0101.0d010101.01010f00
+                            grouplabel:
+                                - 060e2b34.04010101.01030201.01000000
+                          tests:
+                            teststatus:
+                                pass: true
+                          children:
+                            - key:
+                                start: 2308
+                                end: 2324
+                              length:
+                                start: 2324
+                                end: 2325
+                              value:
+                                start: 2325
+                                end: 2385
+                              properties:
+                                uuid: 14e883d3a7ee4c57a757ecf14bf3049e
+                                universallabel: 060e2b34.027f0101.0d010101.01014100
+                                grouplabel:
+                                    - 060e2b34.04010101.01030201.10000000
+                              tests:
+                                teststatus:
+                                    pass: true
+                              children:
+                                - key:
+                                    start: 2385
+                                    end: 2401
+                                  length:
+                                    start: 2401
+                                    end: 2402
+                                  value:
+                                    start: 2402
+                                    end: 2442
+                                  properties:
+                                    uuid: d3bc9a0c75e74644a84c0bc8f7fd6d41
+                                    universallabel: 060e2b34.027f0101.0d010401.04010100
+                                    grouplabel: []
+                                  tests:
+                                    teststatus:
+                                        pass: true
+                                  children:
+                                    - key:
+                                        start: 2442
+                                        end: 2458
+                                      length:
+                                        start: 2458
+                                        end: 2459
+                                      value:
+                                        start: 2459
+                                        end: 2567
+                                      properties:
+                                        uuid: bd77092ad5e94ea280d58401800dc031
+                                        universallabel: 060e2b34.027f0101.0d010401.04020100
+                                        grouplabel: []
+                                      tests:
+                                        teststatus:
+                                            pass: true
+                                      children: []
+                    - key:
+                        start: 2725
+                        end: 2741
+                      length:
+                        start: 2741
+                        end: 2742
+                      value:
+                        start: 2742
+                        end: 2865
+                      properties:
+                        uuid: 7938b385f48946a39188754d4e55a792
+                        universallabel: 060e2b34.02530105.0e090502.00000000
+                        grouplabel:
+                            - 060e2b34.04010105.0e090607.01010103
+                      tests:
+                        teststatus:
+                            pass: true
+                      children: []
+            - key:
+                start: 2906
+                end: 2922
+              length:
+                start: 2922
+                end: 2923
+              value:
+                start: 2923
+                end: 3047
+              properties:
+                uuid: e43541bc80cd48da8557606f174e60ed
+                universallabel: 060e2b34.027f0101.0d010101.01013000
+                grouplabel: []
+              tests:
+                teststatus:
+                    pass: true
+              children: []
+        - key:
+            start: 1589
+            end: 1605
+          length:
+            start: 1605
+            end: 1606
+          value:
+            start: 1606
+            end: 1686
+          properties:
+            uuid: 7549ac8908e64524a7166de7108f842c
+            universallabel: 060e2b34.027f0101.0d010101.01013b00
+            grouplabel: []
+          tests:
+            teststatus:
+                pass: true
+          children:
+            - key:
+                start: 1391
+                end: 1407
+              length:
+                start: 1407
+                end: 1408
+              value:
+                start: 1408
+                end: 1476
+              properties:
+                uuid: c08ed43c4e3c419da482dc09c7909ccd
+                universallabel: 060e2b34.027f0101.0d010101.01010f00
+                grouplabel:
+                    - 060e2b34.04010101.01030202.03000000
+              tests:
+                teststatus:
+                    pass: true
+              children:
+                - key:
+                    start: 1476
+                    end: 1492
+                  length:
+                    start: 1492
+                    end: 1493
+                  value:
+                    start: 1493
+                    end: 1589
+                  properties:
+                    uuid: 3e2d9da3ed174061bd939d2566dbdb88
+                    universallabel: 060e2b34.027f0101.0d010101.01011100
+                    grouplabel:
+                        - 060e2b34.04010101.01030202.03000000
+                  tests:
+                    teststatus:
+                        pass: true
+                  children: []
+        - key:
+            start: 1686
+            end: 1702
+          length:
+            start: 1702
+            end: 1703
+          value:
+            start: 1703
+            end: 1771
+          properties:
+            uuid: 7dfcfc3291034349a0d818836b057e6b
+            universallabel: 060e2b34.027f0101.0d010101.01010f00
+            grouplabel:
+                - 060e2b34.04010101.01030202.03000000
+          tests:
+            teststatus:
+                pass: true
+          children:
+            - key:
+                start: 1476
+                end: 1492
+              length:
+                start: 1492
+                end: 1493
+              value:
+                start: 1493
+                end: 1589
+              properties:
+                uuid: 3e2d9da3ed174061bd939d2566dbdb88
+                universallabel: 060e2b34.027f0101.0d010101.01011100
+                grouplabel:
+                    - 060e2b34.04010101.01030202.03000000
+              tests:
+                teststatus:
+                    pass: true
+              children: []
+        - key:
+            start: 1771
+            end: 1787
+          length:
+            start: 1787
+            end: 1788
+          value:
+            start: 1788
+            end: 1851
+          properties:
+            uuid: ad85d782be1a4eddbbbd8ad6aa4007bc
+            universallabel: 060e2b34.027f0101.0d010101.01011400
+            grouplabel:
+                - 060e2b34.04010101.01030202.03000000
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 2865
+            end: 2881
+          length:
+            start: 2881
+            end: 2882
+          value:
+            start: 2882
+            end: 2906
+          properties:
+            uuid: 4fff4497958f448a915415660f609cd7
+            universallabel: 060e2b34.027f0101.0d010401.04010100
+            grouplabel: []
+          tests:
+            teststatus:
+                pass: true
+          children:
+            - null
+      essence: []
+      indextable: null
+      props:
+        partitioncount: 0
+        partitiontype: header
+        primer:
+            3b0a: 060e2b34.01010105.01020210.02010000
+            3b0b: 060e2b34.01010105.01020210.02020000
+            3b02: 060e2b34.01010102.07020110.02040000
+            3b03: 060e2b34.01010102.06010104.02010000
+            3b05: 060e2b34.01010102.03010201.05000000
+            3b06: 060e2b34.01010102.06010104.06040000
+            3b09: 060e2b34.01010105.01020203.00000000
+            3c0a: 060e2b34.01010101.01011502.00000000
+            3c01: 060e2b34.01010102.05200701.02010000
+            3c02: 060e2b34.01010102.05200701.03010000
+            3c04: 060e2b34.01010102.05200701.05010000
+            3c05: 060e2b34.01010102.05200701.07000000
+            3c09: 060e2b34.01010102.05200701.01000000
+            "3e01": 060e2b34.01010103.04030302.00000000
+            4b01: 060e2b34.01010102.05300405.00000000
+            4b02: 060e2b34.01010102.07020103.01030000
+            "0201": 060e2b34.01010102.04070100.00000000
+            "1001": 060e2b34.01010102.06010104.06090000
+            "1101": 060e2b34.01010102.06010103.01000000
+            "1102": 060e2b34.01010102.06010103.02000000
+            "1201": 060e2b34.01010102.07020103.01040000
+            "1501": 060e2b34.01010102.07020103.01050000
+            "1502": 060e2b34.01010102.04040101.02060000
+            "1503": 060e2b34.01010101.04040101.05000000
+            "1901": 060e2b34.01010102.06010104.05010000
+            "3001": 060e2b34.01010101.04060101.00000000
+            "3004": 060e2b34.01010102.06010104.01020000
+            "4401": 060e2b34.01010101.01011510.00000000
+            "4403": 060e2b34.01010102.06010104.06050000
+            "4404": 060e2b34.01010102.07020110.02050000
+            "4405": 060e2b34.01010102.07020110.01030000
+            "4701": 060e2b34.01010102.06010104.02030000
+            "4801": 060e2b34.01010102.01070101.00000000
+            "4803": 060e2b34.01010102.06010104.02040000
+            "4804": 060e2b34.01010102.01040103.00000000
+            "6101": 060e2b34.01010105.06010104.020c0000
+            fffa: 060e2b34.01010105.0e090400.00000000
+            fffb: 060e2b34.0101010d.06010104.05410100
+            fffc: 060e2b34.0101010d.01030408.00000000
+            fffd: 060e2b34.0101010d.03010102.02140000
+            fffe: 060e2b34.0101010d.04090202.00000000
+            ffff: 060e2b34.0101010d.04060806.00000000
+        essenceorder: []
+      tests:
+        teststatus:
+            pass: true
+      partitionpos: 0
+    - key:
+        start: 3047
+        end: 3063
+      length:
+        start: 3063
+        end: 3067
+      value:
+        start: 3067
+        end: 3171
+      headermetadata: []
+      essence:
+        - key:
+            start: 3171
+            end: 3187
+          length:
+            start: 3187
+            end: 3190
+          value:
+            start: 3190
+            end: 3561
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 3561
+            end: 3577
+          length:
+            start: 3577
+            end: 3580
+          value:
+            start: 3580
+            end: 4198
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 4198
+            end: 4214
+          length:
+            start: 4214
+            end: 4217
+          value:
+            start: 4217
+            end: 4706
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 4706
+            end: 4722
+          length:
+            start: 4722
+            end: 4724
+          value:
+            start: 4724
+            end: 4889
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 4889
+            end: 4905
+          length:
+            start: 4905
+            end: 4906
+          value:
+            start: 4906
+            end: 4957
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 4957
+            end: 4973
+          length:
+            start: 4973
+            end: 4976
+          value:
+            start: 4976
+            end: 5813
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 5813
+            end: 5829
+          length:
+            start: 5829
+            end: 5832
+          value:
+            start: 5832
+            end: 6350
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 6350
+            end: 6366
+          length:
+            start: 6366
+            end: 6369
+          value:
+            start: 6369
+            end: 6645
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 6645
+            end: 6661
+          length:
+            start: 6661
+            end: 6662
+          value:
+            start: 6662
+            end: 6729
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 6729
+            end: 6745
+          length:
+            start: 6745
+            end: 6747
+          value:
+            start: 6747
+            end: 6945
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 6945
+            end: 6961
+          length:
+            start: 6961
+            end: 6964
+          value:
+            start: 6964
+            end: 7663
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 7663
+            end: 7679
+          length:
+            start: 7679
+            end: 7682
+          value:
+            start: 7682
+            end: 12846
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 12846
+            end: 12862
+          length:
+            start: 12862
+            end: 12865
+          value:
+            start: 12865
+            end: 15493
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 15493
+            end: 15509
+          length:
+            start: 15509
+            end: 15512
+          value:
+            start: 15512
+            end: 17430
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 17430
+            end: 17446
+          length:
+            start: 17446
+            end: 17449
+          value:
+            start: 17449
+            end: 19913
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 19913
+            end: 19929
+          length:
+            start: 19929
+            end: 19931
+          value:
+            start: 19931
+            end: 20097
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 20097
+            end: 20113
+          length:
+            start: 20113
+            end: 20116
+          value:
+            start: 20116
+            end: 21800
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 21800
+            end: 21816
+          length:
+            start: 21816
+            end: 21819
+          value:
+            start: 21819
+            end: 22186
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 22186
+            end: 22202
+          length:
+            start: 22202
+            end: 22204
+          value:
+            start: 22204
+            end: 22405
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 22405
+            end: 22421
+          length:
+            start: 22421
+            end: 22424
+          value:
+            start: 22424
+            end: 22875
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 22875
+            end: 22891
+          length:
+            start: 22891
+            end: 22892
+          value:
+            start: 22892
+            end: 22939
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 22939
+            end: 22955
+          length:
+            start: 22955
+            end: 22957
+          value:
+            start: 22957
+            end: 23190
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 23190
+            end: 23206
+          length:
+            start: 23206
+            end: 23209
+          value:
+            start: 23209
+            end: 23566
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 23566
+            end: 23582
+          length:
+            start: 23582
+            end: 23585
+          value:
+            start: 23585
+            end: 23873
+          properties:
+            essul: 060e2b34.01020105.0e090502.017f017f
+          tests:
+            teststatus:
+                pass: true
+          children: []
+      indextable: null
+      props:
+        partitioncount: 1
+        partitiontype: body
+        primer:
+            3b0a: 060e2b34.01010105.01020210.02010000
+            3b0b: 060e2b34.01010105.01020210.02020000
+            3b02: 060e2b34.01010102.07020110.02040000
+            3b03: 060e2b34.01010102.06010104.02010000
+            3b05: 060e2b34.01010102.03010201.05000000
+            3b06: 060e2b34.01010102.06010104.06040000
+            3b09: 060e2b34.01010105.01020203.00000000
+            3c0a: 060e2b34.01010101.01011502.00000000
+            3c01: 060e2b34.01010102.05200701.02010000
+            3c02: 060e2b34.01010102.05200701.03010000
+            3c04: 060e2b34.01010102.05200701.05010000
+            3c05: 060e2b34.01010102.05200701.07000000
+            3c09: 060e2b34.01010102.05200701.01000000
+            "3e01": 060e2b34.01010103.04030302.00000000
+            4b01: 060e2b34.01010102.05300405.00000000
+            4b02: 060e2b34.01010102.07020103.01030000
+            "0201": 060e2b34.01010102.04070100.00000000
+            "1001": 060e2b34.01010102.06010104.06090000
+            "1101": 060e2b34.01010102.06010103.01000000
+            "1102": 060e2b34.01010102.06010103.02000000
+            "1201": 060e2b34.01010102.07020103.01040000
+            "1501": 060e2b34.01010102.07020103.01050000
+            "1502": 060e2b34.01010102.04040101.02060000
+            "1503": 060e2b34.01010101.04040101.05000000
+            "1901": 060e2b34.01010102.06010104.05010000
+            "3001": 060e2b34.01010101.04060101.00000000
+            "3004": 060e2b34.01010102.06010104.01020000
+            "4401": 060e2b34.01010101.01011510.00000000
+            "4403": 060e2b34.01010102.06010104.06050000
+            "4404": 060e2b34.01010102.07020110.02050000
+            "4405": 060e2b34.01010102.07020110.01030000
+            "4701": 060e2b34.01010102.06010104.02030000
+            "4801": 060e2b34.01010102.01070101.00000000
+            "4803": 060e2b34.01010102.06010104.02040000
+            "4804": 060e2b34.01010102.01040103.00000000
+            "6101": 060e2b34.01010105.06010104.020c0000
+            fffa: 060e2b34.01010105.0e090400.00000000
+            fffb: 060e2b34.0101010d.06010104.05410100
+            fffc: 060e2b34.0101010d.01030408.00000000
+            fffd: 060e2b34.0101010d.03010102.02140000
+            fffe: 060e2b34.0101010d.04090202.00000000
+            ffff: 060e2b34.0101010d.04060806.00000000
+        essenceorder:
+            - 060e2b34.01020105.0e090502.01010100
+      tests:
+        teststatus:
+            pass: true
+      partitionpos: 1
+    - key:
+        start: 23873
+        end: 23889
+      length:
+        start: 23889
+        end: 23893
+      value:
+        start: 23893
+        end: 23997
+      headermetadata: []
+      essence:
+        - key:
+            start: 23997
+            end: 24013
+          length:
+            start: 24013
+            end: 24016
+          value:
+            start: 24016
+            end: 26493
+          properties:
+            essul: 060e2b34.01020101.0f020101.05000000
+          tests:
+            teststatus:
+                pass: true
+          children: []
+      indextable: null
+      props:
+        partitioncount: 2
+        partitiontype: genericstreampartition
+        primer:
+            3b0a: 060e2b34.01010105.01020210.02010000
+            3b0b: 060e2b34.01010105.01020210.02020000
+            3b02: 060e2b34.01010102.07020110.02040000
+            3b03: 060e2b34.01010102.06010104.02010000
+            3b05: 060e2b34.01010102.03010201.05000000
+            3b06: 060e2b34.01010102.06010104.06040000
+            3b09: 060e2b34.01010105.01020203.00000000
+            3c0a: 060e2b34.01010101.01011502.00000000
+            3c01: 060e2b34.01010102.05200701.02010000
+            3c02: 060e2b34.01010102.05200701.03010000
+            3c04: 060e2b34.01010102.05200701.05010000
+            3c05: 060e2b34.01010102.05200701.07000000
+            3c09: 060e2b34.01010102.05200701.01000000
+            "3e01": 060e2b34.01010103.04030302.00000000
+            4b01: 060e2b34.01010102.05300405.00000000
+            4b02: 060e2b34.01010102.07020103.01030000
+            "0201": 060e2b34.01010102.04070100.00000000
+            "1001": 060e2b34.01010102.06010104.06090000
+            "1101": 060e2b34.01010102.06010103.01000000
+            "1102": 060e2b34.01010102.06010103.02000000
+            "1201": 060e2b34.01010102.07020103.01040000
+            "1501": 060e2b34.01010102.07020103.01050000
+            "1502": 060e2b34.01010102.04040101.02060000
+            "1503": 060e2b34.01010101.04040101.05000000
+            "1901": 060e2b34.01010102.06010104.05010000
+            "3001": 060e2b34.01010101.04060101.00000000
+            "3004": 060e2b34.01010102.06010104.01020000
+            "4401": 060e2b34.01010101.01011510.00000000
+            "4403": 060e2b34.01010102.06010104.06050000
+            "4404": 060e2b34.01010102.07020110.02050000
+            "4405": 060e2b34.01010102.07020110.01030000
+            "4701": 060e2b34.01010102.06010104.02030000
+            "4801": 060e2b34.01010102.01070101.00000000
+            "4803": 060e2b34.01010102.06010104.02040000
+            "4804": 060e2b34.01010102.01040103.00000000
+            "6101": 060e2b34.01010105.06010104.020c0000
+            fffa: 060e2b34.01010105.0e090400.00000000
+            fffb: 060e2b34.0101010d.06010104.05410100
+            fffc: 060e2b34.0101010d.01030408.00000000
+            fffd: 060e2b34.0101010d.03010102.02140000
+            fffe: 060e2b34.0101010d.04090202.00000000
+            ffff: 060e2b34.0101010d.04060806.00000000
+        essenceorder:
+            - 060e2b34.01020101.0f020101.05000000
+      tests:
+        teststatus:
+            pass: true
+      partitionpos: 2
+    - key:
+        start: 26493
+        end: 26509
+      length:
+        start: 26509
+        end: 26513
+      value:
+        start: 26513
+        end: 26617
+      headermetadata:
+        - key:
+            start: 26617
+            end: 26633
+          length:
+            start: 26633
+            end: 26637
+          value:
+            start: 26637
+            end: 27401
+          properties:
+            uuid: "00000000000000000000000000000000"
+            universallabel: 060e2b34.027f0101.0d010201.01050100
+            grouplabel: []
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 27401
+            end: 27417
+          length:
+            start: 27417
+            end: 27419
+          value:
+            start: 27419
+            end: 27581
+          properties:
+            uuid: 8628e43c1b3949d996efd8f2cbc3648b
+            universallabel: 060e2b34.027f0101.0d010101.01012f00
+            grouplabel: []
+          tests:
+            teststatus:
+                pass: true
+          children:
+            - key:
+                start: 27581
+                end: 27597
+              length:
+                start: 27597
+                end: 27598
+              value:
+                start: 27598
+                end: 27662
+              properties:
+                uuid: 803306f92b8a48279b17925853098865
+                universallabel: 060e2b34.027f0101.0d010101.01011800
+                grouplabel: []
+              tests:
+                teststatus:
+                    pass: true
+              children:
+                - key:
+                    start: 27662
+                    end: 27678
+                  length:
+                    start: 27678
+                    end: 27679
+                  value:
+                    start: 27679
+                    end: 27787
+                  properties:
+                    uuid: aaae83f80b6a499db7a5ffa4033b97fc
+                    universallabel: 060e2b34.027f0101.0d010101.01013600
+                    grouplabel: []
+                  tests:
+                    teststatus:
+                        pass: true
+                  children:
+                    - key:
+                        start: 27787
+                        end: 27803
+                      length:
+                        start: 27803
+                        end: 27804
+                      value:
+                        start: 27804
+                        end: 27884
+                      properties:
+                        uuid: 0103a1f241ba4e7eab3b3060e06c47b8
+                        universallabel: 060e2b34.027f0101.0d010101.01013b00
+                        grouplabel: []
+                      tests:
+                        teststatus:
+                            pass: true
+                      children:
+                        - key:
+                            start: 27884
+                            end: 27900
+                          length:
+                            start: 27900
+                            end: 27901
+                          value:
+                            start: 27901
+                            end: 27969
+                          properties:
+                            uuid: c08ed43c4e3c419da482dc09c7909ccd
+                            universallabel: 060e2b34.027f0101.0d010101.01010f00
+                            grouplabel:
+                                - 060e2b34.04010101.01030202.03000000
+                          tests:
+                            teststatus:
+                                pass: true
+                          children:
+                            - key:
+                                start: 27969
+                                end: 27985
+                              length:
+                                start: 27985
+                                end: 27986
+                              value:
+                                start: 27986
+                                end: 28082
+                              properties:
+                                uuid: 3e2d9da3ed174061bd939d2566dbdb88
+                                universallabel: 060e2b34.027f0101.0d010101.01011100
+                                grouplabel:
+                                    - 060e2b34.04010101.01030202.03000000
+                              tests:
+                                teststatus:
+                                    pass: true
+                              children: []
+                - key:
+                    start: 28344
+                    end: 28360
+                  length:
+                    start: 28360
+                    end: 28362
+                  value:
+                    start: 28362
+                    end: 28506
+                  properties:
+                    uuid: 9df4274ad7d3410eb8de510ed5c75b26
+                    universallabel: 060e2b34.027f0101.0d010101.01013700
+                    grouplabel: []
+                  tests:
+                    teststatus:
+                        pass: true
+                  children:
+                    - key:
+                        start: 28506
+                        end: 28522
+                      length:
+                        start: 28522
+                        end: 28523
+                      value:
+                        start: 28523
+                        end: 28603
+                      properties:
+                        uuid: a43e0c6ad05b49329222d2ca0a013d60
+                        universallabel: 060e2b34.027f0101.0d010101.01013b00
+                        grouplabel: []
+                      tests:
+                        teststatus:
+                            pass: true
+                      children:
+                        - key:
+                            start: 28603
+                            end: 28619
+                          length:
+                            start: 28619
+                            end: 28620
+                          value:
+                            start: 28620
+                            end: 28688
+                          properties:
+                            uuid: b5c8223ab70f467daac527e151d1da2b
+                            universallabel: 060e2b34.027f0101.0d010101.01010f00
+                            grouplabel:
+                                - 060e2b34.04010101.01030202.03000000
+                          tests:
+                            teststatus:
+                                pass: true
+                          children:
+                            - key:
+                                start: 28688
+                                end: 28704
+                              length:
+                                start: 28704
+                                end: 28705
+                              value:
+                                start: 28705
+                                end: 28801
+                              properties:
+                                uuid: fedd09a09a124c388a0f8b8351e4b2fd
+                                universallabel: 060e2b34.027f0101.0d010101.01011100
+                                grouplabel:
+                                    - 060e2b34.04010101.01030202.03000000
+                              tests:
+                                teststatus:
+                                    pass: true
+                              children: []
+                    - key:
+                        start: 29060
+                        end: 29076
+                      length:
+                        start: 29076
+                        end: 29077
+                      value:
+                        start: 29077
+                        end: 29133
+                      properties:
+                        uuid: 9078a2b71f274e4da31e92b359308bef
+                        universallabel: 060e2b34.027f0101.0d010101.01013a00
+                        grouplabel: []
+                      tests:
+                        teststatus:
+                            pass: true
+                      children:
+                        - key:
+                            start: 29133
+                            end: 29149
+                          length:
+                            start: 29149
+                            end: 29150
+                          value:
+                            start: 29150
+                            end: 29218
+                          properties:
+                            uuid: e7d30bd4cfbb475789e3a4a6d43ff15c
+                            universallabel: 060e2b34.027f0101.0d010101.01010f00
+                            grouplabel:
+                                - 060e2b34.04010101.01030201.01000000
+                          tests:
+                            teststatus:
+                                pass: true
+                          children:
+                            - key:
+                                start: 28801
+                                end: 28817
+                              length:
+                                start: 28817
+                                end: 28818
+                              value:
+                                start: 28818
+                                end: 28878
+                              properties:
+                                uuid: 14e883d3a7ee4c57a757ecf14bf3049e
+                                universallabel: 060e2b34.027f0101.0d010101.01014100
+                                grouplabel:
+                                    - 060e2b34.04010101.01030201.10000000
+                              tests:
+                                teststatus:
+                                    pass: true
+                              children:
+                                - key:
+                                    start: 28878
+                                    end: 28894
+                                  length:
+                                    start: 28894
+                                    end: 28895
+                                  value:
+                                    start: 28895
+                                    end: 28935
+                                  properties:
+                                    uuid: d3bc9a0c75e74644a84c0bc8f7fd6d41
+                                    universallabel: 060e2b34.027f0101.0d010401.04010100
+                                    grouplabel: []
+                                  tests:
+                                    teststatus:
+                                        pass: true
+                                  children:
+                                    - key:
+                                        start: 28935
+                                        end: 28951
+                                      length:
+                                        start: 28951
+                                        end: 28952
+                                      value:
+                                        start: 28952
+                                        end: 29060
+                                      properties:
+                                        uuid: bd77092ad5e94ea280d58401800dc031
+                                        universallabel: 060e2b34.027f0101.0d010401.04020100
+                                        grouplabel: []
+                                      tests:
+                                        teststatus:
+                                            pass: true
+                                      children: []
+                    - key:
+                        start: 29218
+                        end: 29234
+                      length:
+                        start: 29234
+                        end: 29235
+                      value:
+                        start: 29235
+                        end: 29358
+                      properties:
+                        uuid: 7938b385f48946a39188754d4e55a792
+                        universallabel: 060e2b34.02530105.0e090502.00000000
+                        grouplabel:
+                            - 060e2b34.04010105.0e090607.01010103
+                      tests:
+                        teststatus:
+                            pass: true
+                      children: []
+            - key:
+                start: 29399
+                end: 29415
+              length:
+                start: 29415
+                end: 29416
+              value:
+                start: 29416
+                end: 29540
+              properties:
+                uuid: e43541bc80cd48da8557606f174e60ed
+                universallabel: 060e2b34.027f0101.0d010101.01013000
+                grouplabel: []
+              tests:
+                teststatus:
+                    pass: true
+              children: []
+        - key:
+            start: 28082
+            end: 28098
+          length:
+            start: 28098
+            end: 28099
+          value:
+            start: 28099
+            end: 28179
+          properties:
+            uuid: 7549ac8908e64524a7166de7108f842c
+            universallabel: 060e2b34.027f0101.0d010101.01013b00
+            grouplabel: []
+          tests:
+            teststatus:
+                pass: true
+          children:
+            - key:
+                start: 27884
+                end: 27900
+              length:
+                start: 27900
+                end: 27901
+              value:
+                start: 27901
+                end: 27969
+              properties:
+                uuid: c08ed43c4e3c419da482dc09c7909ccd
+                universallabel: 060e2b34.027f0101.0d010101.01010f00
+                grouplabel:
+                    - 060e2b34.04010101.01030202.03000000
+              tests:
+                teststatus:
+                    pass: true
+              children:
+                - key:
+                    start: 27969
+                    end: 27985
+                  length:
+                    start: 27985
+                    end: 27986
+                  value:
+                    start: 27986
+                    end: 28082
+                  properties:
+                    uuid: 3e2d9da3ed174061bd939d2566dbdb88
+                    universallabel: 060e2b34.027f0101.0d010101.01011100
+                    grouplabel:
+                        - 060e2b34.04010101.01030202.03000000
+                  tests:
+                    teststatus:
+                        pass: true
+                  children: []
+        - key:
+            start: 28179
+            end: 28195
+          length:
+            start: 28195
+            end: 28196
+          value:
+            start: 28196
+            end: 28264
+          properties:
+            uuid: 7dfcfc3291034349a0d818836b057e6b
+            universallabel: 060e2b34.027f0101.0d010101.01010f00
+            grouplabel:
+                - 060e2b34.04010101.01030202.03000000
+          tests:
+            teststatus:
+                pass: true
+          children:
+            - key:
+                start: 27969
+                end: 27985
+              length:
+                start: 27985
+                end: 27986
+              value:
+                start: 27986
+                end: 28082
+              properties:
+                uuid: 3e2d9da3ed174061bd939d2566dbdb88
+                universallabel: 060e2b34.027f0101.0d010101.01011100
+                grouplabel:
+                    - 060e2b34.04010101.01030202.03000000
+              tests:
+                teststatus:
+                    pass: true
+              children: []
+        - key:
+            start: 28264
+            end: 28280
+          length:
+            start: 28280
+            end: 28281
+          value:
+            start: 28281
+            end: 28344
+          properties:
+            uuid: ad85d782be1a4eddbbbd8ad6aa4007bc
+            universallabel: 060e2b34.027f0101.0d010101.01011400
+            grouplabel:
+                - 060e2b34.04010101.01030202.03000000
+          tests:
+            teststatus:
+                pass: true
+          children: []
+        - key:
+            start: 29358
+            end: 29374
+          length:
+            start: 29374
+            end: 29375
+          value:
+            start: 29375
+            end: 29399
+          properties:
+            uuid: 4fff4497958f448a915415660f609cd7
+            universallabel: 060e2b34.027f0101.0d010401.04010100
+            grouplabel: []
+          tests:
+            teststatus:
+                pass: true
+          children:
+            - null
+      essence: []
+      indextable: null
+      props:
+        partitioncount: 3
+        partitiontype: footer
+        primer:
+            3b0a: 060e2b34.01010105.01020210.02010000
+            3b0b: 060e2b34.01010105.01020210.02020000
+            3b02: 060e2b34.01010102.07020110.02040000
+            3b03: 060e2b34.01010102.06010104.02010000
+            3b05: 060e2b34.01010102.03010201.05000000
+            3b06: 060e2b34.01010102.06010104.06040000
+            3b09: 060e2b34.01010105.01020203.00000000
+            3c0a: 060e2b34.01010101.01011502.00000000
+            3c01: 060e2b34.01010102.05200701.02010000
+            3c02: 060e2b34.01010102.05200701.03010000
+            3c04: 060e2b34.01010102.05200701.05010000
+            3c05: 060e2b34.01010102.05200701.07000000
+            3c09: 060e2b34.01010102.05200701.01000000
+            "3e01": 060e2b34.01010103.04030302.00000000
+            4b01: 060e2b34.01010102.05300405.00000000
+            4b02: 060e2b34.01010102.07020103.01030000
+            "0201": 060e2b34.01010102.04070100.00000000
+            "1001": 060e2b34.01010102.06010104.06090000
+            "1101": 060e2b34.01010102.06010103.01000000
+            "1102": 060e2b34.01010102.06010103.02000000
+            "1201": 060e2b34.01010102.07020103.01040000
+            "1501": 060e2b34.01010102.07020103.01050000
+            "1502": 060e2b34.01010102.04040101.02060000
+            "1503": 060e2b34.01010101.04040101.05000000
+            "1901": 060e2b34.01010102.06010104.05010000
+            "3001": 060e2b34.01010101.04060101.00000000
+            "3004": 060e2b34.01010102.06010104.01020000
+            "4401": 060e2b34.01010101.01011510.00000000
+            "4403": 060e2b34.01010102.06010104.06050000
+            "4404": 060e2b34.01010102.07020110.02050000
+            "4405": 060e2b34.01010102.07020110.01030000
+            "4701": 060e2b34.01010102.06010104.02030000
+            "4801": 060e2b34.01010102.01070101.00000000
+            "4803": 060e2b34.01010102.06010104.02040000
+            "4804": 060e2b34.01010102.01040103.00000000
+            "6101": 060e2b34.01010105.06010104.020c0000
+            fffa: 060e2b34.01010105.0e090400.00000000
+            fffb: 060e2b34.0101010d.06010104.05410100
+            fffc: 060e2b34.0101010d.01030408.00000000
+            fffd: 060e2b34.0101010d.03010102.02140000
+            fffe: 060e2b34.0101010d.04090202.00000000
+            ffff: 060e2b34.0101010d.04060806.00000000
+        essenceorder: []
+      tests:
+        teststatus:
+            pass: true
+      partitionpos: 3
+    - key:
+        start: 29540
+        end: 29556
+      length:
+        start: 29556
+        end: 29557
+      value:
+        start: 29557
+        end: 29609
+      headermetadata: []
+      essence: []
+      indextable: null
+      props:
+        partitioncount: 4
+        partitiontype: rip
+        primer:
+            3b0a: 060e2b34.01010105.01020210.02010000
+            3b0b: 060e2b34.01010105.01020210.02020000
+            3b02: 060e2b34.01010102.07020110.02040000
+            3b03: 060e2b34.01010102.06010104.02010000
+            3b05: 060e2b34.01010102.03010201.05000000
+            3b06: 060e2b34.01010102.06010104.06040000
+            3b09: 060e2b34.01010105.01020203.00000000
+            3c0a: 060e2b34.01010101.01011502.00000000
+            3c01: 060e2b34.01010102.05200701.02010000
+            3c02: 060e2b34.01010102.05200701.03010000
+            3c04: 060e2b34.01010102.05200701.05010000
+            3c05: 060e2b34.01010102.05200701.07000000
+            3c09: 060e2b34.01010102.05200701.01000000
+            "3e01": 060e2b34.01010103.04030302.00000000
+            4b01: 060e2b34.01010102.05300405.00000000
+            4b02: 060e2b34.01010102.07020103.01030000
+            "0201": 060e2b34.01010102.04070100.00000000
+            "1001": 060e2b34.01010102.06010104.06090000
+            "1101": 060e2b34.01010102.06010103.01000000
+            "1102": 060e2b34.01010102.06010103.02000000
+            "1201": 060e2b34.01010102.07020103.01040000
+            "1501": 060e2b34.01010102.07020103.01050000
+            "1502": 060e2b34.01010102.04040101.02060000
+            "1503": 060e2b34.01010101.04040101.05000000
+            "1901": 060e2b34.01010102.06010104.05010000
+            "3001": 060e2b34.01010101.04060101.00000000
+            "3004": 060e2b34.01010102.06010104.01020000
+            "4401": 060e2b34.01010101.01011510.00000000
+            "4403": 060e2b34.01010102.06010104.06050000
+            "4404": 060e2b34.01010102.07020110.02050000
+            "4405": 060e2b34.01010102.07020110.01030000
+            "4701": 060e2b34.01010102.06010104.02030000
+            "4801": 060e2b34.01010102.01070101.00000000
+            "4803": 060e2b34.01010102.06010104.02040000
+            "4804": 060e2b34.01010102.01040103.00000000
+            "6101": 060e2b34.01010105.06010104.020c0000
+            fffa: 060e2b34.01010105.0e090400.00000000
+            fffb: 060e2b34.0101010d.06010104.05410100
+            fffc: 060e2b34.0101010d.01030408.00000000
+            fffd: 060e2b34.0101010d.03010102.02140000
+            fffe: 060e2b34.0101010d.04090202.00000000
+            ffff: 060e2b34.0101010d.04060806.00000000
+        essenceorder: []
+      tests:
+        teststatus:
+            pass: true
+      partitionpos: 4
+tests:
+    teststatus:
+        pass: true

@@ -135,7 +135,14 @@ func (fi *frameInformation) sourcePackageTimeline(primer *mxf2go.Primer, umid mx
 	// if no tracks are present then this won't be used
 	sid := uint32(2)
 
-	for _, str := range stream.dataStreams {
+	streams := make([]channelProperties, len(stream.dataStreams))
+
+	copy(streams, stream.dataStreams)
+	if stream.manifest {
+		streams = append(streams, channelProperties{})
+	}
+
+	for _, str := range streams {
 
 		if str.clocked && !head {
 			//
@@ -180,8 +187,8 @@ func (fi *frameInformation) sourcePackageTimeline(primer *mxf2go.Primer, umid mx
 
 			// en as the default
 			descID := mxf2go.TUUID(uuid.New())
-			// inactive user bits	060e2b34.04010101.01030201.01000000
-			descSequence := mxf2go.GDescriptiveMarkerStruct{InstanceID: descID, ComponentDataDefinition: []byte{0x06, 0x0e, 0x2b, 0x34, 04, 01, 01, 01, 01, 03, 02, 01, 01, 00, 00, 00},
+			// inactive user bits	060e2b34.04010101.01030201.01000000 060e2b34.04010101.01030201.10000000
+			descSequence := mxf2go.GDescriptiveMarkerStruct{InstanceID: descID, ComponentDataDefinition: []byte{0x06, 0x0e, 0x2b, 0x34, 04, 01, 01, 01, 01, 03, 02, 01, 0x10, 00, 00, 00},
 				DescriptiveFrameworkObject: frameID[:]}
 			//	essenceSequence := mxf2go.GSequenceStruct{InstanceID: essenceSequenceID, ComponentDataDefinition: []byte{0x06, 0x0e, 0x2b, 0x34, 04, 01, 01, 01, 01, 03, 02, 02, 03, 00, 00, 00},
 			//		ComponentObjects: mxf2go.TComponentStrongReferenceVector{sourceClipID[:]}}
