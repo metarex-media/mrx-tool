@@ -10,31 +10,31 @@ tests:
             - pass: true
             - pass: true
         - message: |
-            ST277-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the header partion at byte offset 0
+            ST377-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the header partion at byte offset 0
           checks:
             - pass: true
         - message: |
-            ST277-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the header partion at byte offset 0
+            ST377-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the header partion at byte offset 0
           checks:
             - pass: true
         - message: |
-            ST277-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 2524
+            ST377-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 2524
           checks:
             - pass: true
         - message: |
-            ST277-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 2524
+            ST377-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 2524
           checks:
             - pass: true
         - message: |
-            ST277-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the footer partion at byte offset 38594
+            ST377-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the footer partion at byte offset 38594
           checks:
             - pass: true
         - message: |
-            ST277-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the footer partion at byte offset 38594
+            ST377-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the footer partion at byte offset 38594
           checks:
             - pass: true
         - message: |
-            ST277-1:2019,12.2,shall,1: Checking the partition positions in the file match those in the supplied random index pack
+            ST377-1:2019,12.2,shall,1: Checking the partition positions in the file match those in the supplied random index pack
           checks:
             - pass: true
       pass: true

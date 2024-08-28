@@ -85,7 +85,7 @@ func TestBadFileRead(t *testing.T) {
 
 	// run two different test files with and without index tables
 	mrxFiles := []string{"testdata/notanmrx.yaml", "not a file"}
-	errors := []string{"Buffer stream unexpectantly closed, was expecting at least 18 more bytes", "error reading and buffering data invalid argument"}
+	errors := []string{"Buffer stream unexpectedly closed, was expecting at least 18 more bytes", "error reading and buffering data invalid argument"}
 	//	hashes := []string{"4ebf90df1fd10d3cba689f2a313d6c1dc04b23353139ce9441c54d583679b5d6", "e9aa941ee55166c81171f9da12f4b0fcd03b20bbb4dc38fa3b1586ff8e3f4537"}
 
 	for i, mrx := range mrxFiles {

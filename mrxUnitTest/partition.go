@@ -43,7 +43,10 @@ type mxfPartition struct {
 
 var (
 	order = binary.BigEndian
+)
 
+const (
+	// keys for identifying the type of partition.
 	HeaderPartition        = "header"
 	BodyPartition          = "body"
 	GenericStreamPartition = "genericstreampartition"
@@ -77,6 +80,11 @@ func partitionExtract(partionKLV *klv.KLV) mxfPartition {
 	}
 
 	partPack.Signature = fullName(partionKLV.Key)
+
+	// return early to prevent errors
+	if len(partionKLV.Value) < 64 {
+		return partPack
+	}
 
 	//	packLength, lengthlength := berDecode(ber)
 	partPack.PartitionLength = partionKLV.LengthValue

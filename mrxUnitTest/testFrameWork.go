@@ -18,13 +18,14 @@ func NewTestContext(dest io.Writer) *TestContext {
 }
 
 // TestContext is the global context for all the
-// tests.
+// MRX tests.
 type TestContext struct {
 	w          io.Writer
 	globalPass bool
 	report     Report
 }
 
+// RegisterSkippedTest adds a skipped test to the test report.
 func (tc *TestContext) RegisterSkippedTest(key, desc string) {
 	tc.report.SkippedTests = append(tc.report.SkippedTests, skippedTest{TestKey: key, Desc: desc})
 }
@@ -44,6 +45,8 @@ type skippedTest struct {
 	Desc    string
 }
 
+// TestSection contains the information for a
+// batch of tests
 type TestSection struct {
 	// the header message for that batch of tests
 	Header string
@@ -54,6 +57,7 @@ type TestSection struct {
 	PassCount, FailCount int
 }
 
+// TestResult is the result of a test run
 type TestResult struct {
 	Message string
 	Checks  []check
@@ -64,6 +68,7 @@ type check struct {
 	ErrMessage string `yaml:"errorMessage,omitempty"`
 }
 
+// EndTest flushes the tests as a complete yaml.
 // End Test must be called to write the results to the io.Writer
 func (tc *TestContext) EndTest() {
 	if tc.globalPass {
@@ -100,7 +105,18 @@ func (s *TestContext) Header(message string, tests func(t Test)) {
 	s.report.Tests = append(s.report.Tests, seg.testReport)
 }
 
-// Test runs the assertions and logs the resukts in the report
+// Test runs the assertions and logs the results in the report.
+// The asserts must be an array of t.Expect() calls like so:
+/*
+	t.Test("An example test", NewSpec("demo", "demo", "shall", 1),
+				t.Expect(err).To(BeNil()),
+				t.Expect(val).Shall(Equal(1)),
+			)
+
+
+If the t.Expect() functions are not called and
+something else is used then the test will panic.
+*/
 func (c *CompleteTest) Test(message string, specDetail SpecDetails, asserts ...bool) {
 	c.segment.test(message, specDetail, asserts...)
 }
@@ -155,6 +171,8 @@ type gomegaExpect interface {
 	Expect(actual interface{}, extra ...interface{}) types.Assertion
 }
 
+// CompleteTest is the test body for running and
+// handling the gomega tests.
 type CompleteTest struct {
 	segment      *segmentTest
 	gomegaExpect Expecter
@@ -249,6 +267,8 @@ type Assertions interface {
 // MXFAssertions wraps the basic types.assertions with some
 // extra names to allow the MXf specification to be
 // written as tests.
+//
+// It satisfies the Assertions methods.
 type MXFAssertions struct {
 	standard types.Assertion
 }

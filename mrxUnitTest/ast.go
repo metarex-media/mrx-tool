@@ -1,3 +1,6 @@
+// Package mrxUnitTest contains the test functions and interfaces
+// for testing mxf/mrx files against their specifications.
+// And for developing new tests for testing the mxf files.
 package mrxUnitTest
 
 import (
@@ -197,6 +200,7 @@ type Position struct {
 	Start, End int
 }
 
+// MXFProperty contains the properties of and MXF object
 type MXFProperty interface {
 	// symbol returns the MXF UL associated with the node.
 	// if there is one
@@ -208,10 +212,12 @@ type MXFProperty interface {
 	Label() []string
 }
 
+// EssenceProperties contains the properties of an essence object
 type EssenceProperties struct {
 	EssUL string
 }
 
+// ID returns the of the essence, it always returns ""
 func (e EssenceProperties) ID() string {
 
 	return ""
@@ -219,22 +225,27 @@ func (e EssenceProperties) ID() string {
 
 const EssenceLabel = "essence"
 
+// Label returns the labels associated with the essence.
+// it always returns []string{"essence"}
 func (e EssenceProperties) Label() []string {
 
 	return []string{EssenceLabel}
 }
 
-// symbol returns the partition type
+// UL returns the UL of the essence
 func (e EssenceProperties) UL() string {
 	return e.EssUL
 }
 
+// GroupProperties contains the properties of an group object
 type GroupProperties struct {
 	UUID           mxf2go.TUUID
 	UniversalLabel string
 	GroupLabel     []string
 }
 
+// ID returns the of the group, formatted as
+// "00000000.00000000.00000000.00000000"
 func (gp GroupProperties) ID() string {
 	var fullUUID string
 	for _, uid := range gp.UUID {
@@ -243,14 +254,17 @@ func (gp GroupProperties) ID() string {
 	return fullUUID
 }
 
+// UL returns the UL of the group
 func (gp GroupProperties) UL() string {
 	return gp.UniversalLabel
 }
 
+// Label returns an labels associated with a group
 func (gp GroupProperties) Label() []string {
 	return gp.GroupLabel
 }
 
+// PartitionProperties contains the properties of a partition object
 type PartitionProperties struct {
 	PartitionCount int // the count of the partition along the MXF
 	PartitionType  string
@@ -258,6 +272,8 @@ type PartitionProperties struct {
 	EssenceOrder   []string
 }
 
+// ID returns the ID associated with a partition,
+// it always returns ""
 func (p PartitionProperties) ID() string {
 
 	return ""
@@ -265,12 +281,14 @@ func (p PartitionProperties) ID() string {
 
 const PartitionType = "partition"
 
+// Label returns the labels associated with the partition.
+// it always returns []string{"partition"}
 func (p PartitionProperties) Label() []string {
 
 	return []string{PartitionType}
 }
 
-// symbol returns the partition type
+// UL returns the UL of the partition
 func (p PartitionProperties) Symbol() string {
 	//fmt.Println(p.PartitionType)
 	return p.PartitionType
@@ -449,7 +467,10 @@ type Specifications struct {
 	MXF []*func(doc io.ReadSeeker, isxdDesc *MXFNode) func(t Test)
 }
 
-// inlcude the logger? if there's any errors flush them - discard ifo for unkown keys fro the moment
+// Make AST generates an Abstract Syntax Tree (AST) of an MXF file.
+//
+// As part of the AST tests are assigned to the nodes in the tree, these tests are
+// declared as specifications.
 func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int, specs Specifications) (*MXFNode, error) { // wg *sync.WaitGroup, buffer chan packet, errChan chan error) {
 
 	// use errs to handle errors while runnig concurrently
@@ -601,6 +622,10 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int, specs Specificati
 
 				//	currentPartitionNode.HeaderMetadata = append(currentPartitionNode.HeaderMetadata, currentPartitionNode)
 			} else {
+
+				if currentPartitionNode == nil {
+					return fmt.Errorf("invalid mxf file structure, essence encountered before any partitions")
+				}
 				// extract the essence
 				essNode := extractEssenceNode(klvItem, currentPartitionNode, offset, &patternTally)
 
@@ -613,13 +638,23 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int, specs Specificati
 			// get the next item for a loop
 			klvItem, klvOpen = <-buffer
 		}
-		mxf.Partitions = append(mxf.Partitions, currentPartitionNode)
+
+		if currentPartitionNode != nil {
+			mxf.Partitions = append(mxf.Partitions, currentPartitionNode)
+		}
+
+		if offset == 0 {
+			return fmt.Errorf("no mxf data found in byte stream")
+		}
 		return nil
 	})
 
 	// post processing data if the klv hasn't returned an error
 	// count of partitions
-	errs.Wait()
+	err := errs.Wait()
+	if err != nil {
+		return nil, err
+	}
 
 	//b, _ := yaml.Marshal(mxf)
 	//dest.Write(b)
@@ -784,13 +819,13 @@ func metadataNodeExtraction(metadata *klv.KLV, mdNode *Node, refMap map[*Node]re
 				if ok {
 
 					b, _ := decodeF.Decode(metadata.Value[pos+dec.keyLen+dec.lengthLen : pos+dec.keyLen+dec.lengthLen+length])
-					strongRefs := ReferenceExtract(b, strongRef)
+					strongRefs := ReferenceExtract(b, StrongRef)
 					if len(strongRefs) > 0 {
 						mid := refMap[mdNode]
 						mid.ref = append(mid.ref, strongRefs...)
 						refMap[mdNode] = mid
 					} else {
-						weakRefs := ReferenceExtract(b, weakRef)
+						weakRefs := ReferenceExtract(b, WeakRef)
 						if len(weakRefs) != 0 {
 							outString := make([]string, len(weakRefs))
 							for i, wr := range weakRefs {
@@ -920,25 +955,33 @@ func decodeBuilder(key uint8) (keyLength, bool) {
 	return decodeOption, skip
 }
 
+// Ref is the type for identifying reference types
+type Ref string
+
 const (
-	strongRef = "StrongReference"
-	weakRef   = "WeakReference"
+	// StrongRef is the reference type for strong references
+	StrongRef Ref = "StrongReference"
+	// WeakRef is the reference type for weak references
+	WeakRef Ref = "WeakReference"
 )
 
 // map of UUID and parents
 // if the uuid is found
 // then assignt he child to the parents
 
-// StrongReference checks if a type is strong reference,
-// then recurisvely searches through the types to find the strong set version
-func ReferenceExtract(field any, reftype string) [][]byte {
+// ReferenceExtract extracts all references of a given type.
+// by looking at the type of the field and checking its name.
+//
+// This is for use with the github.com/metarex-media/mxf-to-go
+// repo
+func ReferenceExtract(field any, reftype Ref) [][]byte {
 
 	switch v := field.(type) {
 	case mxf2go.TStrongReference:
 		return [][]byte{v}
 	default:
 		switch {
-		case strings.Contains(reflect.TypeOf(field).Name(), reftype+"Set") || strings.Contains(reflect.TypeOf(field).Name(), reftype+"Vector"):
+		case strings.Contains(reflect.TypeOf(field).Name(), string(reftype)+"Set") || strings.Contains(reflect.TypeOf(field).Name(), string(reftype)+"Vector"):
 			arr := reflect.ValueOf(field)
 			arrLen := arr.Len()
 			referenced := make([][]byte, arrLen)
@@ -957,7 +1000,7 @@ func ReferenceExtract(field any, reftype string) [][]byte {
 			}
 
 			return referenced
-		case strings.Contains(reflect.TypeOf(field).Name(), reftype):
+		case strings.Contains(reflect.TypeOf(field).Name(), string(reftype)):
 			return [][]byte{getId(v)}
 		default:
 
@@ -980,16 +1023,18 @@ func getId(ref any) []byte {
 	return UID
 }
 
-// DecodeGroupNode converts a node to a klv then
-// calls decode group
+// DecodeGroupNode decodes a Node into a map[string]any,
+// where the key of the map is the ul of the field and the any is the decoded value.
+// Any unknown fields will not be decoded and are skipped from the returned values.
 func DecodeGroupNode(doc io.ReadSeeker, node *Node, primer map[string]string) (map[string]any, error) {
 	groupKLV := nodeToKLV(doc, node)
 
 	return DecodeGroup(groupKLV, primer)
 }
 
-// DecodeGroup decodes a group KLV into a map[string]any
-// where the key is the ul of the field and the any is the decoded value.
+// DecodeGroup decodes a group KLV into a map[string]any,
+// where the key of the map is the ul of the field and the any is the decoded value.
+// Any unknown fields will not be decoded and are skipped from the returned values.
 func DecodeGroup(group *klv.KLV, primer map[string]string) (map[string]any, error) {
 	dec, skip := decodeBuilder(group.Key[5])
 

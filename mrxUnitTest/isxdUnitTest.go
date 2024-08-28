@@ -8,27 +8,21 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-/*
-keys = header, essence, UL, MXF
-*/
-
-const (
-	HeaderKey  = "header"
-	EssenceKey = "essence"
-	GenericKey = "generickey"
-)
-
+// ISXDDoc is the document the specs for
+// ISXD are found in and used for these tests.
 const ISXDDoc = "RDD47:2018"
 
-func NewISXD() Specifications {
+// ISXDSpecifications returns all the specifications
+// associated with ISXD
+func ISXDSpecifications() Specifications {
 	nt := testISXDDescriptor
 
-	gc := GenericCount
+	gc := genericCountCheck
 	tfw := testFrameWrapped
 
 	tgp := testGenericPartition
 
-	ts := TestStructure
+	ts := checkStructure
 
 	/*
 		improvements get the documentation involved
@@ -41,7 +35,7 @@ func NewISXD() Specifications {
 
 	return Specifications{
 		Node: map[string][]*func(doc io.ReadSeeker, isxdDesc *Node, primer map[string]string) func(t Test){
-			"060e2b34.02530105.0e090502.00000000": {&nt},
+			mxf2go.GISXDUL[13:]: {&nt},
 			//060e2b34.02530101.0d010101.01013b00
 		},
 		Part: map[string][]*func(doc io.ReadSeeker, isxdDesc *PartitionNode) func(t Test){
@@ -79,7 +73,8 @@ func testISXDDescriptor(doc io.ReadSeeker, isxdDesc *Node, primer map[string]str
 	}
 }
 
-func GenericCount(doc io.ReadSeeker, header *PartitionNode) func(t Test) {
+// check the generic body partition count and layout to the ISXD spec
+func genericCountCheck(doc io.ReadSeeker, header *PartitionNode) func(t Test) {
 
 	return func(t Test) {
 
@@ -92,7 +87,8 @@ func GenericCount(doc io.ReadSeeker, header *PartitionNode) func(t Test) {
 		if len(genericParts) > 0 {
 			// ibly run if there's any generic essence
 			// update to a partitionsearch
-			staticTracks, err := header.Search("select * from metadata where UL = 060e2b34.027f0101.0d010101.01013a00")
+
+			staticTracks, err := header.Search("select * from metadata where UL = " + mxf2go.GStaticTrackUL[13:])
 			t.Test("Checking that a single static track is present in the header metadata", NewSpec(ISXDDoc, "5.4", "shall", 1),
 				t.Expect(err).To(BeNil()),
 				t.Expect(len(staticTracks)).Shall(Equal(1)),
@@ -105,7 +101,7 @@ func GenericCount(doc io.ReadSeeker, header *PartitionNode) func(t Test) {
 					t.Expect(staticTrack).ShallNot(BeNil()),
 				)
 
-				sequence := staticTrack.FindUL("060e2b34.027f0101.0d010101.01010f00")
+				sequence := staticTrack.FindUL(mxf2go.GSequenceUL[13:])
 				t.Test("Checking that the static track points to a sequence", NewSpec(ISXDDoc, "5.4", "shall", 2),
 					t.Expect(sequence).ToNot(BeNil()),
 				)
@@ -127,7 +123,7 @@ func testFrameWrapped(doc io.ReadSeeker, header *PartitionNode) func(t Test) {
 
 		if len(header.Essence) > 0 {
 
-			badKeys, err := header.Search("select * from essence where UL <> 060e2b34.01020105.0e090502.017f017f")
+			badKeys, err := header.Search("select * from essence where UL <> " + mxf2go.FrameWrappedISXDData.UL[13:])
 
 			t.Test("Checking that the only ISXD essence keys are found in body partitions", NewSpec(ISXDDoc, "7.5", "shall", 1),
 				t.Expect(err).Shall(BeNil()),
@@ -174,23 +170,25 @@ func testGenericPartition(doc io.ReadSeeker, header *PartitionNode) func(t Test)
 			t.Expect(mp.IndexSID).Shall(Equal(uint32(0)), "index SID not 0"),
 		)
 
-		t.Test("checking the partition key meets the expected value of 060e2b34.02050101.0d010201.01031100", NewSpec(ISXDDoc, "7.5", "shall", 1),
-			t.Expect(fullName(headerKLV.Key)).Shall(Equal("060e2b34.02050101.0d010201.01031100")),
+		t.Test("checking the partition key meets the expected value of "+mxf2go.GGenericStreamPartitionUL[13:], NewSpec(ISXDDoc, "7.5", "shall", 1),
+			t.Expect(fullNameMask(headerKLV.Key, 5)).Shall(Equal(mxf2go.GGenericStreamPartitionUL[13:])),
 		)
 
-		invalidKeys, err := header.Search("select * from essence where ul <> 060e2b34.0101010c.0d010509.01000000")
+		// 060e2b34.0101010c.0d010509.01000000 as the value is not used in the registers (yet?)
+		gpEssKey := "060e2b34.0101010c.0d010509.01000000"
+		invalidKeys, err := header.Search("select * from essence where ul <> " + gpEssKey)
 		//09.01 - 1001 -little endin & 01 - makrer bit
 		// can be shown as this but is not in the essence
 		// 060e2b34.0101010c.0d01057f.7f000000
 
-		t.Test("checking the essence keys all have the value of 060e2b34.0101010c.0d010509.01000000", NewSpec(ISXDDoc, "7.5", "shall", 1),
+		t.Test("checking the essence keys all have the value of "+gpEssKey, NewSpec(ISXDDoc, "7.5", "shall", 1),
 			t.Expect(err).Shall(BeNil()),
 			t.Expect(len(invalidKeys)).Shall(Equal(0), fmt.Sprintf("%v other essence keys found", len(invalidKeys))),
 		)
 	}
 }
 
-func TestStructure(doc io.ReadSeeker, mxf *MXFNode) func(t Test) {
+func checkStructure(doc io.ReadSeeker, mxf *MXFNode) func(t Test) {
 	return func(t Test) {
 
 		// find the generic paritions

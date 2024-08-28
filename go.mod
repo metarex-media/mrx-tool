@@ -6,7 +6,7 @@ require (
 	github.com/brianvoe/gofakeit/v7 v7.0.4
 	github.com/cbroglie/mustache v1.4.0
 	github.com/google/uuid v1.6.0
-	github.com/metarex-media/mxf-to-go v0.0.0-20240812144922-38cd2ce670e6
+	github.com/metarex-media/mxf-to-go v0.0.0-20240828141327-5be4d71f75d8
 	github.com/onsi/gomega v1.34.1
 	github.com/peterbourgon/mergemap v0.0.1
 	github.com/smartystreets/goconvey v1.8.1

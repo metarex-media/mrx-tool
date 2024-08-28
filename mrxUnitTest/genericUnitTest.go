@@ -8,7 +8,16 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func NewGeneric() Specifications {
+const (
+	// The key used for identifying the header partition
+	HeaderKey = "header"
+	// the key for using identifying essence streams
+	EssenceKey = "essence"
+	// The key used for identifying the Generic Body partition
+	GenericKey = "generickey"
+)
+
+func GenericSpecifications() Specifications {
 
 	ts := mrxPartLayout
 	return Specifications{
@@ -17,7 +26,9 @@ func NewGeneric() Specifications {
 
 }
 
-const ST377Doc = "ST277-1:2019"
+// ST377Doc is the document the specs for
+// ST 377 are found in and used for these tests.
+const ST377Doc = "ST377-1:2019"
 
 func mrxPartLayout(stream io.ReadSeeker, node *MXFNode) func(t Test) {
 

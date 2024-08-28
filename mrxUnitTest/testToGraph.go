@@ -10,7 +10,14 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// DrawGraph takes the yaml log and draws a graphical representation of it
+// DrawGraph takes the yaml log generated from the
+/*
+MRXTest function
+and draws a graphical representation of it.
+
+It is a bar chart with the total pass and failure counts
+as the vertical two bars.
+*/
 func DrawGraph(reportStream io.Reader, dest io.Writer) error {
 
 	reportBytes, err := io.ReadAll(reportStream)
@@ -53,7 +60,7 @@ func DrawGraph(reportStream io.Reader, dest io.Writer) error {
 	}
 
 	graph := chart.BarChart{
-		Title: fmt.Sprintf("Qc Report results : %v", report.TestPass),
+		Title: fmt.Sprintf("MXF Report results : %v", report.TestPass),
 		YAxis: chart.YAxis{
 			Ticks: ticks, Range: &chart.ContinuousRange{Min: 0, Max: float64(max)}},
 

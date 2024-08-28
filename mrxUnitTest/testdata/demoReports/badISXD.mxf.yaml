@@ -10,39 +10,39 @@ tests:
             - pass: true
             - pass: true
         - message: |
-            ST277-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the header partion at byte offset 0
+            ST377-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the header partion at byte offset 0
           checks:
             - pass: true
         - message: |
-            ST277-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the header partion at byte offset 0
+            ST377-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the header partion at byte offset 0
           checks:
             - pass: true
         - message: |
-            ST277-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 3047
+            ST377-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the body partion at byte offset 3047
           checks:
             - pass: true
         - message: |
-            ST277-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 3047
+            ST377-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the body partion at byte offset 3047
           checks:
             - pass: true
         - message: |
-            ST277-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the genericstreampartition partion at byte offset 23873
+            ST377-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the genericstreampartition partion at byte offset 23873
           checks:
             - pass: true
         - message: |
-            ST277-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the genericstreampartition partion at byte offset 23873
+            ST377-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the genericstreampartition partion at byte offset 23873
           checks:
             - pass: true
         - message: |
-            ST277-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the footer partion at byte offset 26493
+            ST377-1:2019,7.1,Table5,7: Checking the previous partition pointer is the correct byte position for the footer partion at byte offset 26493
           checks:
             - pass: true
         - message: |
-            ST277-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the footer partion at byte offset 26493
+            ST377-1:2019,7.1,Table5,8: Checking the this partition pointer matches the actual byte offset of the file for the footer partion at byte offset 26493
           checks:
             - pass: true
         - message: |
-            ST277-1:2019,12.2,shall,1: Checking the partition positions in the file match those in the supplied random index pack
+            ST377-1:2019,12.2,shall,1: Checking the partition positions in the file match those in the supplied random index pack
           checks:
             - pass: true
       pass: true
@@ -113,7 +113,7 @@ tests:
           checks:
             - pass: true
         - message: |
-            RDD47:2018,7.5,shall,1: checking the partition key meets the expected value of 060e2b34.02050101.0d010201.01031100
+            RDD47:2018,7.5,shall,1: checking the partition key meets the expected value of 060e2b34.027f0101.0d010201.01031100
           checks:
             - pass: true
         - message: |

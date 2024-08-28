@@ -7,12 +7,22 @@ import (
 	"github.com/metarex-media/mrx-tool/klv"
 )
 
+/*
+MRXTest tests an MRX file against the specifications given to it.
+These test results are then logged as an yaml file to the io.Writer.
+
+It has the inbuilt specs of:
+  - ST 377
+  - RDD 47
+
+Custom specifications can also be used.
+*/
 func MRXTest(doc io.ReadSeeker, w io.Writer, testspecs ...Specifications) error {
 
 	klvChan := make(chan *klv.KLV, 1000)
 
 	// get the specifications here
-	testspecs = append(testspecs, NewISXD(), NewGeneric())
+	testspecs = append(testspecs, ISXDSpecifications(), GenericSpecifications())
 
 	// get an identical map of the base tests and
 	// the skipped specifications.
@@ -25,11 +35,6 @@ func MRXTest(doc io.ReadSeeker, w io.Writer, testspecs ...Specifications) error 
 		return genErr
 	}
 	// Test Structure
-
-	/// go through each partition
-	// switch test header/footer
-	// test essence
-	// test generic
 
 	// testStructure
 	tc := NewTestContext(w)

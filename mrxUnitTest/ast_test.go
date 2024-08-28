@@ -1,6 +1,7 @@
 package mrxUnitTest
 
 import (
+	"bytes"
 	"crypto/sha256"
 	"fmt"
 	"io"
@@ -39,9 +40,9 @@ func TestAST(t *testing.T) {
 		hnormal := sha256.New()
 		hnormal.Write(expecBytes)
 
-		Convey("generating a file for testing", t, func() {
-			Convey("checking the file is encoded without error and the data is not corrupted", func() {
-				Convey("No error is returned for the encoding", func() {
+		Convey("Checking AST maps are consistent and are in the expected form", t, func() {
+			Convey(fmt.Sprintf("generating an AST of %s, which is saved as a yaml", mxf), func() {
+				Convey("The generated yaml matches the expected yaml", func() {
 
 					So(docErr, ShouldBeNil)
 					So(genErr, ShouldBeNil)
@@ -51,7 +52,35 @@ func TestAST(t *testing.T) {
 				})
 			})
 		})
+	}
+}
 
+func TestASTErrors(t *testing.T) {
+	headerKey := []byte{06, 0x0e, 0x2b, 0x34, 02, 05, 01, 01, 0x0d, 01, 02, 01, 01, 02, 01, 00}
+	badInputs := [][]byte{{}, make([]byte, 100),
+		{06, 0x0e, 0x2b, 0x34, 02, 05, 01, 01, 0x0d, 01, 02, 01, 01, 02, 01, 00, 0, 0, 0, 0, 0, 0},
+		append(headerKey, make([]byte, 10000)...)}
+
+	expectedErrMess := []string{"empty data stream", "Buffer stream unexpectedly closed, was expecting at least 1 more bytes",
+		"Buffer stream unexpectedly closed, was expecting at least 11 more bytes", "Buffer stream unexpectedly closed, was expecting at least 13 more bytes"}
+
+	for i, input := range badInputs {
+
+		doc := bytes.NewReader(input)
+		klvChan := make(chan *klv.KLV, 1000)
+		_, genErr := MakeAST(doc, klvChan, 10, Specifications{
+			Node: make(map[string][]*func(doc io.ReadSeeker, isxdDesc *Node, primer map[string]string) func(t Test)),
+			Part: make(map[string][]*func(doc io.ReadSeeker, isxdDesc *PartitionNode) func(t Test)),
+			MXF:  make([]*func(doc io.ReadSeeker, isxdDesc *MXFNode) func(t Test), 0),
+		})
+
+		Convey("Checking errors are returned when making the AST", t, func() {
+			Convey(fmt.Sprintf("generating the ast with a byte stream with an expected error of %s", expectedErrMess[i]), func() {
+				Convey("The generated error is expected", func() {
+					So(genErr, ShouldResemble, fmt.Errorf(expectedErrMess[i]))
+				})
+			})
+		})
 	}
 }
 
