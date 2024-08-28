@@ -657,8 +657,8 @@ func MakeAST(stream io.Reader, buffer chan *klv.KLV, size int, specs Specificati
 	}
 
 	// b, _ := yaml.Marshal(mxf)
-	//dest.Write(b)
-	//fmt.Println(mxf)
+	// dest.Write(b)
+	// fmt.Println(mxf)
 	// assign after the yaml to stop endless recursion
 	for _, p := range mxf.Partitions {
 		p.Parent = mxf
